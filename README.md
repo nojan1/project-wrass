@@ -9,4 +9,5 @@
  [ ] Add support for SD card reading and loading programs into RAM   
  [ ] Create a "shell enviroment"   
  [ ] Add sound   
+ [ ] Integrated enhanced basic    
  [ ] Create SD emulator to speed up program loading
