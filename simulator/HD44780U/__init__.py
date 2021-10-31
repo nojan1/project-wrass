@@ -1,9 +1,7 @@
 import pygame
-
-
 class HD44780U(object):
     def __init__(self):
-        pygame.init()
+        pygame.display.init()
 
         self.screen = pygame.display.set_mode((320, 240))
 

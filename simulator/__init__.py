@@ -6,6 +6,19 @@ from py65.utils import console
 from HD44780U import HD44780U
 from via import VIA
 
+class StepAwareCMOS65C02(CMOS65C02):
+	def __init__(self, *args, **kwargs):
+		CMOS65C02.__init__(self, *args, **kwargs)
+
+		self.on_step = None
+
+	def step(self):
+		if self.on_step != None:
+			self.on_step()
+
+		CMOS65C02.step(self)
+		return self
+
 def main():
 	mem = ObservableMemory()
 
@@ -16,23 +29,15 @@ def main():
 
 	hdd4478 = HD44780U()
 	via = VIA(0x6000, mem)
-	monitor = Monitor(mpu_type=CMOS65C02, memory=mem)
+	monitor = Monitor(mpu_type=StepAwareCMOS65C02, memory=mem)
 
-	RunLoop(monitor).start()
-	hdd4478.handle_events()
+	monitor._mpu.on_step = hdd4478.handle_events
 
-from threading import Thread
-class RunLoop(Thread):
-	def __init__(self, monitor):
-		Thread.__init__(self)
-		self.monitor = monitor
-	
-	def run(self) -> None:
-		try:
-			self.monitor.cmdloop()
-		except KeyboardInterrupt:
-			self.monitor._output('')
-			#console.restore_mode()
+	try:
+		monitor.cmdloop()
+	except KeyboardInterrupt:
+		monitor._output('')
+		#console.restore_mode()
 
 if __name__ == "__main__":
 	main()
