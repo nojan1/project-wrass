@@ -18,7 +18,7 @@ class VIA(object):
         memory.subscribe_to_write(addreses, self.OnWrite)
         memory.subscribe_to_read(addreses, self.OnRead)
 
-        self.registers = [0x00 * 16]
+        self.registers = [0x00] * 16
 
     def OnRead(self, addr):
         register_index = addr - self.first_address
@@ -32,6 +32,7 @@ class VIA(object):
         elif register_index == PORTB:
             data = data & self.registers[DDRB]
 
+        print(f"Setting index {register_index} to {data}")
         self.registers[register_index] = data
 
         if self.output_changed != None:
