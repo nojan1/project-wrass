@@ -15,6 +15,7 @@ class VIA(object):
         self.PORTB = 0
 
         addreses = [first_address+x for x in range(15)]
+        
         memory.subscribe_to_write(addreses, self.OnWrite)
         memory.subscribe_to_read(addreses, self.OnRead)
 

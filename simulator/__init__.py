@@ -29,6 +29,8 @@ def main():
 
 	hdd4478 = HD44780U()
 	via = VIA(0x6000, mem)
+	via.SetOutputChanged(lambda x: lcd_mapping(x, hdd4478))
+
 	monitor = Monitor(mpu_type=StepAwareCMOS65C02, memory=mem)
 
 	monitor._mpu.on_step = hdd4478.handle_events
@@ -38,6 +40,11 @@ def main():
 	except KeyboardInterrupt:
 		monitor._output('')
 		#console.restore_mode()
+
+def lcd_mapping(updated_state, hdd4478):
+	(PORTA, PORTB) = updated_state
+	print(f"Got updated state {updated_state}")
+	hdd4478.command(0, 1, 0x55)
 
 if __name__ == "__main__":
 	main()
