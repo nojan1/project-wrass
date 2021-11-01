@@ -14,8 +14,9 @@ class HD44780U(object):
     def __init__(self):
         pygame.init()
 
-        self.font = pygame.font.SysFont("monospace", DESIRED_FONT_SIZE, bold=True)
-        
+        #self.font = pygame.font.SysFont("monospace", DESIRED_FONT_SIZE, bold=True)
+        self.font = pygame.font.Font("HD44780U/VCR_OSD_MONO_1.001.ttf", DESIRED_FONT_SIZE)
+
         (font_width, font_height) = self.font.size("H")
         self.char_cell_width = font_width + 2
         self.char_cell_height = font_height + 2
