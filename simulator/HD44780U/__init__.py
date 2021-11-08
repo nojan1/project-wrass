@@ -25,18 +25,12 @@ class HD44780U(object):
         self.total_height = (BLACK_BORDER_WIDTH * 2) + (self.char_cell_height * ROWS) + (CHAR_CELL_SPACING * (ROWS + 1))
         self.screen = pygame.display.set_mode((self.total_width, self.total_height))
 
-        self.last_instruction = 0x00
-        self.last_data = 0x00
-        self.last_rw = 0x00
-        self.last_rs = 0x00
-        self.last_e = 0x00
+        self.last_e = 0
 
         self.char_buffer = [" "] * (COLS * ROWS)
-        self.char_buffer[0] = "H"
-        self.char_buffer[1] = "e"
-        self.char_buffer[2] = "l"
-        self.char_buffer[3] = "l"
-        self.char_buffer[4] = "o"
+        self.position = 0
+
+        self.on_data_returned = None
 
         self.draw()
 
@@ -56,8 +50,42 @@ class HD44780U(object):
         pygame.display.flip()
 
     def handle_events(self):
-        for e in pygame.event.get():
+        for _ in pygame.event.get():
             pass
 
+        pygame.display.update()
+
     def command(self, e, rw, rs, data):
-        pass
+        print(f"got command e:{e}, last_e:{self.last_e}, rw: {rw}, rs: {rs}, data: {data}")
+        if self.last_e == 0 and e == 1:
+            self._process_command(rw, rs, data)                
+            
+        self.last_e = e
+        self.draw()
+
+    def _process_command(self, rw, rs, data):
+        print(f"Processing command rw: {rw}, rs: {rs}, data: {data}")
+
+        if rs == 0:
+            #Instruction
+            if rw == 1:
+                #Output busy flag
+                data_out = self.position & 0x7
+                if self.on_data_returned != None:
+                    self.on_data_returned(data_out)
+            elif data == 1:
+                # Clear home
+                self.position = 1
+                for i in range(COLS * ROWS):
+                    self.char_buffer[i] = " "
+        else:
+            #Data
+            if rw ==0:
+                print(f"Wrote {data} to {self.position}")
+                self.char_buffer[self.position] = self._get_char(data)
+                self.position += 1
+            else:
+                print(f'Reading {self.char_buffer[self.position]}')
+
+    def _get_char(self, data):
+        return chr(data)

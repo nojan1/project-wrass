@@ -15,7 +15,7 @@ class VIA(object):
         self.PORTB = 0
 
         addreses = [first_address+x for x in range(15)]
-        
+
         memory.subscribe_to_write(addreses, self.OnWrite)
         memory.subscribe_to_read(addreses, self.OnRead)
 
@@ -36,7 +36,7 @@ class VIA(object):
         print(f"Setting index {register_index} to {data}")
         self.registers[register_index] = data
 
-        if self.output_changed != None:
+        if (register_index == PORTA or register_index == PORTB) and self.output_changed != None:
             self.output_changed((self.registers[PORTA], self.registers[PORTB]))
 
     def SetOutputChanged(self, callback):

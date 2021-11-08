@@ -22,14 +22,15 @@ class StepAwareCMOS65C02(CMOS65C02):
 def main():
 	mem = ObservableMemory()
 
-	for i in range(1024):
-		mem[i] = 0xea
-
-	mem[1024] = 0x4c
-
 	hdd4478 = HD44780U()
+
 	via = VIA(0x6000, mem)
 	via.SetOutputChanged(lambda x: lcd_mapping(x, hdd4478))
+
+	def hdd4478_data_out(data):
+		mem._subject[0x6000] = data
+
+	hdd4478.on_data_returned = hdd4478_data_out
 
 	monitor = Monitor(mpu_type=StepAwareCMOS65C02, memory=mem)
 
@@ -43,8 +44,12 @@ def main():
 
 def lcd_mapping(updated_state, hdd4478):
 	(PORTA, PORTB) = updated_state
-	print(f"Got updated state {updated_state}")
-	hdd4478.command(0, 1, 0x55)
+
+	e = (PORTA & 0b10000000) >> 7
+	rw = (PORTA & 0b01000000) >> 6
+	rs = (PORTA & 0b00100000) >> 5
+
+	hdd4478.command(e, rw, rs, PORTB)
 
 if __name__ == "__main__":
 	main()
