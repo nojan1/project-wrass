@@ -53,7 +53,7 @@ class HD44780U(object):
         for _ in pygame.event.get():
             pass
 
-        pygame.display.update()
+        # pygame.display.update()
 
     def command(self, e, rw, rs, data):
         print(f"got command e:{e}, last_e:{self.last_e}, rw: {rw}, rs: {rs}, data: {data}")
