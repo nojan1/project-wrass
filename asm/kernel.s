@@ -6,9 +6,11 @@
     .include "include/lcd_8bit.s"
 
 irq:
+    nop
     rti
 
 nmi:
+    nop
     rti
 
 reset:
