@@ -2,6 +2,8 @@
 #define CLOCK_IN 2
 #define CLOCK_OUT 3
 #define READ_WRITE 4
+#define AUTO_CLOCK 5
+#define SINGLE_STEP_CLOCK 6
 
 const char ADDR[] = {22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 50};
 const char DATA[] = {39, 41, 43, 45, 47, 49, 51, 53};
@@ -11,6 +13,8 @@ void setup() {
   pinMode(CLOCK_OUT, OUTPUT);
   pinMode(READ_WRITE, INPUT);
   pinMode(CLOCK_IN, INPUT);
+  pinMode(AUTO_CLOCK, INPUT);
+  pinMode(SINGLE_STEP_CLOCK, INPUT);
 
   for(int n = 0; n < 16; n++)
   {
@@ -28,8 +32,13 @@ void setup() {
 
 // the loop function runs over and over again forever
 void loop() {
-  emitPulse();
-  delay(200);             
+  if(digitalRead(AUTO_CLOCK) == 1){
+    emitPulse();
+    delay(200);             
+  }else if(digitalRead(SINGLE_STEP_CLOCK) == 1){
+      emitPulse();
+      delay(300);  
+  }
 }
 
 void emitPulse(){

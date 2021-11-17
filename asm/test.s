@@ -1,17 +1,8 @@
-PORTB = $6000
-PORTA = $6001
-DDRB = $6002
-DDRA = $6003
-
-E  = %10000000
-RW = %01000000
-RS = %00100000
-
   .org $8000
 
 reset:
   ldx #$ff
-  txs
+  txs 
 
   lda #%11111111 ; Set all pins on port B to output
   sta DDRB
@@ -44,6 +35,7 @@ loop:
 
 message: .asciiz "Hello, world!"
 
+  .include "include/constants.s"
   .include "include/lcd_8bit.s"
 
   .org $fffc

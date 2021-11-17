@@ -1,3 +1,7 @@
+E  = %10000000
+RW = %01000000
+RS = %00100000
+
 lcd_wait:
   pha
   lda #%00000000  ; Port B is input
@@ -10,7 +14,7 @@ lcdbusy:
   lda PORTB
   and #%10000000
   bne lcdbusy
-
+  
   lda #RW
   sta PORTA
   lda #%11111111  ; Port B is output

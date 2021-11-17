@@ -47,7 +47,7 @@ class HD44780U(object):
             font_surface = self.font.render(c, False, CHAR_CELL_FOREGROUND_COLOR)
             self.screen.blit(font_surface, (x_pos + 1, y_pos + 1))
 
-        pygame.display.flip()
+        pygame.display.update()
 
     def handle_events(self):
         for _ in pygame.event.get():
