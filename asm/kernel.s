@@ -6,10 +6,10 @@
     .include "include/lcd_8bit.s"
 
 irq:
-    rts
+    rti
 
 nmi:
-    rts
+    rti
 
 reset:
     ldx $FF ;Set stackpointer to top of zero page
