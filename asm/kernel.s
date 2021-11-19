@@ -17,7 +17,7 @@ reset:
     ldx $FF ;Set stackpointer to top of zero page
     txs
 
-
+    
 
     .org $FFFA
     .word nmi

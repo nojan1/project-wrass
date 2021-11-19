@@ -25,7 +25,7 @@ void setup() {
     pinMode(DATA[x], INPUT);
   }
 
-  attachInterrupt(digitalPinToInterrupt(CLOCK_IN), readBuses, RISING);
+  //attachInterrupt(digitalPinToInterrupt(CLOCK_IN), readBuses, RISING);
 
   Serial.begin(57600);
 }
@@ -51,24 +51,24 @@ void emitPulse(){
 }
 
 void readBuses(){
-  unsigned int address = 0;
-  unsigned int data = 0;
   char output[15];
-  
-  for(int n = 0; n < 16; n++){
+
+  unsigned int address = 0;
+  for (int n = 0; n < 16; n += 1) {
     int bit = digitalRead(ADDR[n]) ? 1 : 0;
     Serial.print(bit);
-    address |= bit << n;
+    address = (address << 1) + bit;
   }
-
-  Serial.print("  ");
   
-  for(int n = 0; n < 8; n++){
+  Serial.print("   ");
+  
+  unsigned int data = 0;
+  for (int n = 0; n < 8; n += 1) {
     int bit = digitalRead(DATA[n]) ? 1 : 0;
     Serial.print(bit);
-    data |= bit << n;
+    data = (data << 1) + bit;
   }
 
-  sprintf(output, "  %04x  %c %02x", address, digitalRead(READ_WRITE) ? 'r' : 'W', data);
-  Serial.println(output);
+  sprintf(output, "   %04x  %c %02x", address, digitalRead(READ_WRITE) ? 'r' : 'W', data);
+  Serial.println(output);  
 }
