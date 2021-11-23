@@ -31,7 +31,7 @@ lcd_instruction:
   sta PORTA
   lda #0         ; Clear RS/RW/E bits
   sta PORTA
-  rts
+  rts 
 
 print_char:
   jsr lcd_wait

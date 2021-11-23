@@ -6,7 +6,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "vasm6502_oldstyle -dotdir -Fbin test.s",
+            "command": "vasm6502_oldstyle -wdc02 -dotdir -Fbin -L kernel/kernel.list kernel/kernel.s",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -24,7 +24,14 @@
         {
             "label": "Run in simulator",
             "type": "shell",
-            "command": "cd ../simulator && python3 __init__.py --load '../asm/a.out top'",
+            "command": "cd ../simulator && python3 __init__.py --load '../kernel/asm/a.out top'",
+            "dependsOn": "Build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Upload to ROM",
+            "type": "shell",
+            "command": "minipro -p AT28C256 -w kernel/a.out",
             "dependsOn": "Build",
             "problemMatcher": []
         }

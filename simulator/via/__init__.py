@@ -33,7 +33,7 @@ class VIA(object):
         elif register_index == PORTB:
             data = data & self.registers[DDRB]
 
-        print(f"Setting index {register_index} to {data}")
+        #print(f"Setting index {register_index} to {data}")
         self.registers[register_index] = data
 
         if (register_index == PORTA or register_index == PORTB) and self.output_changed != None:

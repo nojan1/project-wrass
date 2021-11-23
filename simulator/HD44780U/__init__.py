@@ -47,7 +47,7 @@ class HD44780U(object):
             font_surface = self.font.render(c, False, CHAR_CELL_FOREGROUND_COLOR)
             self.screen.blit(font_surface, (x_pos + 1, y_pos + 1))
 
-        pygame.display.update()
+        pygame.display.flip()
 
     def handle_events(self):
         for _ in pygame.event.get():
@@ -56,7 +56,7 @@ class HD44780U(object):
         # pygame.display.update()
 
     def command(self, e, rw, rs, data):
-        print(f"got command e:{e}, last_e:{self.last_e}, rw: {rw}, rs: {rs}, data: {data}")
+        #print(f"got command e:{e}, last_e:{self.last_e}, rw: {rw}, rs: {rs}, data: {data}")
         if self.last_e == 0 and e == 1:
             self._process_command(rw, rs, data)                
             
