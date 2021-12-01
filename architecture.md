@@ -34,7 +34,7 @@ The framebuffer, tilemap and color attributes are stored in seperate RAM. It sha
 
 To access information about Screen stuff the IO space is used.
 
-## Screen RAM Map
+## Screen RAM Map (Character mode)
 
 | Type             | Lower Address | Upper Address |
 | ---------------- | ------------- | ------------- |
@@ -43,15 +43,15 @@ To access information about Screen stuff the IO space is used.
 | Tilemap          | $E582         | $ED81         |
 | Colors           | $ED82         | $EE02         |
 
-## Framebuffer format
+### Framebuffer format
 
 The framebuffer is composed of 80 * 60 bytes confirming to 80 columns and 60 rows layed out in row order. Each byte in the buffer matches a single tile in the tilemap. 
 
-## Color Attributes
+### Color Attributes
 
 The color attributes are layed out in the same format as the framebuffer with the difference that each byte instead describes the color for the rendered tile. The lower 4 bits matches to 16 different colors for the background and the top 4 is the color for the foreground.
 
-## Tilemap format
+### Tilemap format
 
 The tilemap is composed of 8 bytes per tile, coresponding to 8 rows. When converting to pixels it is simply 0 == pixel off, 1 == pixel on.
 
@@ -67,6 +67,28 @@ byte
  5:  0 1 1 1 1 1 1 0
  6:  0 1 1 1 1 1 1 0
  7:  0 1 1 0 0 1 1 0
+```
+
+## Screen RAM Map (Bitmap mode)
+
+| Type               | Lower Address | Upper Address |
+| ------------------ | ------------- | ------------- |
+| Bitmap data format | $C000         | $E580         |
+| Tilemap            | $E582         | $ED81         |
+| Colors             | $ED82         | $EE02         |
+
+### Bitmap data
+
+The bitmap data is encoded in a 2bp and the screen resolution is reduced to 320x240.
+The available colors are the first 4 in the color map.
+
+Example:
+```
+  00_01_10_11 
+```
+Would translate to a row of 4 pixels as such:
+```
+<color 0><color 1><color 2><color 3>
 ```
 
 ## Colors format
