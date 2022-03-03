@@ -1,47 +1,22 @@
-Architecture
--------------
+# Graphics
 
-# Memory map
+The graphics unit is a separete IO device hooked up to one of the IO lines in the IO address space.
 
-| Type                | Start | End   | Size |
-| ------------------- | ----- | ----- | ---- |
-| RAM (1)             | $0000 | $7FFF | 32k  |
-| RAM (2)             | $8000 | $9FFF | 8k   |
-| IO                  | $A000 | $BFFF | 8k   |
-| ROM                 | $C000 | $FFFF | 16k  |
-| ------------------- | ----  | ----- | ---  |
-| Screen (Write only) | $C000 | ???   | ??   |
+## Registers
 
-# IO
-
-The IO space region is a 8k byte range that is divided up into 16 different IO devices. This yields a total of 16 IO select lines having access to 512 bytes of address space each.
-
-## IO Line Allocation
-
-| Line | Device  | Lower Address | Upper Address |
-| ---- | ------- | ------------- | ------------- |
-| 0    | IO Card | $A000         | $A1FF         |
-| 1    | GPU     | $A200         | $A3FF         |
-| 2    | SOUND   | $A400         | $A5FF         |
-| 3    |         | $A600         | $A7FF         |
-| 4    |         | $A800         | $A9FF         |
-| 5    |         | $AA00         | $ABFF         |
-| 6    |         | $AC00         | $ADFF         |
-| 7    |         | $AE00         | $AFFF         |
-| 8    |         | $B000         | $B1FF         |
-| 9    |         | $B200         | $B3FF         |
-| 10   |         | $B400         | $B5FF         |
-| 11   |         | $B600         | $B7FF         |
-| 12   |         | $B800         | $B9FF         |
-| 13   |         | $BA00         | $BBFF         |
-| 14   |         | $BC00         | $BDFF         |
-| 15   |         | $BE00         | $BFFF         |
+| Address | Register name           | Description                                                                                                                 |
+| ------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| $0000   | Control                 | Uset to control the overall operation of the graphics unit                                                                  |
+| $0001   | Y-Offset                | Global screen offset for render, bit 6 controls positive or negative offset, bit 7 is ignored                               |
+| $0002   | X-Offset                | Global screen offset for render, bit 6 controls positive or negative offset, bit 7 is ignored                               |
+| $0003   | Increment               | After a memory operation using the Read/Write register the address will increment/decrement (control by bit 7) by this much |
+| $0004   | Internal address (Low)  | When doing memory access this is the LOW part of the 16 bit address                                                         |
+| $0005   | Internal address (High) | When doing memory access this is the HIGH part of the 16 bit address                                                        |
+| $0006   | Read/Write              | Performing a write to the is register will write that value to the memory address of ($0004)                                | ($0005). Performing a read will instead return the value at that location |
 
 # Screen
 
-The framebuffer, tilemap and color attributes are stored in seperate RAM. It shares address space with ROM however since writing to the ROM is a no-op this action is repurposed to write to screen RAM. Note that that does make the Screen RAM write-only!
-
-To access information about Screen stuff the IO space is used.
+The framebuffer, tilemap and color attributes are stored in seperate RAM. Writes and reads from this area is done using the registers described above
 
 ## Screen RAM Map (Character mode)
 

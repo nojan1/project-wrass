@@ -34,7 +34,7 @@ void setup() {
 void loop() {
   if(digitalRead(AUTO_CLOCK) == 1){
     emitPulse();
-    delay(200);             
+    delay(50);             
   }else if(digitalRead(SINGLE_STEP_CLOCK) == 1){
       emitPulse();
       delay(300);  
@@ -43,9 +43,8 @@ void loop() {
 
 void emitPulse(){
   digitalWrite(CLOCK_OUT, HIGH);   
-  //delay(10);                      
+  delay(1);                      
   digitalWrite(CLOCK_OUT, LOW);   
-  delay(10);
 
   readBuses();
 }
