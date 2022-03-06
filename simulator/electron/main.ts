@@ -2,6 +2,10 @@ import Debugger from '6502.ts/lib/machine/Debugger'
 import { app, BrowserWindow, ipcMain, WebContents } from 'electron'
 import { My6502ProjectBoard } from './cpu'
 
+import fs from 'fs'
+const yargs = require('yargs')
+const { hideBin } = require('yargs/helpers')
+
 let mainWindow: BrowserWindow | null
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
@@ -33,17 +37,63 @@ function createWindow() {
   })
 }
 
-const createDebugger = () => {
-  const board = new My6502ProjectBoard()
+const loadMemoryFromFile = async (path: string) => {
+  return new Promise<Buffer>((resolve, reject) => {
+    fs.readFile(
+      path,
+      {
+        encoding: null,
+      },
+      (err, data) => {
+        if (err) reject(err)
+        else {
+          resolve(data)
+        }
+      }
+    )
+  })
+}
+
+const createDebugger = async () => {
+  const options = yargs(hideBin(process.argv))
+    .option('file', {
+      alias: 'f',
+      type: 'string',
+      description:
+        'The path to the binary file that should be loaded in to memory',
+    })
+    .option('load-address', {
+      type: 'number',
+      default: 0x8000,
+      description:
+        'The start address to where the binary should be stored in memory',
+    })
+    .option('breakpoint', {
+      alias: 'b',
+      type: 'number',
+      array: true,
+      description: 'Set breakpoint on address provded',
+    }).argv
+
+  const data: Buffer | null = options.file
+    ? await loadMemoryFromFile(options.file)
+    : null
+
+  const board = new My6502ProjectBoard(data, options.loadAddress)
+
   board.boot()
   const myDebugger = new Debugger()
   myDebugger.attach(board)
   myDebugger.setBreakpointsEnabled(true)
 
+  options.breakpoint?.forEach((address: number, i: number) => {
+    myDebugger.setBreakpoint(address, `Breakpoint from cli #${i}`)
+  })
+
   return myDebugger
 }
 
-async function registerListeners() {
+async function registerListeners(debuggerInstance: Debugger) {
   const sendUpdates = (sender: WebContents) => {
     sender.send('cpu-state-update', debuggerInstance.getBoard().getCpu().state)
     sender.send('dissassembly-state-update', debuggerInstance.disassemble(15))
@@ -96,11 +146,10 @@ async function registerListeners() {
   })
 }
 
-const debuggerInstance = createDebugger()
-
 app
   .on('ready', createWindow)
   .whenReady()
+  .then(createDebugger)
   .then(registerListeners)
   .catch(e => console.error(e))
 

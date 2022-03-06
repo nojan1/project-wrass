@@ -24,16 +24,37 @@ const program = [
 ]
 
 export class My6502ProjectBoard extends VanillaBoard {
+  constructor(
+    private loadData: Buffer | null = null,
+    private loadAdress: number = 0x020,
+    private entryAddress: number = 0x8000
+  ) {
+    super()
+
+    this._bus = this._createBus()
+  }
+
   protected override _createBus(): VanillaMemory {
     const ram = new My6502ProjectMemory()
-    const offset = 0x0200
 
-    for (let i = 0; i < program.length; i++) {
-      ram.poke(offset + i, program[i])
+    if (this.loadData) {
+      for (let i = 0; i < this.loadData.length; i++) {
+        ram.poke(this.loadAdress + i, this.loadData[i])
+      }
+
+      ram.poke(0xfffc, this.entryAddress & 0xff)
+      ram.poke(0xfffd, (this.entryAddress >> 8) & 0xff)
+    } else {
+      // Debug usage only!!!
+      const offset = 0x0200
+
+      for (let i = 0; i < program.length; i++) {
+        ram.poke(offset + i, program[i])
+      }
+
+      ram.poke(0xfffc, 0x00)
+      ram.poke(0xfffd, 0x02)
     }
-
-    ram.poke(0xfffc, 0x00)
-    ram.poke(0xfffd, 0x02)
 
     return ram
   }
