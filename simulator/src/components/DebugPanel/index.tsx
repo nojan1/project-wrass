@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { useDebuggerRunning } from '../../hooks'
 import { PanelBackground } from '../../styles'
+import GroupBox from '../GroupBox'
 import CpuState from './CpuState'
 import Dissasembly from './Dissasembly'
 import StackDump from './StackDump'
@@ -30,9 +31,15 @@ const DebugPanel: React.FunctionComponent = () => {
         Step
       </button>
       <InfoSection $inactive={debuggerRunning ?? false}>
-        <CpuState />
-        <Dissasembly />
-        <StackDump />
+        <GroupBox title="State">
+          <CpuState />
+        </GroupBox>
+        <GroupBox title="Disassembly">
+          <Dissasembly />
+        </GroupBox>
+        <GroupBox title="Stack" scroll={true}>
+          <StackDump />
+        </GroupBox>
       </InfoSection>
     </PanelOuterContainer>
   )

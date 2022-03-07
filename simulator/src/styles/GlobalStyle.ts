@@ -8,11 +8,10 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
     background-color: black;
     color: white;
-    font-family: 'VT323', arial;
+    font-family: 'VT323', monospace;
   }
 
   @font-face {
