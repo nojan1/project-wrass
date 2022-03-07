@@ -1,6 +1,8 @@
 import fs from 'fs'
 
 export const loadMemoryFromFile = async (path: string) => {
+  console.log(`Loading data from ${path}`)
+
   return new Promise<Buffer>((resolve, reject) => {
     fs.readFile(
       path,

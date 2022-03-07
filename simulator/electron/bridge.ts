@@ -1,6 +1,8 @@
 import { contextBridge, ipcRenderer } from 'electron'
 
 contextBridge.exposeInMainWorld('Main', {
+  disassembleAt: (address: number, length = 10) =>
+    ipcRenderer.invoke('disassemble-at', address, length),
   stepDebugger: () => ipcRenderer.invoke('step-debugger'),
   addBreakpoint: (address: number, description?: string) => {
     ipcRenderer.send('add-breakpoint', address, description)

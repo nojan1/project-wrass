@@ -1,8 +1,8 @@
 import React from 'react'
-import { useLastTrap } from '../hooks'
+import { useMachineContext } from '../context/machine'
 
 const LastTrap: React.FunctionComponent = () => {
-  const lastTrap = useLastTrap()
+  const { lastTrap } = useMachineContext()
 
   if (!lastTrap) return null
 

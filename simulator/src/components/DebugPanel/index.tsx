@@ -1,16 +1,19 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useDebuggerRunning } from '../../hooks'
+import { useMachineContext } from '../../context/machine'
 import { PanelBackground } from '../../styles'
 import GroupBox from '../GroupBox'
 import CpuState from './CpuState'
 import Dissasembly from './Dissasembly'
 import StackDump from './StackDump'
+import Toolbar from './Toolbar'
 
 const PanelOuterContainer = styled.div`
   padding: 10px;
   background-color: ${PanelBackground};
   flex-basis: 30%;
+  display: flex;
+  flex-direction: column;
 `
 
 const InfoSection = styled.div<{ $inactive: boolean }>`
@@ -23,13 +26,11 @@ user-select: none;
 `
 
 const DebugPanel: React.FunctionComponent = () => {
-  const debuggerRunning = useDebuggerRunning()
+  const { debuggerRunning } = useMachineContext()
 
   return (
     <PanelOuterContainer>
-      <button type="button" onClick={() => window.Main.stepDebugger()}>
-        Step
-      </button>
+      <Toolbar />
       <InfoSection $inactive={debuggerRunning ?? false}>
         <GroupBox title="State">
           <CpuState />

@@ -1,8 +1,8 @@
 import React from 'react'
-import { useStackDump } from '../../hooks'
+import { useMachineContext } from '../../context/machine'
 
 const StackDump: React.FunctionComponent = () => {
-  const stackDump = useStackDump()
+  const { stackDump } = useMachineContext()
 
   if (!stackDump) return null
 

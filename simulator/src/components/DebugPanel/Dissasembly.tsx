@@ -1,12 +1,12 @@
 import React from 'react'
-import { useDissasembly } from '../../hooks'
+import { useMachineContext } from '../../context/machine'
 
 const Dissasembly: React.FunctionComponent = () => {
-  const dissasembly = useDissasembly()
+  const { disassembly } = useMachineContext()
 
-  if (!dissasembly) return null
+  if (!disassembly) return null
 
-  return <pre>{dissasembly}</pre>
+  return <pre>{disassembly}</pre>
 }
 
 export default Dissasembly

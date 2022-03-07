@@ -1,5 +1,6 @@
 import Debugger from '6502.ts/lib/machine/Debugger'
-import { My6502ProjectBoard } from './board'
+import { toHex } from '../utils/output'
+import { createBoard } from './board'
 import { SystemBus } from './systemBus'
 
 const setMemory = (
@@ -8,12 +9,22 @@ const setMemory = (
   loadAddress: number,
   entryAddress: number
 ) => {
+  console.log(
+    `Loading ${toHex(data.length)} bytes from $${toHex(
+      loadAddress
+    )} to $${toHex(loadAddress + data.length - 1)}`
+  )
+
   for (let i = 0; i < data.length; i++) {
     bus.poke(loadAddress + i, data[i])
   }
 
-  bus.poke(0xfffc, entryAddress & 0xff)
-  bus.poke(0xfffd, (entryAddress >> 8) & 0xff)
+  if (loadAddress + data.length < 0xfffc) {
+    console.log(`Setting RESV to $${toHex(entryAddress)}`)
+
+    bus.poke(0xfffc, entryAddress & 0xff)
+    bus.poke(0xfffd, (entryAddress >> 8) & 0xff)
+  }
 }
 
 export const initBoard = (
@@ -24,7 +35,7 @@ export const initBoard = (
   const bus = new SystemBus()
   if (loadData) setMemory(bus, loadData, loadAdress, entryAddress)
 
-  const board = new My6502ProjectBoard(bus)
+  const board = createBoard(bus)
   board.boot()
 
   const myDebugger = new Debugger()

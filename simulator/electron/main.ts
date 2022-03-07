@@ -100,6 +100,10 @@ async function registerListeners(debuggerInstance: Debugger) {
     )
   }
 
+  ipcMain.handle('disassemble-at', (_, address, length) =>
+    debuggerInstance.disassembleAt(address, length)
+  )
+
   ipcMain.on('add-breakpoint', (_, address, description = '') => {
     debuggerInstance.setBreakpoint(address, description)
   })

@@ -1,6 +1,4 @@
-    .org $8000
-        ; unusable space on ROM, used by IO space
-    .org $8100
+    .org $C000
 
     .include "include/constants.s"
     .include "include/io.s"
