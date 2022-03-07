@@ -4,7 +4,6 @@ import { useDebuggerRunning } from '../../hooks'
 import { PanelBackground } from '../../styles'
 import CpuState from './CpuState'
 import Dissasembly from './Dissasembly'
-import LastTrap from './LastTrap'
 import StackDump from './StackDump'
 
 const PanelOuterContainer = styled.div`
@@ -34,7 +33,6 @@ const DebugPanel: React.FunctionComponent = () => {
         <CpuState />
         <Dissasembly />
         <StackDump />
-        <LastTrap />
       </InfoSection>
     </PanelOuterContainer>
   )

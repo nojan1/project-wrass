@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLastTrap } from '../../hooks'
+import { useLastTrap } from '../hooks'
 
 const LastTrap: React.FunctionComponent = () => {
   const lastTrap = useLastTrap()

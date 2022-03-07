@@ -1,8 +1,9 @@
 import Debugger from '6502.ts/lib/machine/Debugger'
 import { app, BrowserWindow, ipcMain, WebContents } from 'electron'
-import { My6502ProjectBoard } from './cpu'
+import { getTestProgramBuffer } from './data/program'
+import { initBoard } from './machine'
+import { loadMemoryFromFile } from './utils/memoryFile'
 
-import fs from 'fs'
 const yargs = require('yargs')
 const { hideBin } = require('yargs/helpers')
 
@@ -37,23 +38,6 @@ function createWindow() {
   })
 }
 
-const loadMemoryFromFile = async (path: string) => {
-  return new Promise<Buffer>((resolve, reject) => {
-    fs.readFile(
-      path,
-      {
-        encoding: null,
-      },
-      (err, data) => {
-        if (err) reject(err)
-        else {
-          resolve(data)
-        }
-      }
-    )
-  })
-}
-
 const createDebugger = async () => {
   const options = yargs(hideBin(process.argv))
     .option('file', {
@@ -63,6 +47,12 @@ const createDebugger = async () => {
         'The path to the binary file that should be loaded in to memory',
     })
     .option('load-address', {
+      type: 'number',
+      default: 0x0,
+      description:
+        'The start address to where the binary should be stored in memory',
+    })
+    .option('reset-address', {
       type: 'number',
       default: 0x8000,
       description:
@@ -77,14 +67,13 @@ const createDebugger = async () => {
 
   const data: Buffer | null = options.file
     ? await loadMemoryFromFile(options.file)
-    : null
+    : getTestProgramBuffer()
 
-  const board = new My6502ProjectBoard(data, options.loadAddress)
-
-  board.boot()
-  const myDebugger = new Debugger()
-  myDebugger.attach(board)
-  myDebugger.setBreakpointsEnabled(true)
+  const { myDebugger } = initBoard(
+    data,
+    options.loadAddress,
+    options.resetAddress
+  )
 
   options.breakpoint?.forEach((address: number, i: number) => {
     myDebugger.setBreakpoint(address, `Breakpoint from cli #${i}`)
@@ -129,7 +118,7 @@ async function registerListeners(debuggerInstance: Debugger) {
     event.sender.send('debugger-running', false)
   })
 
-  ipcMain.handle('run', event => {
+  ipcMain.on('run', event => {
     event.sender.send('debugger-running', true)
     event.sender.send('last-trap-update', undefined)
 

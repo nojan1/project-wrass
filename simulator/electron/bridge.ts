@@ -10,13 +10,14 @@ contextBridge.exposeInMainWorld('Main', {
     ipcRenderer.send('remove-breakpoint', address)
   },
 
-  run: () => ipcRenderer.invoke('run'),
+  run: () => {
+    ipcRenderer.send('run')
+  },
 
   /**
    * Provide an easier way to listen to events
    */
   on: (channel: string, callback: Function) => {
-    console.log('got registration for ' + channel)
     ipcRenderer.on(channel, (_, data) => callback(data))
   },
 })
