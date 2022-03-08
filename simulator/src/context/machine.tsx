@@ -38,7 +38,6 @@ export const MachineContextProvider: React.FunctionComponent = ({
       setState(x => ({ ...x, debuggerRunning: data }))
     )
     window.Main.on('cpu-state-update', (data: any) => {
-      console.log(data)
       setState(x => ({ ...x, stateObject: data }))
     })
   }, [window.Main])

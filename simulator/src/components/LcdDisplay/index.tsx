@@ -32,7 +32,7 @@ const Digit = styled.div`
 `
 
 const LcdDisplay: React.FunctionComponent = () => {
-  const [text, setText] = useState('hello')
+  const [text, setText] = useState('')
 
   return (
     <DisplayOuter>

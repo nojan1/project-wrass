@@ -1,3 +1,4 @@
+import BlinkenLights from './components/BlinkenLights'
 import DebugPanel from './components/DebugPanel'
 import LastTrap from './components/LastTrap'
 import Layout from './components/Layout'
@@ -9,7 +10,14 @@ export function App() {
   return (
     <MachineContextProvider>
       <GlobalStyle />
-      <Layout footer={<LastTrap />}>
+      <Layout
+        footer={
+          <>
+            <LastTrap />
+            <BlinkenLights />
+          </>
+        }
+      >
         <OutputPanel />
         <DebugPanel />
       </Layout>

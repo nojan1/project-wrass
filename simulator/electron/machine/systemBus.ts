@@ -1,16 +1,14 @@
 import BusInterface from '6502.ts/lib/machine/bus/BusInterface'
 import Memory from '6502.ts/lib/machine/vanilla/Memory'
-import { IoMultiplexer } from './io'
+import { SendDataCallback } from '.'
 
 export class SystemBus extends Memory {
   private _rom: Memory
-  private _io: BusInterface
 
-  constructor() {
+  constructor(private _sendData: SendDataCallback, private _io: BusInterface) {
     super()
 
     this._rom = new Memory()
-    this._io = new IoMultiplexer()
   }
 
   getSubBusForAddress(address: number): BusInterface | null {
@@ -43,6 +41,10 @@ export class SystemBus extends Memory {
     const subBus = this.getSubBusForAddress(address)
     if (subBus) subBus.write(address, value)
     else super.write(address, value)
+
+    if (address === 0) {
+      this._sendData('blinkenlights-update', (value >> 4) & 0xf)
+    }
   }
 
   poke(address: number, value: number): void {

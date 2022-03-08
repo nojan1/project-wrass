@@ -16,6 +16,10 @@ contextBridge.exposeInMainWorld('Main', {
     ipcRenderer.send('run')
   },
 
+  pause: () => {
+    ipcRenderer.send('pause')
+  },
+
   /**
    * Provide an easier way to listen to events
    */

@@ -16,13 +16,22 @@ const PanelOuterContainer = styled.div`
   flex-direction: column;
 `
 
-const InfoSection = styled.div<{ $inactive: boolean }>`
-  ${props =>
-    props.$inactive
-      ? `
-user-select: none;
+const Wrapper = styled.div`
+  position: relative;
 `
-      : ''}
+
+const InfoSectionOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  background-color: ${PanelBackground};
+  opacity: 0.9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 const DebugPanel: React.FunctionComponent = () => {
@@ -31,7 +40,10 @@ const DebugPanel: React.FunctionComponent = () => {
   return (
     <PanelOuterContainer>
       <Toolbar />
-      <InfoSection $inactive={debuggerRunning ?? false}>
+      <Wrapper>
+        {debuggerRunning && (
+          <InfoSectionOverlay>Debugger running</InfoSectionOverlay>
+        )}
         <GroupBox title="State">
           <CpuState />
         </GroupBox>
@@ -41,7 +53,7 @@ const DebugPanel: React.FunctionComponent = () => {
         <GroupBox title="Stack" scroll={true}>
           <StackDump />
         </GroupBox>
-      </InfoSection>
+      </Wrapper>
     </PanelOuterContainer>
   )
 }

@@ -1,7 +1,8 @@
-import Debugger from '6502.ts/lib/machine/Debugger'
 import { app, BrowserWindow, ipcMain, WebContents } from 'electron'
 import { getTestProgramBuffer } from './data/program'
 import { initBoard } from './machine'
+import { MyDebugger } from './machine/myDebugger'
+import { deferWork } from './utils/deferWork'
 import { loadMemoryFromFile } from './utils/memoryFile'
 
 const yargs = require('yargs')
@@ -54,7 +55,6 @@ const createDebugger = async () => {
     })
     .option('reset-address', {
       type: 'number',
-      default: 0x8000,
       description:
         'The start address to where the binary should be stored in memory',
     })
@@ -70,9 +70,10 @@ const createDebugger = async () => {
     : getTestProgramBuffer()
 
   const { myDebugger } = initBoard(
+    (channel: string, data: any) => mainWindow?.webContents.send(channel, data),
     data,
     options.loadAddress,
-    options.resetAddress
+    options.resetAddress ?? options.loadAddress
   )
 
   options.breakpoint?.forEach((address: number, i: number) => {
@@ -82,7 +83,7 @@ const createDebugger = async () => {
   return myDebugger
 }
 
-async function registerListeners(debuggerInstance: Debugger) {
+async function registerListeners(debuggerInstance: MyDebugger) {
   const sendUpdates = (sender: WebContents) => {
     sender.send('cpu-state-update', debuggerInstance.getBoard().getCpu().state)
     sender.send('dissassembly-state-update', debuggerInstance.disassemble(15))
@@ -122,12 +123,12 @@ async function registerListeners(debuggerInstance: Debugger) {
     event.sender.send('debugger-running', false)
   })
 
-  ipcMain.on('run', event => {
+  ipcMain.on('run', async event => {
     event.sender.send('debugger-running', true)
     event.sender.send('last-trap-update', undefined)
 
     while (1) {
-      debuggerInstance.step(100)
+      await deferWork(() => debuggerInstance.step(100))
       const lastTrap = debuggerInstance.getLastTrap()
 
       if (lastTrap) {
@@ -136,6 +137,16 @@ async function registerListeners(debuggerInstance: Debugger) {
         return lastTrap
       }
     }
+  })
+
+  ipcMain.on('pause', event => {
+    event.sender.send('debugger-running', true)
+    event.sender.send('last-trap-update', undefined)
+
+    debuggerInstance.injectTrip()
+
+    sendUpdates(event.sender)
+    event.sender.send('debugger-running', false)
   })
 }
 

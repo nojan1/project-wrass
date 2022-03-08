@@ -16,6 +16,10 @@ const ToolbarButton = styled.button`
   border-color: 1px solid white;
   background-color: transparent;
 
+  :disabled {
+    opacity: 0.5;
+  }
+
   svg {
     color: white;
   }
