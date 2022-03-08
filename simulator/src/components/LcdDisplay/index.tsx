@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
+import { useLcdText } from '../../hooks'
 
 const DisplayOuter = styled.div`
   display: flex;
@@ -32,7 +33,7 @@ const Digit = styled.div`
 `
 
 const LcdDisplay: React.FunctionComponent = () => {
-  const [text, setText] = useState('')
+  const text = useLcdText() ?? ''
 
   return (
     <DisplayOuter>

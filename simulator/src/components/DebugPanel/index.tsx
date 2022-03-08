@@ -11,7 +11,7 @@ import Toolbar from './Toolbar'
 const PanelOuterContainer = styled.div`
   padding: 10px;
   background-color: ${PanelBackground};
-  flex-basis: 30%;
+  flex-basis: 35%;
   display: flex;
   flex-direction: column;
 `

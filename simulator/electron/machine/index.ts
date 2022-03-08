@@ -2,6 +2,7 @@ import { toHex } from '../utils/output'
 import { createBoard } from './board'
 import { IoMultiplexer } from './io'
 import { IoCard } from './ioCard'
+import { LcdController } from './lcdController'
 import { MyDebugger } from './myDebugger'
 import { SystemBus } from './systemBus'
 import { VIA } from './via'
@@ -39,6 +40,7 @@ export const initBoard = (
   entryAddress: number = 0x8000
 ) => {
   const via1 = new VIA()
+  via1.registerCallbackHandler(new LcdController(sendData))
 
   const io = new IoMultiplexer({
     0: new IoCard(via1),

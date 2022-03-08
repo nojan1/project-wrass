@@ -1,4 +1,4 @@
-  .org $8000
+  .org $C000
 
 reset:
   ldx #$ff

@@ -143,7 +143,7 @@ async function registerListeners(debuggerInstance: MyDebugger) {
     event.sender.send('debugger-running', true)
     event.sender.send('last-trap-update', undefined)
 
-    debuggerInstance.injectTrip()
+    debuggerInstance.injectTrap()
 
     sendUpdates(event.sender)
     event.sender.send('debugger-running', false)
