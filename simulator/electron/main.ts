@@ -3,12 +3,15 @@ import { getTestProgramBuffer } from './data/program'
 import { initBoard } from './machine'
 import { MyDebugger } from './machine/myDebugger'
 import { deferWork } from './utils/deferWork'
+import { parseListing, SymbolListing } from './utils/listingParser'
 import { loadMemoryFromFile } from './utils/memoryFile'
+import { annotateDisassembly, toHex } from './utils/output'
 
 const yargs = require('yargs')
 const { hideBin } = require('yargs/helpers')
 
 let mainWindow: BrowserWindow | null
+let symbols: SymbolListing | null
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -47,6 +50,12 @@ const createDebugger = async () => {
       description:
         'The path to the binary file that should be loaded in to memory',
     })
+    .option('listing', {
+      alias: 'l',
+      type: 'string',
+      description:
+        'The path to a listing file for the binary, it will be used to decorate disassembly and set breakpoints',
+    })
     .option('load-address', {
       type: 'number',
       default: 0x0,
@@ -69,6 +78,8 @@ const createDebugger = async () => {
     ? await loadMemoryFromFile(options.file)
     : getTestProgramBuffer()
 
+  symbols = options.listing ? await parseListing(options.listing) : null
+
   const { myDebugger } = initBoard(
     (channel: string, data: any) => mainWindow?.webContents.send(channel, data),
     data,
@@ -80,13 +91,23 @@ const createDebugger = async () => {
     myDebugger.setBreakpoint(address, `Breakpoint from cli #${i}`)
   })
 
+  symbols?.breakpoints.forEach(([address, name]) => {
+    console.log(`Setting breakpoint from listing. ${name} => ${toHex(address)}`)
+    myDebugger.setBreakpoint(address, `Breakpoint from listing: ${name}`)
+  })
+
   return myDebugger
 }
 
 async function registerListeners(debuggerInstance: MyDebugger) {
   const sendUpdates = (sender: WebContents) => {
+    const disassembly = debuggerInstance.disassemble(15)
+    sender.send(
+      'dissassembly-state-update',
+      symbols ? annotateDisassembly(disassembly, symbols) : disassembly
+    )
+
     sender.send('cpu-state-update', debuggerInstance.getBoard().getCpu().state)
-    sender.send('dissassembly-state-update', debuggerInstance.disassemble(15))
     sender.send('stack-dump-update', debuggerInstance.dumpStack())
 
     const trap = debuggerInstance.getLastTrap()

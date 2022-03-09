@@ -20,6 +20,7 @@ reset:
 
   ldx #0
 print:
+break_print_next_character:
   lda message,x
   beq loop
   jsr print_char

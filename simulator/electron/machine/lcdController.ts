@@ -1,5 +1,4 @@
 import { SendDataCallback } from '.'
-import { toHex } from '../utils/output'
 import { ViaCallbackHandler } from './via'
 
 export class LcdController implements ViaCallbackHandler {
@@ -21,12 +20,12 @@ export class LcdController implements ViaCallbackHandler {
     this._rs = (value & 0x20) >> 5
 
     if (this._e === 1 && this._last_e === 0) {
-      console.log('E toggled, about to handle command')
-      console.log(
-        `e: ${this._e} rw: ${this._rw} rs: ${this._rs} data: ${toHex(
-          this._data
-        )}`
-      )
+      //   console.log('E toggled, about to handle command')
+      //   console.log(
+      //     `e: ${this._e} rw: ${this._rw} rs: ${this._rs} data: ${toHex(
+      //       this._data
+      //     )}`
+      //   )
       this._handleCommand()
     }
 
