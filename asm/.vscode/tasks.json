@@ -6,7 +6,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "vasm6502_oldstyle -wdc02 -dotdir -Fbin -L kernel/kernel.list kernel/kernel.s",
+            "command": "vasm6502_oldstyle -wdc02 -dotdir -Fbin -L kernel/kernel.list -o kernel/kernel.bin kernel/kernel.s",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -24,7 +24,7 @@
         {
             "label": "Run in simulator",
             "type": "shell",
-            "command": "cd ../simulator && python3 __init__.py --load '../kernel/asm/a.out top'",
+            "command": "../simulator/out/6502\\ project\\ simulator-darwin-arm64/6502\\ project\\ simulator.app/Contents/MacOS/6502-project-simulator -f kernel/kernel.bin -l kernel/kernel.list --loadAddress 0xC000",
             "dependsOn": "Build",
             "problemMatcher": []
         },

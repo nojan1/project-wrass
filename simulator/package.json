@@ -1,8 +1,8 @@
 {
-  "name": "electron-react-typescript",
-  "author": "Diego Fernandes <diego.schell.f@gmail.com>",
-  "version": "2.0.0",
-  "description": "An Electron boilerplate including TypeScript, React, Jest and ESLint.",
+  "name": "6502-project-simulator",
+  "author": "Niklas Hedlund",
+  "version": "1.0.0",
+  "description": "Simulator to simulate and develop custom 6502 computer",
   "main": "./.webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -68,8 +68,8 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "name": "Electron starter",
-        "executableName": "electron-starter",
+        "name": "6502 project simulator",
+        "executableName": "6502-project-simulator",
         "icon": "assets/icon",
         "extraResource": [
           "assets"
