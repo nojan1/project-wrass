@@ -2,6 +2,7 @@ import { toHex } from '../utils/output'
 import { createBoard } from './board'
 import { IoMultiplexer } from './io'
 import { IoCard } from './ioCard'
+import { KeyboardController } from './keyboardController'
 import { LcdController } from './lcdController'
 import { MyDebugger } from './myDebugger'
 import { SystemBus } from './systemBus'
@@ -42,8 +43,12 @@ export const initBoard = (
   const via1 = new VIA()
   via1.registerCallbackHandler(new LcdController(sendData))
 
+  const via2 = new VIA()
+  const keyboardController = new KeyboardController()
+  via2.registerCallbackHandler(keyboardController)
+
   const io = new IoMultiplexer({
-    0: new IoCard(via1),
+    0: new IoCard(via1, via2),
   })
 
   const bus = new SystemBus(sendData, io)
@@ -55,6 +60,8 @@ export const initBoard = (
   const myDebugger = new MyDebugger()
   myDebugger.attach(board)
   myDebugger.setBreakpointsEnabled(true)
+
+  keyboardController.attachCpu(board.getCpu())
 
   return {
     board,

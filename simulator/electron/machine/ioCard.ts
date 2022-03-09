@@ -3,7 +3,7 @@ import { MultiplexingBus } from './multiplexingBus'
 import { VIA } from './via'
 
 export class IoCard extends MultiplexingBus {
-  constructor(private _via1: VIA, private _via2 = new VIA()) {
+  constructor(private _via1: VIA, private _via2: VIA) {
     super()
   }
 

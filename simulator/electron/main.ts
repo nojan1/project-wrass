@@ -34,7 +34,8 @@ function createWindow() {
     },
   })
 
-  mainWindow.webContents.openDevTools()
+  if (!app.isPackaged) mainWindow.webContents.openDevTools()
+
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
 
   mainWindow.on('closed', () => {
