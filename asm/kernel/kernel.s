@@ -6,7 +6,18 @@
     .include "include/monitor.s"
 
 irq:
-    nop
+    ; Keyboard interupt, we will assume this is the only thing that can trigger and interupt atm...
+    pha
+    txa
+    pha
+        lda IO_VIA2_PORTA
+        ldx WRITE_POINTER
+        sta INPUT_BUFFER, x
+        inc WRITE_POINTER
+    pla
+    tax
+    pla
+
     rti
 
 nmi:
@@ -24,9 +35,9 @@ reset:
 
     ; LCD SETUP
     lda #%11111111 ; Set all pins on port B to output
-    sta DDRB
+    sta LCD_DDRB
     lda #%11100000 ; Set top 3 pins on port A to output
-    sta DDRA
+    sta LCD_DDRA
 
     lda #%00111000 ; Set 8-bit mode; 2-line display; 5x8 font
     jsr lcd_instruction
@@ -37,6 +48,10 @@ reset:
     lda #$00000001 ; Clear display
     jsr lcd_instruction
     ;;;;
+
+    ; KEYBOARD INTERFACE SETUP
+    lda #0
+    sta IO_VIA2_DDRA ; All pins are input
 
     jsr monitor_loop
 

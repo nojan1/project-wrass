@@ -3,20 +3,22 @@
 ; The character will be placed in A
 ; If no character is available A will be set to 0
 getc:
+    sei
     phx
-    ldx READ_POINTER
-    cpx WRITE_POINTER
-    bcc _getc_character_available ;Is the read pointer behind the write pointer?
+    lda READ_POINTER
+    cmp WRITE_POINTER
+    bne _getc_character_available ;Is the read pointer behind the write pointer?
     lda #$0
     jmp _getc_return
 
 _getc_character_available:
+    ldx READ_POINTER
     lda INPUT_BUFFER, x
-    inx
-    stx WRITE_POINTER
+    inc READ_POINTER
 
 _getc_return:
     plx
+    cli
     rts
 
 ; Put character from A into output

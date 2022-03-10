@@ -40,15 +40,16 @@ export const initBoard = (
   loadAdress: number = 0x020,
   entryAddress: number = 0x8000
 ) => {
-  const via1 = new VIA()
-  via1.registerCallbackHandler(new LcdController(sendData))
+  const lcdVia1 = new VIA()
+  lcdVia1.registerCallbackHandler(new LcdController(sendData))
 
   const via2 = new VIA()
   const keyboardController = new KeyboardController()
   via2.registerCallbackHandler(keyboardController)
 
   const io = new IoMultiplexer({
-    0: new IoCard(via1, via2),
+    0: new IoCard(new VIA(), via2),
+    1: lcdVia1,
   })
 
   const bus = new SystemBus(sendData, io)

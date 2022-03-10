@@ -1,18 +1,19 @@
 import CpuInterface from '6502.ts/lib/machine/cpu/CpuInterface'
 import { ipcMain } from 'electron'
+import { deferWork } from '../utils/deferWork'
 import { Scancodes } from './scancodes'
 import { ViaCallbackHandler } from './via'
 
 export class KeyboardController implements ViaCallbackHandler {
   private _cpu: CpuInterface | null = null
-  private _pendingData: number | null = null
+  private _pendingData: number[] = []
 
   constructor() {
     ipcMain.on('keydown', (_, code: string) => {
       const scancode = Scancodes[code]
       if (!scancode) return
 
-      this._pendingData = scancode
+      this._pendingData = [scancode]
       this._cpu?.setInterrupt(true)
     })
 
@@ -20,7 +21,7 @@ export class KeyboardController implements ViaCallbackHandler {
       const scancode = Scancodes[code]
       if (!scancode) return
 
-      this._pendingData = scancode
+      this._pendingData = [0xf0, scancode]
       this._cpu?.setInterrupt(true)
     })
   }
@@ -30,14 +31,15 @@ export class KeyboardController implements ViaCallbackHandler {
   }
 
   portARead(): number | null {
-    if (this._pendingData) {
-      const dataToReturn = this._pendingData
-      this._pendingData = null
+    this._cpu?.setInterrupt(false)
 
-      return dataToReturn
+    const data = this._pendingData.pop() ?? null
+
+    if (this._pendingData.length > 0) {
+      deferWork(() => this._cpu?.setInterrupt(true))
     }
 
-    return null
+    return data
   }
 
   portAWrite(value: number): void {}
