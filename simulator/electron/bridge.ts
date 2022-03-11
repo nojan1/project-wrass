@@ -30,6 +30,10 @@ contextBridge.exposeInMainWorld('Main', {
     ipcRenderer.send('keyup', code)
   },
 
+  updateRequest: () => {
+    ipcRenderer.send('update-request')
+  },
+
   /**
    * Provide an easier way to listen to events
    */

@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useMachineContext } from '../../context/machine'
 import { PanelBackground } from '../../styles'
 import GroupBox from '../GroupBox'
+import MemoryExplorer from '../MemoryExplorer'
 import CpuState from './CpuState'
 import Dissasembly from './Dissasembly'
 import StackDump from './StackDump'
@@ -35,11 +36,22 @@ const InfoSectionOverlay = styled.div`
 `
 
 const DebugPanel: React.FunctionComponent = () => {
-  const { debuggerRunning } = useMachineContext()
+  const { debuggerRunning, stateObject } = useMachineContext()
+  const [selectedMemoryAddress, setSelectedMemoryAddress] =
+    useState<{ value: number }>()
 
   return (
     <PanelOuterContainer>
-      <Toolbar />
+      <Toolbar
+        onOpenMemoryExplorer={() =>
+          setSelectedMemoryAddress(
+            selectedMemoryAddress
+              ? { ...selectedMemoryAddress }
+              : { value: stateObject?.p ?? 0 }
+          )
+        }
+      />
+      <MemoryExplorer selectedAddress={selectedMemoryAddress} />
       <Wrapper>
         {debuggerRunning && (
           <InfoSectionOverlay>Debugger running</InfoSectionOverlay>

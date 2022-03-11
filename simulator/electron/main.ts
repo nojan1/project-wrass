@@ -1,7 +1,6 @@
 import { app, BrowserWindow, ipcMain, WebContents } from 'electron'
 import { getTestProgramBuffer } from './data/program'
-import { initBoard } from './machine'
-import { MyDebugger } from './machine/myDebugger'
+import { BoardInitContext, initBoard } from './machine'
 import { deferWork } from './utils/deferWork'
 import { parseListing, SymbolListing } from './utils/listingParser'
 import { loadMemoryFromFile } from './utils/memoryFile'
@@ -81,7 +80,7 @@ const createDebugger = async () => {
 
   symbols = options.listing ? await parseListing(options.listing) : null
 
-  const { myDebugger } = initBoard(
+  const boardContext = initBoard(
     (channel: string, data: any) => mainWindow?.webContents.send(channel, data),
     data,
     options.loadAddress,
@@ -89,29 +88,32 @@ const createDebugger = async () => {
   )
 
   options.breakpoint?.forEach((address: number, i: number) => {
-    myDebugger.setBreakpoint(address, `Breakpoint from cli #${i}`)
+    boardContext.myDebugger.setBreakpoint(address, `Breakpoint from cli #${i}`)
   })
 
   symbols?.breakpoints.forEach(([address, name]) => {
     console.log(`Setting breakpoint from listing. ${name} => ${toHex(address)}`)
-    myDebugger.setBreakpoint(address, `Breakpoint from listing: ${name}`)
+    boardContext.myDebugger.setBreakpoint(
+      address,
+      `Breakpoint from listing: ${name}`
+    )
   })
 
-  return myDebugger
+  return boardContext
 }
 
-async function registerListeners(debuggerInstance: MyDebugger) {
+async function registerListeners({ myDebugger, bus }: BoardInitContext) {
   const sendUpdates = (sender: WebContents) => {
-    const disassembly = debuggerInstance.disassemble(15)
+    const disassembly = myDebugger.disassemble(15)
     sender.send(
       'dissassembly-state-update',
       symbols ? annotateDisassembly(disassembly, symbols) : disassembly
     )
 
-    sender.send('cpu-state-update', debuggerInstance.getBoard().getCpu().state)
-    sender.send('stack-dump-update', debuggerInstance.dumpStack())
+    sender.send('cpu-state-update', myDebugger.getBoard().getCpu().state)
+    sender.send('stack-dump-update', myDebugger.dumpStack())
 
-    const trap = debuggerInstance.getLastTrap()
+    const trap = myDebugger.getLastTrap()
     sender.send(
       'last-trap-update',
       trap
@@ -121,25 +123,27 @@ async function registerListeners(debuggerInstance: MyDebugger) {
           }
         : undefined
     )
+
+    sender.send('memory-dump', bus.dumpMemory())
   }
 
   ipcMain.handle('disassemble-at', (_, address, length) =>
-    debuggerInstance.disassembleAt(address, length)
+    myDebugger.disassembleAt(address, length)
   )
 
   ipcMain.on('add-breakpoint', (_, address, description = '') => {
-    debuggerInstance.setBreakpoint(address, description)
+    myDebugger.setBreakpoint(address, description)
   })
 
   ipcMain.on('remove-breakpoint', (_, address) => {
-    debuggerInstance.clearBreakpoint(address)
+    myDebugger.clearBreakpoint(address)
   })
 
   ipcMain.handle('step-debugger', event => {
     event.sender.send('debugger-running', true)
     event.sender.send('last-trap-update', undefined)
 
-    debuggerInstance.step(1)
+    myDebugger.step(1)
 
     sendUpdates(event.sender)
     event.sender.send('debugger-running', false)
@@ -150,8 +154,8 @@ async function registerListeners(debuggerInstance: MyDebugger) {
     event.sender.send('last-trap-update', undefined)
 
     while (1) {
-      await deferWork(() => debuggerInstance.step(100))
-      const lastTrap = debuggerInstance.getLastTrap()
+      await deferWork(() => myDebugger.step(100))
+      const lastTrap = myDebugger.getLastTrap()
 
       if (lastTrap) {
         sendUpdates(event.sender)
@@ -165,10 +169,14 @@ async function registerListeners(debuggerInstance: MyDebugger) {
     event.sender.send('debugger-running', true)
     event.sender.send('last-trap-update', undefined)
 
-    debuggerInstance.injectTrap()
+    myDebugger.injectTrap()
 
     sendUpdates(event.sender)
     event.sender.send('debugger-running', false)
+  })
+
+  ipcMain.on('update-request', event => {
+    sendUpdates(event.sender)
   })
 }
 

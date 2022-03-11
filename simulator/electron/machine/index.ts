@@ -1,3 +1,4 @@
+import BoardInterface from '6502.ts/lib/machine/board/BoardInterface'
 import { toHex } from '../utils/output'
 import { createBoard } from './board'
 import { IoMultiplexer } from './io'
@@ -34,12 +35,18 @@ const setMemory = (
   }
 }
 
+export interface BoardInitContext {
+  board: BoardInterface
+  myDebugger: MyDebugger
+  bus: SystemBus
+}
+
 export const initBoard = (
   sendData: SendDataCallback,
   loadData: Buffer | null = null,
   loadAdress: number = 0x020,
   entryAddress: number = 0x8000
-) => {
+): BoardInitContext => {
   const lcdVia1 = new VIA()
   lcdVia1.registerCallbackHandler(new LcdController(sendData))
 
@@ -67,5 +74,6 @@ export const initBoard = (
   return {
     board,
     myDebugger,
+    bus,
   }
 }

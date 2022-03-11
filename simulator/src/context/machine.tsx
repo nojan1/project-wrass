@@ -13,6 +13,7 @@ export interface IMachineContext {
   stackDump?: string
   lastTrap?: SimplifiedTrap
   debuggerRunning?: boolean
+  memoryDump?: Uint8Array
 }
 
 const MachineContext = createContext<IMachineContext>({})
@@ -40,6 +41,11 @@ export const MachineContextProvider: React.FunctionComponent = ({
     window.Main.on('cpu-state-update', (data: any) => {
       setState(x => ({ ...x, stateObject: data }))
     })
+    window.Main.on('memory-dump', (data: any) => {
+      setState(x => ({ ...x, memoryDump: data }))
+    })
+
+    window.Main.updateRequest()
   }, [window.Main])
 
   return (

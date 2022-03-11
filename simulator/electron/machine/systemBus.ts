@@ -52,4 +52,13 @@ export class SystemBus extends Memory {
     if (subBus) subBus.poke(address, value)
     else super.poke(address, value)
   }
+
+  dumpMemory() {
+    const dump = new Uint8ClampedArray(0x10000)
+    for (let i = 0; i < dump.length; i++) {
+      dump[i] = this.peek(i)
+    }
+
+    return dump
+  }
 }

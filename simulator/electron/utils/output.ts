@@ -1,7 +1,10 @@
 import { SymbolListing } from './listingParser'
 
-export const toHex = (value: number, length = 4) =>
-  `$${value.toString(16).toUpperCase().padEnd(length, '0')}`
+export const toHex = (value: number, length = 4, includePrefix = true) =>
+  `${includePrefix ? '$' : ''}${value
+    .toString(16)
+    .toUpperCase()
+    .padEnd(length, '0')}`
 
 export const annotateDisassembly = (
   disassembly: string,
