@@ -23,4 +23,6 @@ _getc_return:
 
 ; Put character from A into output
 putc:
-    jsr print_char ; Temporary, refactor to remove double call
+    pha
+        jsr print_char ; Temporary, refactor to remove double call
+    pla
