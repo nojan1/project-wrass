@@ -1,6 +1,7 @@
 import React from 'react'
 import { useMachineContext } from '../../context/machine'
 import HexDisplay from '../HexDisplay'
+import FlagsDisplay from './FlagsDisplay'
 
 const CpuState: React.FunctionComponent = () => {
   const { stateObject } = useMachineContext()
@@ -9,15 +10,18 @@ const CpuState: React.FunctionComponent = () => {
     <table cellSpacing="10px">
       <tbody>
         <tr>
+          <td colSpan={3}>
+            <FlagsDisplay flags={stateObject?.flags ?? 0} />
+          </td>
+        </tr>
+        <tr>
           <td>
             <b>SP: </b> <HexDisplay value={stateObject?.s} digits={2} />
           </td>
           <td>
             <b>PC: </b> <HexDisplay value={stateObject?.p} />
           </td>
-          <td>
-            <b>FLAGS: </b> <HexDisplay value={stateObject?.flags} digits={2} />
-          </td>
+          <td></td>
         </tr>
         <tr>
           <td>

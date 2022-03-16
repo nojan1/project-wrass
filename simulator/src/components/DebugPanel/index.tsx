@@ -4,6 +4,7 @@ import { useMachineContext } from '../../context/machine'
 import { PanelBackground } from '../../styles'
 import GroupBox from '../GroupBox'
 import MemoryExplorer from '../MemoryExplorer'
+import MemoryWatch from '../MemoryWatch'
 import CpuState from './CpuState'
 import Dissasembly from './Dissasembly'
 import StackDump from './StackDump'
@@ -64,6 +65,9 @@ const DebugPanel: React.FunctionComponent = () => {
         </GroupBox>
         <GroupBox title="Stack" scroll={true}>
           <StackDump />
+        </GroupBox>
+        <GroupBox title="Watches" scroll={true}>
+          <MemoryWatch />
         </GroupBox>
       </Wrapper>
     </PanelOuterContainer>

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { toHex } from '../../../electron/utils/output'
 import { useMachineContext } from '../../context/machine'
-import { BorderColor } from '../../styles'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeGrid as Grid, GridChildComponentProps } from 'react-window'
 import Modal from '../Modal'
+import MemoryAddressInput from './MemoryAddressInput'
 
 const chunkSize = 16
 
@@ -26,26 +26,6 @@ const MemoryContentsContainer = styled.div`
   margin-top: 10px;
   flex-grow: 1;
   user-select: none;
-`
-
-const MemoryAddessInput = styled.div`
-  position: relative;
-
-  span {
-    position: absolute;
-    left: 10px;
-    top: 4px;
-  }
-
-  input {
-    padding: 5px 10px 5px 19px;
-    background-color: transparent;
-    color: white;
-    border-color: ${BorderColor};
-    outline-color: white;
-    outline-width: 0.5px;
-    width: 100%;
-  }
 `
 
 const MemoryExplorer: React.FunctionComponent<MemoryExplorerProps> = ({
@@ -75,14 +55,9 @@ const MemoryExplorer: React.FunctionComponent<MemoryExplorerProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
       <MemoryExplorerContainer>
-        <MemoryAddessInput>
-          <span>$</span>
-          <input
-            defaultValue={toHex(selectedAddress?.value ?? 0, 4, false)}
-            pattern="[0-9a-fA-F]*"
-            onChange={e => handleOnScroll(parseInt(e.target.value, 16))}
-          />
-        </MemoryAddessInput>
+        <MemoryAddressInput
+          onChange={e => handleOnScroll(parseInt(e.target.value, 16))}
+        />
 
         <MemoryContentsContainer>
           <AutoSizer>
