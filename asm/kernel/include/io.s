@@ -26,3 +26,29 @@ putc:
     pha
         jsr print_char ; Temporary, refactor to remove double call
     pla
+    rts
+
+; Put characters from string in STR_PARAM1 into output
+putstr:
+    pha
+    phy 
+    ldy #0
+
+_putstr_loop:
+    lda (STR_PARAM1), y
+    beq _putstr_end
+
+    jsr putc
+
+    iny
+    jmp _putstr_loop
+
+_putstr_end:
+    ply
+    pla
+    rts
+
+; Put newline into output
+newline:
+    ; TODO: Implement
+    rts

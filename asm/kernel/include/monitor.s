@@ -1,5 +1,5 @@
 read_command_string:
-    .string "read"
+    .string "rread"
 
 write_command_string:
     .string "write"
@@ -30,20 +30,20 @@ monitor_loop:
     jsr putc
     
     ldx #0
-monitor_loop_read:
+_monitor_loop_read:
     jsr getc
-    beq monitor_loop_read
+    beq _monitor_loop_read
 
     cmp #$0a ; Was enter pressed?
-    beq monitor_loop_command_entered
+    beq _monitor_loop_command_entered
 
     jsr putc
     sta COMMAND_BUFFER, x
     inx
 
-    jmp monitor_loop_read
+    jmp _monitor_loop_read
 
-monitor_loop_command_entered:
+_monitor_loop_command_entered:
     ldx #0
 
     ; Load command buffer into param 1
@@ -52,24 +52,60 @@ monitor_loop_command_entered:
     lda #>COMMAND_BUFFER
     sta STR_PARAM1 + 1
 
+_monitor_loop_command_entered_next_command:
     ; Load current command into param 2
     lda commands, x
     sta STR_PARAM2
-brk_loaded_lowbyte:
     inx 
     lda commands, x
     sta STR_PARAM2 + 1
-brk_loaded_highbyte:
 
     jsr str_startswith
-brk_return_from_startswith:
+brk_after_startswith:
+    bne _monitor_loop_command_recieved
 
+    ; Go to next command
+    inx
+    inx
+    inx
+
+    cpx #$10 ; Have we checked the last available command?
+    bne _monitor_loop_command_entered_next_command
+
+    jmp _monitor_loop_command_error
+     
+_monitor_loop_command_recieved:
+    ; We have a valid command
+    ; Parse out the parameters eventually
+    inx ; num parameters
+    inx ; firt part of handler address
+
+brk_before_jump:
+    jmp (commands, x)
+
+_command_exuction_complete:
+    jmp monitor_loop
+
+bad_command_string:
+    .string "Bad command"
+
+_monitor_loop_command_error:
+    jsr newline
+
+    lda #<bad_command_string
+    sta STR_PARAM1
+    lda #>bad_command_string
+    sta STR_PARAM1 + 1
+
+    jsr putstr
+    jsr newline
 
     jmp monitor_loop
 
 
-
 read_command_implementation:
+brk_entered_read_command:
+    nop
     rti
 
 write_command_implementation:
