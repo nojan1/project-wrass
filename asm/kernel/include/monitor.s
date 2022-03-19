@@ -44,6 +44,8 @@ _monitor_loop_read:
     jmp _monitor_loop_read
 
 _monitor_loop_command_entered:
+    lda #0
+    sta COMMAND_BUFFER, x ; Put null terminator into command
     ldx #0
 
     ; Load command buffer into param 1
@@ -61,7 +63,6 @@ _monitor_loop_command_entered_next_command:
     sta STR_PARAM2 + 1
 
     jsr str_startswith
-; brk_after_startswith:
     bne _monitor_loop_command_recieved
 
     ; Go to next command
@@ -104,7 +105,7 @@ _monitor_loop_command_error:
 
 
 read_command_implementation:
-; brk_entered_read_command:
+brk_entered_read_command:
     nop
     rti
 

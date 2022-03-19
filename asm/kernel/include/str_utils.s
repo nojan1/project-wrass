@@ -8,16 +8,13 @@ str_startswith:
         ldy #0
 
 _str_startswith_loop:
-        lda (STR_PARAM2), y
-; brk_check_end:
+        lda (STR_PARAM1), y
         beq _str_startswith_match ; End of string, if we got here consider them the same
 
         cmp #$20 ; Got space, consider this the same as end of string
-; brk_check_space:
         beq _str_startswith_match
 
-        cmp (STR_PARAM1), y
-; brk_check_same:
+        cmp (STR_PARAM2), y
         bne _str_startswith_no_match
 
         iny
