@@ -16,7 +16,7 @@ const Title = styled.span`
   padding: 0 5px;
 `
 
-const ContentContainer = styled.div<{ $scroll: boolean }>`
+const ContentContainer = styled.div<{ $scroll: boolean; $maxHeight: string }>`
   ${props =>
     props.$scroll
       ? `
@@ -24,22 +24,28 @@ const ContentContainer = styled.div<{ $scroll: boolean }>`
         max-height: 400px;
     `
       : ''}
+
+  max-height: ${props => props.$maxHeight};
 `
 
 export interface GroupBoxProps {
   title: string
   scroll?: boolean
+  maxHeight?: string
 }
 
 const GroupBox: React.FunctionComponent<GroupBoxProps> = ({
   title,
   children,
+  maxHeight = 'auto',
   scroll = false,
 }) => {
   return (
     <GroupBoxContainer>
       {title && <Title>{title}</Title>}
-      <ContentContainer $scroll={scroll}>{children}</ContentContainer>
+      <ContentContainer $scroll={scroll} $maxHeight={maxHeight}>
+        {children}
+      </ContentContainer>
     </GroupBoxContainer>
   )
 }

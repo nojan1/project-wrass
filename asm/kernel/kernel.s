@@ -85,7 +85,7 @@ reset:
     sta WRITE_POINTER
     sta READ_POINTER
     sta KEYBOARD_FLAGS
-
+    sta CURRENT_LINE
 
     ; LCD SETUP
     lda #%11111111 ; Set all pins on port B to output

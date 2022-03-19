@@ -1,6 +1,9 @@
 import { SendDataCallback } from '.'
 import { ViaCallbackHandler } from './via'
 
+const NUM_COLS = 20
+const NUM_ROWS = 4
+
 export class LcdController implements ViaCallbackHandler {
   private _data = 0
   private _rw = 0
@@ -9,7 +12,7 @@ export class LcdController implements ViaCallbackHandler {
   private _last_e = 0
 
   private _position = 0
-  private _characters = Array(40).fill(' ')
+  private _characters = Array(NUM_COLS * NUM_ROWS).fill(' ')
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private _sendData: SendDataCallback) {}
@@ -54,7 +57,10 @@ export class LcdController implements ViaCallbackHandler {
         if (this._data === 1) {
           // Clear home
           this._position = 0
-          this._characters = Array(40).fill(' ')
+          this._characters = Array(NUM_COLS * NUM_ROWS).fill(' ')
+        } else if (this._data & 0x80) {
+          // Set ddram address
+          this._position = this._data & 0x7f
         }
       }
     } else {

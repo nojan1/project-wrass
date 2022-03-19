@@ -2,6 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import { useLcdText } from '../../hooks'
 
+const NUM_COLS = 20
+const NUM_ROWS = 4
+
 const DisplayOuter = styled.div`
   display: flex;
   border: 1px solid #b8b8b82b;
@@ -13,8 +16,8 @@ const DisplayInner = styled.div`
   flex-grow: 1;
   background-color: #003805;
   display: grid;
-  grid-template-columns: repeat(20, auto);
-  grid-template-rows: repeat(2, auto);
+  grid-template-columns: repeat(${NUM_COLS}, auto);
+  grid-template-rows: repeat(${NUM_ROWS}, auto);
   padding: 5px;
 `
 
@@ -38,7 +41,7 @@ const LcdDisplay: React.FunctionComponent = () => {
   return (
     <DisplayOuter>
       <DisplayInner>
-        {Array.from(text.padEnd(40, ' ')).map((c, i) => (
+        {Array.from(text.padEnd(NUM_COLS * NUM_ROWS, ' ')).map((c, i) => (
           <Digit key={i}>{c}</Digit>
         ))}
       </DisplayInner>

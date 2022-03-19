@@ -1,3 +1,5 @@
+NUM_ROWS = 4
+NUM_COLS = 20
 
 ; Check for and return an available charactor from the input buffer
 ; The character will be placed in A
@@ -50,5 +52,35 @@ _putstr_end:
 
 ; Put newline into output
 newline:
-    ; TODO: Implement
+    pha
+    phx
+    
+    lda CURRENT_LINE
+    clc
+    adc #1
+    cmp #NUM_ROWS-1 ; Zero based
+    
+    bne _newline_not_max_row
+    lda #0
+
+_newline_not_max_row:
+    sta CURRENT_LINE
+
+    tax
+    lda #0
+_newline_offset_calculation_loop:
+    cpx #0
+    beq _newline_offset_calculated
+    
+    clc
+    adc #NUM_COLS ; Add the number of characters on each LCD row
+    dex
+    jmp _newline_offset_calculation_loop
+
+_newline_offset_calculated
+    ora #$80 ; Set 7th bit
+    jsr lcd_instruction
+
+    plx
+    pla
     rts

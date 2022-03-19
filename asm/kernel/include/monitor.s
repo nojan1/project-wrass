@@ -61,7 +61,7 @@ _monitor_loop_command_entered_next_command:
     sta STR_PARAM2 + 1
 
     jsr str_startswith
-brk_after_startswith:
+; brk_after_startswith:
     bne _monitor_loop_command_recieved
 
     ; Go to next command
@@ -104,7 +104,7 @@ _monitor_loop_command_error:
 
 
 read_command_implementation:
-brk_entered_read_command:
+; brk_entered_read_command:
     nop
     rti
 

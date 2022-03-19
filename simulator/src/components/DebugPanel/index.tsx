@@ -63,11 +63,11 @@ const DebugPanel: React.FunctionComponent = () => {
         <GroupBox title="Disassembly">
           <Dissasembly />
         </GroupBox>
-        <GroupBox title="Stack" scroll={true}>
-          <StackDump />
-        </GroupBox>
         <GroupBox title="Watches" scroll={true}>
           <MemoryWatch />
+        </GroupBox>
+        <GroupBox title="Stack" scroll={true} maxHeight="350px">
+          <StackDump />
         </GroupBox>
       </Wrapper>
     </PanelOuterContainer>

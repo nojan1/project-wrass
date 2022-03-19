@@ -17,7 +17,7 @@ _str_startswith_loop:
         beq _str_startswith_match
 
         cmp (STR_PARAM1), y
-brk_check_same:
+; brk_check_same:
         bne _str_startswith_no_match
 
         iny
