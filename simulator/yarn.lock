@@ -2,10 +2,8 @@
 # yarn lockfile v1
 
 
-"6502.ts@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/6502.ts/-/6502.ts-1.0.6.tgz#e62de905b9c3020e61dcc8e12b4142de5b8fc80e"
-  integrity sha512-eiQFvCqLACznxS31PJNbCNrzCuMRMFuGiFKPVDHKefDVFFspcFekFhMFee9V6Sr2rCVzvYwseBT7adbVs4Q2mg==
+"6502.ts@file:../../6502.ts":
+  version "1.0.7"
   dependencies:
     "@types/file-saver" "^2.0.1"
     async-mutex "^0.2.4"

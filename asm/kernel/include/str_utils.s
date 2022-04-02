@@ -28,6 +28,6 @@ _str_startswith_no_match:
     lda #0
 
 _str_startswith_exit:
-    cli
     ply 
+    cli
     rts

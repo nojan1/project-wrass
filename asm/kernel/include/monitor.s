@@ -32,6 +32,7 @@ monitor_loop:
     ldx #0
 _monitor_loop_read:
     jsr getc
+    cmp #0
     beq _monitor_loop_read
 
     cmp #$0a ; Was enter pressed?
@@ -47,6 +48,7 @@ _monitor_loop_command_entered:
     lda #0
     sta COMMAND_BUFFER, x ; Put null terminator into command
     ldx #0
+    ldy #0
 
     ; Load command buffer into param 1
     lda #<COMMAND_BUFFER
@@ -58,17 +60,19 @@ _monitor_loop_command_entered_next_command:
     ; Load current command into param 2
     lda commands, x
     sta STR_PARAM2
-    inx 
+    inx
     lda commands, x
     sta STR_PARAM2 + 1
 
     jsr str_startswith
+    cmp #0
     bne _monitor_loop_command_recieved
 
     ; Go to next command
     inx
     inx
     inx
+    iny
 
     cpx #$10 ; Have we checked the last available command?
     bne _monitor_loop_command_entered_next_command
@@ -79,12 +83,25 @@ _monitor_loop_command_recieved:
     ; We have a valid command
     ; Parse out the parameters eventually
     inx ; num parameters
-    inx ; firt part of handler address
 
-brk_before_jump:
-    jmp (commands, x)
+; This code should work but the emulated CPU doesn't support inderict JMP
+;     inx ; firt part of handler address
+
+; brk_before_jump:
+;     jmp (commands, x)
+
+    ; Hardcode the command handlers for now
+    cpy #0
+    beq read_command_implementation
+
+    cpy #1
+    beq write_command_implementation
+
+    cpy #2
+    beq jump_command_implementation    
 
 _command_exuction_complete:
+    jsr newline
     jmp monitor_loop
 
 bad_command_string:
@@ -103,14 +120,21 @@ _monitor_loop_command_error:
 
     jmp monitor_loop
 
+read_command_temp_string:
+    .string "In read command"
 
 read_command_implementation:
-brk_entered_read_command:
-    nop
-    rti
+    jsr newline
+    lda #<read_command_temp_string
+    sta STR_PARAM1
+    lda #>read_command_temp_string
+    sta STR_PARAM1 + 1
+
+    jsr putstr
+    jmp _command_exuction_complete
 
 write_command_implementation:
-    rti
+    jmp _command_exuction_complete
 
 jump_command_implementation:
-    rti
+    jmp _command_exuction_complete

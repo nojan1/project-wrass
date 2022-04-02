@@ -15,7 +15,7 @@
   "keywords": [],
   "license": "MIT",
   "dependencies": {
-    "6502.ts": "^1.0.6",
+    "6502.ts": "file:/Users/nojan/Dev/6502.ts",
     "@types/react-virtualized-auto-sizer": "^1.0.1",
     "@types/react-window": "^1.8.5",
     "react": "17.0.2",

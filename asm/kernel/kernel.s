@@ -54,6 +54,7 @@ push_key:
     ldx WRITE_POINTER
     sta INPUT_BUFFER, x
     inc WRITE_POINTER
+; brk_key_pushed:
     jmp exit
 
 shift_down:
@@ -68,6 +69,7 @@ key_release:
     sta KEYBOARD_FLAGS
 
 exit:
+; brk_exit:
     pla
     tax
     pla
