@@ -3,7 +3,7 @@ PORTA = $6001
 DDRB = $6002
 DDRA = $6003
    
-    .org $8000
+    .org $C000
 reset:
     ldx #$FF ;Set stackpointer to top of zero page
     txs
