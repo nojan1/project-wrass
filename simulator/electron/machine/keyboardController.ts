@@ -1,6 +1,5 @@
 import CpuInterface from '6502.ts/lib/machine/cpu/CpuInterface'
 import { ipcMain } from 'electron'
-import { deferWork } from '../utils/deferWork'
 import { Scancodes } from './scancodes'
 import { ViaCallbackHandler } from './via'
 
@@ -13,7 +12,7 @@ export class KeyboardController implements ViaCallbackHandler {
       const scancode = Scancodes[code]
       if (!scancode) return
 
-      this._pendingData = [scancode]
+      this._pendingData.push(scancode)
       this._cpu?.setInterrupt(true)
     })
 
@@ -21,7 +20,8 @@ export class KeyboardController implements ViaCallbackHandler {
       const scancode = Scancodes[code]
       if (!scancode) return
 
-      this._pendingData = [0xf0, scancode]
+      this._pendingData.push(0xf0)
+      this._pendingData.push(scancode)
       this._cpu?.setInterrupt(true)
     })
   }
@@ -31,13 +31,8 @@ export class KeyboardController implements ViaCallbackHandler {
   }
 
   portARead(): number | null {
-    this._cpu?.setInterrupt(false)
-
-    const data = this._pendingData.pop() ?? null
-
-    if (this._pendingData.length > 0) {
-      deferWork(() => this._cpu?.setInterrupt(true))
-    }
+    const data = this._pendingData.shift() ?? null
+    this._cpu?.setInterrupt(!!this._pendingData.length)
 
     return data
   }
