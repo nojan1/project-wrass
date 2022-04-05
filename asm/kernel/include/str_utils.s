@@ -4,7 +4,6 @@
 
 str_startswith: 
     phy
-    sei
         ldy #0
 
 _str_startswith_loop:
@@ -29,5 +28,4 @@ _str_startswith_no_match:
 
 _str_startswith_exit:
     ply 
-    cli
     rts

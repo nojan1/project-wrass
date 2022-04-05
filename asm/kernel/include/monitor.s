@@ -29,9 +29,6 @@ monitor_loop:
     lda #">"
     jsr putc
     
-    lda #$1c
-    jsr puthex
-
     ldx #0
 .read:
     jsr getc
@@ -69,15 +66,17 @@ monitor_loop:
 
     jsr str_startswith
     cmp #0
+
     bne .command_recieved
 
     ; Go to next command
     inx
     inx
     inx
+    inx
     iny
 
-    cpx #$10 ; Have we checked the last available command?
+    cpx #$11 ; Have we checked the last available command?
     bne .next_command
 
     jmp _monitor_loop_command_error
@@ -86,6 +85,7 @@ monitor_loop:
     ; We have a valid command
     ; Parse out the parameters eventually
     inx ; num parameters
+
 
 ; This code should work but the emulated CPU doesn't support inderict JMP
 ;     inx ; firt part of handler address
@@ -117,16 +117,56 @@ _monitor_loop_command_error:
 
     jmp monitor_loop
 
-read_command_temp_string:
-    .string "In read command"
-
 read_command_implementation:
+    jsr newline   
+    ldy #0 ; Byte offset
+
+.new_row:
+    ldx #1
+    lda PARAM_16_1, x
+    jsr puthex
+    ldx #0 ; Column count
+    tya
+    jsr puthex
+
+    lda #":"
+    jsr putc
+    lda #" "
+    jsr putc
+
+.read_byte_loop:
+    lda (PARAM_16_1), y
+    jsr puthex
+
+    lda #" "
+    jsr putc
+
+    iny
+    inx
+
+    cpy #8
+    beq .done
+
+    cpx #4
+    bne .read_byte_loop
+
     jsr newline
-    putstr_addr read_command_temp_string
+    jmp .new_row
+
+.done:
     jmp _command_exuction_complete
 
 write_command_implementation:
+    lda PARAM_16_2
+    ldy #0
+    sta (PARAM_16_1),y
     jmp _command_exuction_complete
 
 jump_command_implementation:
-    jmp _command_exuction_complete
+brk_jmpcommand:
+    ldy #0
+    lda (PARAM_16_1), y
+    pha
+    lda (PARAM_16_1 + 1), y
+    pha
+    rts
