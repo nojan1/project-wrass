@@ -30,14 +30,14 @@ putc:
     pla
     rts
 
-; Put characters from string in STR_PARAM1 into output
+; Put characters from string in PARAM_16_1 into output
 putstr:
     pha
     phy 
     ldy #0
 
 _putstr_loop:
-    lda (STR_PARAM1), y
+    lda (PARAM_16_1), y
     beq _putstr_end
 
     jsr putc
@@ -58,7 +58,7 @@ newline:
     lda CURRENT_LINE
     clc
     adc #1
-    cmp #NUM_ROWS-1 ; Zero based
+    cmp #NUM_ROWS
     
     bne _newline_not_max_row
     lda #0

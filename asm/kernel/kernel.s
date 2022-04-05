@@ -1,3 +1,5 @@
+    .include "include/macros.s"
+
     .org $C000 ; Monitor OS area
 
     .include "include/constants.s"
@@ -5,6 +7,7 @@
     
     .org $E000 ; Kernel area
 
+    .include "include/hex_utils.s"
     .include "include/str_utils.s"
     .include "include/io.s"
     .include "include/lcd_8bit.s"

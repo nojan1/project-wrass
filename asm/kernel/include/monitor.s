@@ -1,5 +1,5 @@
 read_command_string:
-    .string "rread"
+    .string "read"
 
 write_command_string:
     .string "write"
@@ -29,22 +29,25 @@ monitor_loop:
     lda #">"
     jsr putc
     
+    lda #$1c
+    jsr puthex
+
     ldx #0
-_monitor_loop_read:
+.read:
     jsr getc
     cmp #0
-    beq _monitor_loop_read
+    beq .read
 
     cmp #$0a ; Was enter pressed?
-    beq _monitor_loop_command_entered
+    beq .command_entered
 
     jsr putc
     sta COMMAND_BUFFER, x
     inx
 
-    jmp _monitor_loop_read
+    jmp .read
 
-_monitor_loop_command_entered:
+.command_entered:
     lda #0
     sta COMMAND_BUFFER, x ; Put null terminator into command
     ldx #0
@@ -52,21 +55,21 @@ _monitor_loop_command_entered:
 
     ; Load command buffer into param 1
     lda #<COMMAND_BUFFER
-    sta STR_PARAM1
+    sta PARAM_16_1
     lda #>COMMAND_BUFFER
-    sta STR_PARAM1 + 1
+    sta PARAM_16_1 + 1
 
-_monitor_loop_command_entered_next_command:
+.next_command:
     ; Load current command into param 2
     lda commands, x
-    sta STR_PARAM2
+    sta PARAM_16_2
     inx
     lda commands, x
-    sta STR_PARAM2 + 1
+    sta PARAM_16_2 + 1
 
     jsr str_startswith
     cmp #0
-    bne _monitor_loop_command_recieved
+    bne .command_recieved
 
     ; Go to next command
     inx
@@ -75,11 +78,11 @@ _monitor_loop_command_entered_next_command:
     iny
 
     cpx #$10 ; Have we checked the last available command?
-    bne _monitor_loop_command_entered_next_command
+    bne .next_command
 
     jmp _monitor_loop_command_error
      
-_monitor_loop_command_recieved:
+.command_recieved:
     ; We have a valid command
     ; Parse out the parameters eventually
     inx ; num parameters
@@ -109,13 +112,7 @@ bad_command_string:
 
 _monitor_loop_command_error:
     jsr newline
-
-    lda #<bad_command_string
-    sta STR_PARAM1
-    lda #>bad_command_string
-    sta STR_PARAM1 + 1
-
-    jsr putstr
+    putstr_addr bad_command_string
     jsr newline
 
     jmp monitor_loop
@@ -125,12 +122,7 @@ read_command_temp_string:
 
 read_command_implementation:
     jsr newline
-    lda #<read_command_temp_string
-    sta STR_PARAM1
-    lda #>read_command_temp_string
-    sta STR_PARAM1 + 1
-
-    jsr putstr
+    putstr_addr read_command_temp_string
     jmp _command_exuction_complete
 
 write_command_implementation:
