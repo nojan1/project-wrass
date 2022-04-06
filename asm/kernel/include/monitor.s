@@ -48,7 +48,6 @@ monitor_loop:
     lda #0
     sta COMMAND_BUFFER, x ; Put null terminator into command
     ldx #0
-    ldy #0
 
     ; Load command buffer into param 1
     lda #<COMMAND_BUFFER
@@ -74,7 +73,6 @@ monitor_loop:
     inx
     inx
     inx
-    iny
 
     cpx #$11 ; Have we checked the last available command?
     bne .next_command
@@ -86,22 +84,19 @@ monitor_loop:
     ; Parse out the parameters eventually
     inx ; num parameters
 
-
-; This code should work but the emulated CPU doesn't support inderict JMP
+; This code should work but the emulated CPU doesn't support indirect JMP
 ;     inx ; firt part of handler address
-
-; brk_before_jump:
 ;     jmp (commands, x)
 
-    ; Hardcode the command handlers for now
-    cpy #0
-    beq read_command_implementation
-
-    cpy #1
-    beq write_command_implementation
-
-    cpy #2
-    beq jump_command_implementation    
+; Do old school jumping instead
+    inx
+    inx ; second address byte to handler
+    lda commands, x
+    pha
+    dex ; first address byte to handler
+    lda commands, x
+    pha
+    rts
 
 _command_exuction_complete:
     jsr newline
@@ -118,6 +113,7 @@ _monitor_loop_command_error:
     jmp monitor_loop
 
 read_command_implementation:
+    nop
     jsr newline   
     ldy #0 ; Byte offset
 
