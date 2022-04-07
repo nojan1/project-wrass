@@ -98,7 +98,7 @@ monitor_loop:
     pha
     rts
 
-_command_exuction_complete:
+_command_execution_complete:
     jsr newline
     jmp monitor_loop
 
@@ -150,13 +150,13 @@ read_command_implementation:
     jmp .new_row
 
 .done:
-    jmp _command_exuction_complete
+    jmp _command_execution_complete
 
 write_command_implementation:
     lda PARAM_16_2
     ldy #0
     sta (PARAM_16_1),y
-    jmp _command_exuction_complete
+    jmp _command_execution_complete
 
 jump_command_implementation:
 brk_jmpcommand:
