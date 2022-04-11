@@ -5,7 +5,7 @@ import { useMachineContext } from '../../context/machine'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeGrid as Grid, GridChildComponentProps } from 'react-window'
 import Modal from '../Modal'
-import MemoryAddressInput from './MemoryAddressInput'
+import AddressInput from '../AddressInput'
 
 const chunkSize = 16
 
@@ -55,7 +55,7 @@ const MemoryExplorer: React.FunctionComponent<MemoryExplorerProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
       <MemoryExplorerContainer>
-        <MemoryAddressInput
+        <AddressInput
           onChange={e => handleOnScroll(parseInt(e.target.value, 16))}
         />
 

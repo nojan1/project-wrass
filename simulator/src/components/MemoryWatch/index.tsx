@@ -1,6 +1,6 @@
-import React, { FormEvent, useState } from 'react'
+import React, { useState } from 'react'
 import { toHex } from '../../../electron/utils/output'
-import MemoryAddressInput from '../MemoryExplorer/MemoryAddressInput'
+import { ManagedAddressInput } from '../AddressInput'
 import { useMachineContext } from '../../context/machine'
 import styled from 'styled-components'
 import { BorderColor } from '../../styles'
@@ -37,20 +37,15 @@ const MemoryValueContainer = styled.span`
 const MemoryWatch: React.FunctionComponent = () => {
   const [watches, setWatches] = useState<number[]>([])
 
-  const onSubmit = (ev: FormEvent<HTMLFormElement>) => {
-    ev.preventDefault()
+  const onNewWatch = (address: number) => {
+    if (watches.some(x => x === address)) return
 
-    const enteredAddress = parseInt((ev.target as any)[0].value, 16)
-    if (watches.some(x => x === enteredAddress)) return
-
-    setWatches(x => [...x, enteredAddress])
+    setWatches(x => [...x, address])
   }
 
   return (
     <Content>
-      <form onSubmit={onSubmit}>
-        <MemoryAddressInput />
-      </form>
+      <ManagedAddressInput onAddressEntered={onNewWatch} />
 
       <MemoryValuesContainer>
         {watches.map(x => (

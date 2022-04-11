@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useMachineContext } from '../../context/machine'
 import { PanelBackground } from '../../styles'
+import BreakpointsDisplay from '../Breakpoints'
 import GroupBox from '../GroupBox'
 import MemoryExplorer from '../MemoryExplorer'
 import MemoryWatch from '../MemoryWatch'
@@ -68,6 +69,9 @@ const DebugPanel: React.FunctionComponent = () => {
         </GroupBox>
         <GroupBox title="Stack" scroll={true} maxHeight="350px">
           <StackDump />
+        </GroupBox>
+        <GroupBox title="Breakpoints" scroll={true} maxHeight="350px">
+          <BreakpointsDisplay />
         </GroupBox>
       </Wrapper>
     </PanelOuterContainer>

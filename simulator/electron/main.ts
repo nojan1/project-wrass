@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, WebContents } from 'electron'
 import { getTestProgramBuffer } from './data/program'
 import { BoardInitContext, initBoard } from './machine'
+import { Breakpoint } from './types/breakpoint'
 import { deferWork } from './utils/deferWork'
 import { parseListing, SymbolListing } from './utils/listingParser'
 import { loadMemoryFromFile } from './utils/memoryFile'
@@ -87,8 +88,14 @@ const createDebugger = async () => {
     options.resetAddress ?? options.loadAddress
   )
 
+  const initialBreakpoints: Array<Breakpoint> = []
+
   options.breakpoint?.forEach((address: number, i: number) => {
     boardContext.myDebugger.setBreakpoint(address, `Breakpoint from cli #${i}`)
+    initialBreakpoints.push({
+      address,
+      description: `Breakpoint from cli #${i}`,
+    })
   })
 
   symbols?.breakpoints.forEach(([address, name]) => {
@@ -97,12 +104,23 @@ const createDebugger = async () => {
       address,
       `Breakpoint from listing: ${name}`
     )
+
+    initialBreakpoints.push({
+      address,
+      description: `Breakpoint from listing: ${name}`,
+    })
   })
 
-  return boardContext
+  return { boardContext, initialBreakpoints }
 }
 
-async function registerListeners({ myDebugger, bus }: BoardInitContext) {
+async function registerListeners({
+  boardContext: { myDebugger, bus },
+  initialBreakpoints,
+}: {
+  boardContext: BoardInitContext
+  initialBreakpoints: Array<Breakpoint>
+}) {
   const sendUpdates = (sender: WebContents) => {
     const disassembly = myDebugger.disassemble(15)
     sender.send(
@@ -176,6 +194,7 @@ async function registerListeners({ myDebugger, bus }: BoardInitContext) {
   })
 
   ipcMain.on('update-request', event => {
+    event.sender.send('initial-breakpoints', initialBreakpoints)
     sendUpdates(event.sender)
   })
 }

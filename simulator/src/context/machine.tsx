@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import BoardInterface from '6502.ts/lib/machine/board/BoardInterface'
 import CpuInterface from '6502.ts/lib/machine/cpu/CpuInterface'
+import { Breakpoint } from '../../electron/types/breakpoint'
 
 export interface SimplifiedTrap {
   reason: BoardInterface.TrapReason
@@ -14,6 +15,7 @@ export interface IMachineContext {
   lastTrap?: SimplifiedTrap
   debuggerRunning?: boolean
   memoryDump?: Uint8Array
+  initialBreakpoints?: Breakpoint[]
 }
 
 const MachineContext = createContext<IMachineContext>({})
@@ -43,6 +45,9 @@ export const MachineContextProvider: React.FunctionComponent = ({
     })
     window.Main.on('memory-dump', (data: any) => {
       setState(x => ({ ...x, memoryDump: data }))
+    })
+    window.Main.on('initial-breakpoints', (data: any) => {
+      setState(x => ({ ...x, initialBreakpoints: data }))
     })
 
     window.Main.updateRequest()

@@ -1,7 +1,6 @@
     .include "include/macros.s"
 
     .org $C000 ; Monitor OS area
-
     .include "include/constants.s"
     .include "include/monitor.s"
     
