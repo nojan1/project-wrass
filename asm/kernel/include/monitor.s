@@ -8,9 +8,9 @@ jump_command_string:
     .string "jump"
 
 commands:
-    ; read <addr> <count>
+    ; read <addr>
     .word read_command_string ; command string
-    .byte 2 ; num parameters
+    .byte 1 ; num parameters
     .word read_command_implementation
 
     ; write <addr> <value>
@@ -26,6 +26,7 @@ commands:
 
 ; Enter monitor REPL
 monitor_loop:
+    cli
     lda #">"
     jsr putc
     
@@ -45,6 +46,7 @@ monitor_loop:
     jmp .read
 
 .command_entered:
+    sei
     lda #0
     sta COMMAND_BUFFER, x ; Put null terminator into command
     ldx #0
@@ -81,14 +83,43 @@ monitor_loop:
      
 .command_recieved:
     ; We have a valid command
-    ; Parse out the parameters eventually
+    ; Parse out the parameters
+
     inx ; num parameters
+    phx
+    
+    tay
+    lda commands, x
+    beq .parameters_parsed
+    tax
+
+    iny
+    jsr str_readhex
+    sta PARAM_16_2 + 1
+
+    iny
+    jsr str_readhex
+    sta PARAM_16_2
+
+    dex
+    beq .parameters_parsed
+    
+    iny
+    iny
+    jsr str_readhex
+    sta PARAM_16_3
+
+    dex
+    beq .parameters_parsed
 
 ; This code should work but the emulated CPU doesn't support indirect JMP
 ;     inx ; firt part of handler address
 ;     jmp (commands, x)
 
 ; Do old school jumping instead
+.parameters_parsed
+    plx
+     
     inx
     inx ; second address byte to handler
     lda commands, x
@@ -115,11 +146,11 @@ _monitor_loop_command_error:
 read_command_implementation:
     nop
     jsr newline   
-    ldy #0 ; Byte offset
+    ldy PARAM_16_2 ; Byte offset (lower address)
 
 .new_row:
     ldx #1
-    lda PARAM_16_1, x
+    lda PARAM_16_2, x
     jsr puthex
     ldx #0 ; Column count
     tya
@@ -131,7 +162,7 @@ read_command_implementation:
     jsr putc
 
 .read_byte_loop:
-    lda (PARAM_16_1), y
+    lda (PARAM_16_2), y
     jsr puthex
 
     lda #" "
@@ -153,16 +184,16 @@ read_command_implementation:
     jmp _command_execution_complete
 
 write_command_implementation:
-    lda PARAM_16_2
+    lda PARAM_16_3
     ldy #0
-    sta (PARAM_16_1),y
+    sta (PARAM_16_2),y
     jmp _command_execution_complete
 
 jump_command_implementation:
 brk_jmpcommand:
     ldy #0
-    lda (PARAM_16_1), y
+    lda (PARAM_16_2), y
     pha
-    lda (PARAM_16_1 + 1), y
+    lda (PARAM_16_2 + 1), y
     pha
     rts

@@ -29,3 +29,44 @@ _str_startswith_no_match:
 _str_startswith_exit:
     ply 
     rts
+
+
+; Read a byte in hex from PARAM_16_1 and return it in A
+; Y will be used as the starting offset
+; If a null or space is encountered a zero will be returned
+str_readhex:
+    phx
+    
+    ; Upper 4 bits
+    jsr str_readhexchar
+    asl
+    asl
+    asl
+    asl
+    sta VAR_8BIT_1
+
+    ; Lower 4 bits
+    iny
+    jsr str_readhexchar
+    clc
+    adc VAR_8BIT_1
+
+    plx
+    rts
+
+; Read a hex char from PARAM_16_1 and return it in A
+; Y will be used as the starting offset
+; If a null or space is encountered a zero will be returned
+str_readhexchar:
+    lda (PARAM_16_1), y
+    beq .return_zero
+
+    cmp #$20; Space
+    beq .return_zero
+
+    jsr convert_hex
+    rts    
+
+.return_zero:
+    lda #0
+    rts
