@@ -184,6 +184,7 @@ read_command_implementation:
     jmp _command_execution_complete
 
 write_command_implementation:
+    nop
     lda PARAM_16_3
     ldy #0
     sta (PARAM_16_2),y
@@ -191,6 +192,7 @@ write_command_implementation:
 
 jump_command_implementation:
 brk_jmpcommand:
+    nop
     ldy #0
     lda (PARAM_16_2), y
     pha
