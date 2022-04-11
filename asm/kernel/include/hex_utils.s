@@ -30,4 +30,45 @@ putchex:
     jsr putc
     rts
 
+; Convert the hexadecimal character in A into its real value and stores it in A
+convert_hex: 
+    cmp #$60
+    bcs .possibly_lower_character
+
+    cmp #$40
+    bcs .possibly_upper_character
+    
+    cmp #$2F
+    bcs .possibly_digit
+
+    jmp .bad_char
+
+.possibly_lower_character
+    cmp #$67
+    bcs .bad_char
+
+    sec
+    sbc #$57
+    rts
+    
+.possibly_upper_character
+    cmp #$47
+    bcs .bad_char
+ 
+    sec
+    sbc #$37
+    rts
+
+.possibly_digit
+    cmp #$40
+    bcs .bad_char
+
+    and #0b00001111 ; The lower 4 bits hold the digit result
+    rts
+
+.bad_char:
+    ; If we got here the acscii value is not within valid hex range at all
+    lda #0
+    rts
+
 
