@@ -21,30 +21,8 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 //     ? process.resourcesPath
 //     : app.getAppPath()
 
-function createWindow() {
-  mainWindow = new BrowserWindow({
-    // icon: path.join(assetsPath, 'assets', 'icon.png'),
-    width: 1100,
-    height: 700,
-    backgroundColor: '#191622',
-    webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-    },
-  })
-
-  if (!app.isPackaged) mainWindow.webContents.openDevTools()
-
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
-
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
-}
-
-const createDebugger = async () => {
-  const options = yargs(hideBin(process.argv))
+function parseOptions() {
+  return yargs(hideBin(process.argv))
     .option('file', {
       alias: 'f',
       type: 'string',
@@ -73,8 +51,38 @@ const createDebugger = async () => {
       type: 'number',
       array: true,
       description: 'Set breakpoint on address provded',
+    })
+    .option('display', {
+      type: 'string',
+      choices: ['lcd', 'graphic'],
+      default: 'lcd',
     }).argv
+}
 
+function createWindow(options: any) {
+  mainWindow = new BrowserWindow({
+    // icon: path.join(assetsPath, 'assets', 'icon.png'),
+    width: 1100,
+    height: 700,
+    backgroundColor: '#191622',
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+    },
+  })
+
+  if (!app.isPackaged) mainWindow.webContents.openDevTools()
+
+  const url = `${MAIN_WINDOW_WEBPACK_ENTRY}?display=${options.display}`
+  mainWindow.loadURL(url)
+
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
+}
+
+const createDebugger = async (options: any) => {
   const data: Buffer | null = options.file
     ? await loadMemoryFromFile(options.file)
     : getTestProgramBuffer()
@@ -199,10 +207,12 @@ async function registerListeners({
   })
 }
 
+const options = parseOptions()
+
 app
-  .on('ready', createWindow)
+  .on('ready', () => createWindow(options))
   .whenReady()
-  .then(createDebugger)
+  .then(() => createDebugger(options))
   .then(registerListeners)
   .catch(e => console.error(e))
 
@@ -212,6 +222,6 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
+    createWindow(options)
   }
 })

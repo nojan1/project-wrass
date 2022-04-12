@@ -1,6 +1,7 @@
 import BoardInterface from '6502.ts/lib/machine/board/BoardInterface'
 import { toHex } from '../utils/output'
 import { createBoard } from './board'
+import { Gpu } from './gpu'
 import { IoMultiplexer } from './io'
 import { IoCard } from './ioCard'
 import { KeyboardController } from './keyboardController'
@@ -56,7 +57,8 @@ export const initBoard = (
 
   const io = new IoMultiplexer({
     0: new IoCard(new VIA(), via2),
-    1: lcdVia1,
+    1: new Gpu(sendData),
+    2: lcdVia1,
   })
 
   const bus = new SystemBus(sendData, io)

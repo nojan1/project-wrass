@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { BorderColor } from '../../styles'
-// import GraphicDisplay from '../GraphicDisplay'
+import GraphicDisplay from '../GraphicDisplay'
 import LcdDisplay from '../LcdDisplay'
 
 const OutputPanelontainer = styled.div`
@@ -15,10 +15,11 @@ const OutputPanelontainer = styled.div`
 `
 
 const OutputPanel: React.FunctionComponent = () => {
+  const display = new URLSearchParams(window.location.search).get('display')
+
   return (
     <OutputPanelontainer>
-      <LcdDisplay />
-      {/* <GraphicDisplay /> */}
+      {display === 'graphic' ? <GraphicDisplay /> : <LcdDisplay />}
     </OutputPanelontainer>
   )
 }

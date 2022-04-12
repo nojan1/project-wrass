@@ -1,16 +1,28 @@
-import React from 'react'
+import React, { useMemo } from 'react'
+import { useFramebuffer } from '../../hooks'
 import useCanvas from './useCanvas'
 
 const GraphicDisplay: React.FunctionComponent = () => {
-  const canvasRef = useCanvas((ctx, frameCount) => {
-    ctx.fillStyle = 'green'
-    ctx.fillRect(0, 0, 640, 480)
+  const framebuffer = useFramebuffer()
 
-    ctx.fillStyle = 'red'
-    ctx.fillRect(120, 120, 200, 200)
+  const imageData = useMemo(() => {
+    if (!framebuffer) return
+    return new ImageData(framebuffer, 640)
+  }, [framebuffer])
+
+  const canvasRef = useCanvas((ctx, frameCount) => {
+    if (!imageData) return null
+    ctx.putImageData(imageData, 0, 0)
   })
 
-  return <canvas ref={canvasRef} width="640" height="480" />
+  return (
+    <canvas
+      ref={canvasRef}
+      width="640px"
+      height="480px"
+      // style={{ transform: 'scale(2)' }}
+    />
+  )
 }
 
 export default GraphicDisplay
