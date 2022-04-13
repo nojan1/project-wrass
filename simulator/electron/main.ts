@@ -62,8 +62,8 @@ function parseOptions() {
 function createWindow(options: any) {
   mainWindow = new BrowserWindow({
     // icon: path.join(assetsPath, 'assets', 'icon.png'),
-    width: 1100,
-    height: 700,
+    width: 1200,
+    height: 770,
     backgroundColor: '#191622',
     webPreferences: {
       nodeIntegration: false,

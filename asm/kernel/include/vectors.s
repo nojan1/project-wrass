@@ -84,4 +84,4 @@ reset:
     lda #0
     sta IO_VIA2_DDRA ; All pins are input
 
-    jsr monitor_loop
+    jsr monitor_loop_start

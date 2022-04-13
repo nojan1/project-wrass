@@ -1,3 +1,4 @@
+
 read_command_string:
     .string "read"
 
@@ -23,6 +24,9 @@ commands:
     .byte 1 ; num parameters
     .word jump_command_implementation
 
+monitor_loop_start:
+    cli
+    jsr print_banner
 
 ; Enter monitor REPL
 monitor_loop:

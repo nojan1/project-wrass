@@ -1,5 +1,6 @@
 import BusInterface from '6502.ts/lib/machine/bus/BusInterface'
 import { SendDataCallback } from '..'
+import { toHex } from '../../utils/output'
 import { colors } from './colors'
 import { tileset } from './tileset'
 
@@ -77,7 +78,8 @@ export class Gpu implements BusInterface {
   }
 
   peek(address: number): number {
-    return 0
+    const register = this.registerFromAddress(address)
+    return this._registers[register]
   }
 
   readWord(address: number): number {
@@ -97,10 +99,9 @@ export class Gpu implements BusInterface {
       if (arrayIndex <= this._internalMemory.length) {
         this._internalMemory[arrayIndex] = value
       }
-    } else {
-      this._registers[register] = value
     }
 
+    this._registers[register] = value
     this.buildAndSendFramebuffer()
   }
 
@@ -141,12 +142,12 @@ export class Gpu implements BusInterface {
         const subRow = pixelRow % 8
 
         const char =
-          this._internalMemory[FramebufferStart + col + row * CharRows]
+          this._internalMemory[FramebufferStart + col + row * CharCols]
         const tile = this._internalMemory[TilemapStart + subRow + char * 8]
         const bit = ((tile >> subCol) & 0x1) === 1
 
         const colorAttribute =
-          this._internalMemory[ColorAttributesStart + col + row * CharRows]
+          this._internalMemory[ColorAttributesStart + col + row * CharCols]
         const colorIndex = bit
           ? (colorAttribute >> 4) & 0xf
           : colorAttribute & 0xf
