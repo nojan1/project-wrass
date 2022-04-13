@@ -7,7 +7,8 @@ export class IoMultiplexer extends MultiplexingBus {
   }
 
   protected override _getBus(address: number): BusInterface | null {
-    const ioLine = (address >> 9) & 0xf
+    const ioLine = (address >> 6) & 0xf
+    // console.log(`IoLine: ${ioLine}`)
     return this._ioLineMap[ioLine]
   }
 }

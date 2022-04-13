@@ -48,8 +48,7 @@ export class Gpu implements BusInterface {
     })
 
     for (let i = 0; i < CharCols * CharRows; i++) {
-      this._internalMemory[FramebufferStart + i] = 0x21 + (i % (0x7d - 0x21))
-      this._internalMemory[ColorAttributesStart + i] = 0b00011101
+      this._internalMemory[ColorAttributesStart + i] = 0b00010110
     }
 
     setTimeout(() => {
@@ -78,7 +77,7 @@ export class Gpu implements BusInterface {
   }
 
   peek(address: number): number {
-    return this.read(address)
+    return 0
   }
 
   readWord(address: number): number {
@@ -89,7 +88,7 @@ export class Gpu implements BusInterface {
     const register = this.registerFromAddress(address)
     if (register === GpuRegisters.ReadWrite) {
       const internalAddress =
-        (this._registers[GpuRegisters.AddressHigh] << 8) &
+        (this._registers[GpuRegisters.AddressHigh] << 8) |
         this._registers[GpuRegisters.AddressLow]
       const arrayIndex = internalAddress - MemoryBase
 
@@ -106,11 +105,11 @@ export class Gpu implements BusInterface {
   }
 
   poke(address: number, value: number): void {
-    this.write(address, value)
+    // Nope
   }
 
   private registerFromAddress(address: number) {
-    return (address & 0xff) as GpuRegisters
+    return (address & 0x3f) as GpuRegisters
   }
 
   private handleIncrement() {

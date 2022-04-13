@@ -171,10 +171,10 @@ read_command_implementation:
     iny
     inx
 
-    cpy #8
+    cpy #255
     beq .done
 
-    cpx #4
+    cpx #16
     bne .read_byte_loop
 
     jsr newline

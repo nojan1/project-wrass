@@ -76,22 +76,9 @@ reset:
     sta READ_POINTER
     sta KEYBOARD_FLAGS
     sta CURRENT_LINE
+    sta CURRENT_COLUMN
 
-    ; LCD SETUP
-    lda #%11111111 ; Set all pins on port B to output
-    sta LCD_DDRB
-    lda #%11100000 ; Set top 3 pins on port A to output
-    sta LCD_DDRA
-
-    lda #%00111000 ; Set 8-bit mode; 2-line display; 5x8 font
-    jsr lcd_instruction
-    lda #%00001110 ; Display on; cursor on; blink off
-    jsr lcd_instruction
-    lda #%00000110 ; Increment and shift cursor; don't shift display
-    jsr lcd_instruction
-    lda #$00000001 ; Clear display
-    jsr lcd_instruction
-    ;;;;
+    jsr display_init
 
     ; KEYBOARD INTERFACE SETUP
     lda #0

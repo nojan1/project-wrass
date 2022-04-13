@@ -2,6 +2,23 @@ E  = %10000000
 RW = %01000000
 RS = %00100000
 
+display_init:
+  ; LCD SETUP
+  lda #%11111111 ; Set all pins on port B to output
+  sta LCD_DDRB
+  lda #%11100000 ; Set top 3 pins on port A to output
+  sta LCD_DDRA
+
+  lda #%00111000 ; Set 8-bit mode; 2-line display; 5x8 font
+  jsr lcd_instruction
+  lda #%00001110 ; Display on; cursor on; blink off
+  jsr lcd_instruction
+  lda #%00000110 ; Increment and shift cursor; don't shift display
+  jsr lcd_instruction
+  lda #$00000001 ; Clear display
+  jsr lcd_instruction
+  rts
+
 lcd_wait:
   pha
   lda #%00000000  ; Port B is input
