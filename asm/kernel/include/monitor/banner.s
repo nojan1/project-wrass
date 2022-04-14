@@ -13,7 +13,6 @@ tile_bottom_left:
 tile_bottom_right:
     .db $c0,$64,$32,$19,$c,$6,$3,$1
 
-
 print_banner:
     param1_addr tile_top_left
     ldx #$0A

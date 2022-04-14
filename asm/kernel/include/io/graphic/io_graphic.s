@@ -40,3 +40,18 @@ goto_position:
 
     pla
     rts
+
+; Remove the last character at the current GPU address
+ereasec: 
+    pha
+    dec GRAPHICS_ADDR_LOW
+
+    lda #$0
+    sta GRAPHICS_INCREMENT
+    sta GRAPHICS_DATA
+
+    lda #1
+    sta GRAPHICS_INCREMENT
+
+    pla
+    rts

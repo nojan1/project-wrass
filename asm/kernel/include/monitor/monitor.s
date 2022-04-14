@@ -1,4 +1,3 @@
-
 read_command_string:
     .string "read"
 
@@ -25,7 +24,6 @@ commands:
     .word jump_command_implementation
 
 monitor_loop_start:
-    cli
     jsr print_banner
 
 ; Enter monitor REPL
@@ -43,10 +41,23 @@ monitor_loop:
     cmp #$0a ; Was enter pressed?
     beq .command_entered
 
+    cmp #$08
+    beq .erase
+
     jsr putc
     sta COMMAND_BUFFER, x
     inx
+    
+    jmp .read
 
+.erase:
+    cpx #0
+    beq .read
+    
+    dex
+    lda #0
+    sta COMMAND_BUFFER, x
+    jsr ereasec
     jmp .read
 
 .command_entered:
