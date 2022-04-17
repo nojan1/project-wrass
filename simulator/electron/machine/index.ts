@@ -7,6 +7,9 @@ import { IoCard } from './ioCard'
 import { KeyboardController } from './keyboardController'
 import { LcdController } from './lcdController'
 import { MyDebugger } from './myDebugger'
+import { SdCard } from './sd/sdCard'
+import { SpiEchoDevice } from './spi/spiEchoDevice'
+import { SpiViaCallbackHandler } from './spi/spiViaCallbackHandler'
 import { SystemBus } from './systemBus'
 import { VIA } from './via'
 
@@ -51,12 +54,20 @@ export const initBoard = (
   const lcdVia1 = new VIA()
   lcdVia1.registerCallbackHandler(new LcdController(sendData))
 
+  const via1 = new VIA()
+  via1.registerCallbackHandler(
+    new SpiViaCallbackHandler({
+      1: new SdCard(),
+      2: new SpiEchoDevice(),
+    })
+  )
+
   const via2 = new VIA()
   const keyboardController = new KeyboardController()
   via2.registerCallbackHandler(keyboardController)
 
   const io = new IoMultiplexer({
-    0: new IoCard(new VIA(), via2),
+    0: new IoCard(via1, via2),
     1: new Gpu(sendData),
     2: lcdVia1,
   })
