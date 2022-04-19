@@ -20,18 +20,14 @@ export class VIA implements BusInterface {
     const register = address & 0xf
 
     if (register === PORTB)
-      return (
-        this._callbackHandlers.reduce(
-          (acc, cur) => acc | (cur.portBRead() ?? 0),
-          0
-        ) & ~this._buffer[DDRB]
+      return this._callbackHandlers.reduce(
+        (acc, cur) => acc | (cur.portBRead() ?? 0),
+        0
       )
     else if (register === PORTA)
-      return (
-        this._callbackHandlers.reduce(
-          (acc, cur) => acc | (cur.portARead() ?? 0),
-          0
-        ) & ~this._buffer[DDRA]
+      return this._callbackHandlers.reduce(
+        (acc, cur) => acc | (cur.portARead() ?? 0),
+        0
       )
     else return this._buffer[register]
   }

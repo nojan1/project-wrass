@@ -84,4 +84,8 @@ reset:
     lda #0
     sta IO_VIA2_DDRA ; All pins are input
 
+    ; SPI INTERFACE SETUP
+    lda #0b10101111
+    sta IO_VIA1_DDRA
+
     jsr monitor_loop_start
