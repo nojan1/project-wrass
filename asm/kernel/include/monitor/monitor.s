@@ -23,28 +23,7 @@ commands:
     .byte 1 ; num parameters
     .word jump_command_implementation
 
-test:
-    .string "Hello!"
-
 monitor_loop_start:
-    sei
-    lda #2
-    jsr spi_set_device
-
-    ldx #0
-spi_send_loop:
-    lda test,x 
-    beq done
-
-    jsr spi_transcieve
-brk_aftertrancieve:
-    jsr putc
-    inx
-    jmp spi_send_loop
-
-done:
-    cli
-    jsr newline
     jsr print_banner
 
 ; Enter monitor REPL

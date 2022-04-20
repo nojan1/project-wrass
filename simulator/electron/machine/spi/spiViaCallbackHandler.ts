@@ -1,10 +1,9 @@
-import { toHex } from '../../utils/output'
 import { ViaCallbackHandler } from '../via'
 import { ISpiDeviceInterface } from './spiDeviceInterface'
 
 export class SpiViaCallbackHandler implements ViaCallbackHandler {
   private _selectedDeviceNum = 0x0
-  private _lastMiso = false
+  private _lastMiso = 0
   private _lastClock = false
   private _value = 0x0
 
@@ -20,12 +19,12 @@ export class SpiViaCallbackHandler implements ViaCallbackHandler {
     this.updateSelectedDevices()
 
     const clock = (this._value >> 2) & 0x1
-    const mosi = !!(this._value & 0x1)
+    const mosi = this._value & 0x1
 
     if (this._lastClock === false && clock === 1) {
-      this._lastMiso = Object.values(this._spiDevices).reduce<boolean>(
-        (acc, cur) => acc || cur.onClock(mosi),
-        false
+      this._lastMiso = Object.values(this._spiDevices).reduce<number>(
+        (acc, cur) => acc | cur.onClock(mosi),
+        0
       )
     }
 
@@ -37,7 +36,7 @@ export class SpiViaCallbackHandler implements ViaCallbackHandler {
   }
 
   portARead(): number | null {
-    return this._value
+    return (this._value & 0xfd) | (this._lastMiso << 1)
   }
 
   portBRead(): number | null {
