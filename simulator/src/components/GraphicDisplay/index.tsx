@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { useFramebuffer } from '../../hooks'
 import useCanvas from './useCanvas'
+import { useFitToParent } from './useFitToParent'
 
 const GraphicDisplay: React.FunctionComponent = () => {
   const framebuffer = useFramebuffer()
@@ -15,12 +16,14 @@ const GraphicDisplay: React.FunctionComponent = () => {
     ctx.putImageData(imageData, 0, 0)
   })
 
+  const { width, height } = useFitToParent(canvasRef, 640, 480, 20)
+
   return (
     <canvas
       ref={canvasRef}
       width="640px"
       height="480px"
-      // style={{ transform: 'scale(2)' }}
+      style={{ width, height }}
     />
   )
 }
