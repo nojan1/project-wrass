@@ -69,16 +69,20 @@ export abstract class SdStateHandlerBase implements ISdCardStateHandler {
         stopbit=${stopBit},
     `)
 
-    const response = this.handleCommand(commandIndex, argument, crc)
-    this._buffer = new Shifter(response)
+    this._isBusy = true
     this._isSending = true
+
+    this.handleCommand(commandIndex, argument, crc).then(response => {
+      this._buffer = new Shifter(response)
+      this._isBusy = false
+    })
   }
 
   protected abstract handleCommand(
     command: SdSpiCommands,
     argument: number,
     crc: number
-  ): number[]
+  ): Promise<number[]>
 
   protected abstract clockTick(): void
 }

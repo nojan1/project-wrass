@@ -14,21 +14,21 @@ export class SdCardIdleState extends SdStateHandlerBase {
     command: SdSpiCommands,
     argument: number,
     crc: number
-  ): number[] {
+  ): Promise<number[]> {
     if (this._validCommands.includes(command)) {
       if (command === SdSpiCommands.CMD0 && crc !== 0b1001010) {
-        return [R1Flags.CrcError]
+        return Promise.resolve([R1Flags.CrcError])
       }
 
       this._isBusy = true
       this._loadingTicks = 5
 
-      return [
+      return Promise.resolve([
         command === SdSpiCommands.CMD0 ? R1Flags.InIdleState : R1Flags.Success,
-      ]
+      ])
     } else {
       console.log(`Got invalid command ${command}`)
-      return [R1Flags.IllegalCommand]
+      return Promise.resolve([R1Flags.IllegalCommand])
     }
   }
 

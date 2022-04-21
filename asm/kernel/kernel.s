@@ -10,10 +10,12 @@
 
     .include "include/utils/hex_utils.s"
     .include "include/utils/str_utils.s"
+    .include "include/utils/error_utils.s"
     .include "include/io/io_generic.s"
     .include "include/io/spi.s"
 
     .include "include/io/sd/init.s"
+    .include "include/io/sd/ops.s"
 
     .ifdef GRAPHIC_OUTPUT
     .include "include/io/graphic/graphic.s"

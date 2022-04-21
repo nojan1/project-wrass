@@ -50,13 +50,13 @@ spi_transcieve:
 
 .got_zero:
     ; Invert the bitmask
-    lda SPI_BITMASK
-    eor #$FF
-    sta SPI_BITMASK
+    ; lda SPI_BITMASK
+    ; eor #$FF
+    ; sta SPI_BITMASK
 
-    lda SPI_BUFFER
-    and #$FF
-    sta SPI_BUFFER
+    ; lda SPI_BUFFER
+    ; and #$FF
+    ; sta SPI_BUFFER
 
     ; Prepare to process next bit
     txa
@@ -74,7 +74,6 @@ spi_transcieve:
 ; The offset in X will be used to determing bit position. 
 ; To read a full byte set it to $80 before calling
 spi_read:
-brk_spi_read:
     lda #$0
     sta SPI_BUFFER
 
@@ -92,13 +91,13 @@ brk_spi_read:
 
 .got_zero:
     ; Invert the bitmask
-    lda SPI_BITMASK
-    eor #$FF
-    sta SPI_BITMASK
+    ; lda SPI_BITMASK
+    ; eor #$FF
+    ; sta SPI_BITMASK
 
-    lda SPI_BUFFER
-    and #$FF
-    sta SPI_BUFFER
+    ; lda SPI_BUFFER
+    ; and #$FF
+    ; sta SPI_BUFFER
 
     ; Prepare to process next bit
     txa

@@ -12,8 +12,7 @@ export class Shifter {
   constructor(initialData?: number[]) {
     if (initialData) {
       this._data = initialData
-      this._data.push(0x0)
-      this._currentWriteByte = initialData.length - 1
+      this._currentWriteByte = initialData.length
       this._currentWriteBit = 0
       this.empty = false
     }
@@ -30,6 +29,8 @@ export class Shifter {
   shiftIn(dataIn: number) {
     dataIn = dataIn & 0x1
 
+    if (this._currentWriteByte > this._data.length - 1) this._data.push(0x0)
+
     this.empty = false
     this._data[this._currentWriteByte] |= dataIn << (7 - this._currentWriteBit)
 
@@ -40,7 +41,6 @@ export class Shifter {
     if (++this._currentWriteBit === 8) {
       this._currentWriteBit = 0
       this._currentWriteByte++
-      if (this._currentWriteByte > this._data.length - 1) this._data.push(0x0)
     }
 
     // console.log(this._data.map(x => x.toString(2).padStart(8, '0')).join(' '))
