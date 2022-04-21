@@ -29,6 +29,10 @@ export class SpiViaCallbackHandler implements ViaCallbackHandler {
     }
 
     this._lastClock = !!clock
+
+    // console.log(
+    //   `Device: ${this._selectedDeviceNum}, Clock: ${clock}, Mosi: ${mosi}, Miso: ${this._lastMiso}, Value: ${this._value}`
+    // )
   }
 
   portBWrite(value: number): void {

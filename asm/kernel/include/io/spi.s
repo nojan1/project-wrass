@@ -15,13 +15,14 @@ spi_set_device:
 ; Sends the byte stored in A over spi, toggling the clock
 ; Puts the return value into A
 spi_transcieve:
-brk_spi_transcieve:
+; brk_spi_transcieve:
     phx
 
     ldx #$0
     stx SPI_BUFFER
 
     ldx #$80 ; Used for the bit number
+
 .bit_loop:
     stx SPI_BITMASK
     pha
@@ -39,15 +40,7 @@ brk_spi_transcieve:
     and #$FE
 
 .clock:
-    ; Toggle the SPI clock
-    ora #$2 ; Set clock bit (pin 2)
-    sta IO_VIA1_PORTA
-    and #$FB ; Clear clock bit (pin 2)
-    sta IO_VIA1_PORTA
-
-    ; Recieve bit
-    lda IO_VIA1_PORTA ; Miso is pin 1
-    and #$1
+    jsr spi_clk
     beq .got_zero
 
     ; Got a 1 
@@ -56,6 +49,7 @@ brk_spi_transcieve:
     sta SPI_BUFFER
 
 .got_zero:
+    ; Invert the bitmask
     lda SPI_BITMASK
     eor #$FF
     sta SPI_BITMASK
@@ -75,3 +69,59 @@ brk_spi_transcieve:
     lda SPI_BUFFER
     plx
     rts
+
+; Read up to 8 bits from SPI and store in A. The clock will be toggled and Mosi will be 1
+; The offset in X will be used to determing bit position. 
+; To read a full byte set it to $80 before calling
+spi_read:
+brk_spi_read:
+    lda #$0
+    sta SPI_BUFFER
+
+.bit_loop:
+    stx SPI_BITMASK
+
+.clock:
+    jsr spi_clk
+    beq .got_zero
+
+    ; Got a 1 
+    lda SPI_BUFFER
+    ora SPI_BITMASK
+    sta SPI_BUFFER
+
+.got_zero:
+    ; Invert the bitmask
+    lda SPI_BITMASK
+    eor #$FF
+    sta SPI_BITMASK
+
+    lda SPI_BUFFER
+    and #$FF
+    sta SPI_BUFFER
+
+    ; Prepare to process next bit
+    txa
+    lsr
+    tax
+
+    cpx #0
+    bne .bit_loop
+
+    lda SPI_BUFFER
+    rts
+
+; Toogle the SPI clock and read the recieved Miso bit into A
+; Expects A to be the existing value of IO_VIA1_PORTA
+spi_clk:
+    ; Toggle the SPI clock
+    ora #$4 ; Set clock bit (pin 2)
+    sta IO_VIA1_PORTA
+    and #$FB ; Clear clock bit (pin 2)
+    sta IO_VIA1_PORTA
+
+    ; Recieve bit
+    lda IO_VIA1_PORTA ; Miso is pin 1
+    and #$2
+    rts
+

@@ -9,4 +9,6 @@ export class SdCardReadyState extends SdStateHandlerBase {
   ): number[] {
     return [R1Flags.ParameterError]
   }
+
+  protected override clockTick(): void {}
 }

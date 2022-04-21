@@ -6,6 +6,7 @@ import { SdCardState } from './states'
 export abstract class SdStateHandlerBase implements ISdCardStateHandler {
   private _buffer = new Shifter()
   private _isSending = false
+  protected _isBusy = false
 
   onClock(
     dataIn: number,
@@ -16,12 +17,18 @@ export abstract class SdStateHandlerBase implements ISdCardStateHandler {
   } {
     if (!selected) return { dataOut: 0 }
 
-    if (this._isSending) {
-      const dataOut = this._buffer.shiftOut()
-      if (this._buffer.empty) this._isSending = false
+    this.clockTick()
 
+    if (this._isSending) {
+      const dataOut = this._isBusy ? 1 : this._buffer.shiftOut()
+      if (!this._isBusy && this._buffer.empty) {
+        this._isSending = false
+        this._buffer = new Shifter()
+      }
+      console.log(`Sending ${dataOut}`)
       return { dataOut }
     } else {
+      //   console.log(`Shifting in ${dataIn}`)
       this._buffer.shiftIn(dataIn)
       if (this._buffer.bitLength() === 48) {
         // Got a complete command
@@ -53,8 +60,16 @@ export abstract class SdStateHandlerBase implements ISdCardStateHandler {
       ])
     }
 
+    console.log(`
+        commandIndex=${commandIndex},
+        argument=${argument},
+        crc=${crc},
+        stopbit=${stopBit},
+    `)
+
     const response = this.handleCommand(commandIndex, argument, crc)
     this._buffer = new Shifter(response)
+    this._isSending = true
   }
 
   protected abstract handleCommand(
@@ -62,4 +77,6 @@ export abstract class SdStateHandlerBase implements ISdCardStateHandler {
     argument: number,
     crc: number
   ): number[]
+
+  protected abstract clockTick(): void
 }

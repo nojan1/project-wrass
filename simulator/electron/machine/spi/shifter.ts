@@ -1,54 +1,72 @@
 export class Shifter {
   private _data: Array<number> = [0x00]
-  private _currentByte: number = 0
-  private _currentBit: number = 0
+
+  private _currentWriteByte: number = 0
+  private _currentWriteBit: number = 0
+
+  private _currentReadByte: number = 0
+  private _currentReadBit: number = 0
 
   empty: boolean = true
 
   constructor(initialData?: number[]) {
     if (initialData) {
       this._data = initialData
-      this._currentByte = initialData.length - 1
-      this._currentBit = 8
+      this._currentWriteByte = initialData.length - 1
+      this._currentWriteBit = 7
     }
   }
 
   byteLength() {
-    return this._currentByte
+    return this._currentWriteByte
   }
 
   bitLength() {
-    return this._currentByte * 8 + this._currentBit
+    return this._currentWriteByte * 8 + this._currentWriteBit
   }
 
   shiftIn(dataIn: number) {
     dataIn = dataIn & 0x1
 
     this.empty = false
-    this._data[this._currentByte] |= dataIn << (8 - this._currentBit)
+    this._data[this._currentWriteByte] |= dataIn << (7 - this._currentWriteBit)
 
-    if (++this._currentBit === 8) {
-      this._currentBit = 0
-      this._currentByte++
-      if (this._currentByte > this._data.length - 1) this._data.push(0x0)
+    // console.log(
+    //   `CurrentByte: ${this._currentWriteByte}, CurrentBit: ${this._currentWriteBit}`
+    // )
+
+    if (++this._currentWriteBit === 8) {
+      this._currentWriteBit = 0
+      this._currentWriteByte++
+      if (this._currentWriteByte > this._data.length - 1) this._data.push(0x0)
     }
+
+    // console.log(this._data.map(x => x.toString(2).padStart(8, '0')).join(' '))
   }
 
   shiftOut() {
+    if (this.empty) return 0
+
     const dataOut =
-      this._data[this._currentByte] & ~(1 << (8 - this._currentBit)) ? 0 : 1
+      (this._data[this._currentReadByte] &
+        (1 << (7 - this._currentReadBit))) ===
+      0
+        ? 0
+        : 1
 
-    if (--this._currentBit < 0) {
-      this._currentBit = 7
+    // console.log(this._data.map(x => x.toString(2).padStart(8, '0')).join(' '))
+    // console.log(`byte: ${this._currentReadByte}, bit: ${this._currentReadBit}`)
 
-      if (--this._currentByte < 0) {
+    if (++this._currentReadBit > 7) {
+      this._currentReadBit = 0
+
+      if (++this._currentReadByte > this._data.length - 1) {
         this.empty = true
-        this._currentByte = 0
-        this._currentBit = 0
-        this._data[0] = 0x0
+        this._currentReadByte--
       }
     }
 
+    // console.log(`Shifting out ${dataOut}`)
     return dataOut
   }
 

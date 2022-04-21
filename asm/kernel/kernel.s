@@ -1,7 +1,8 @@
     .include "include/macros.s"
+    .include "include/constants.s"
+    .include "include/errors.s"
 
     .org $C000 ; Monitor OS area
-    .include "include/constants.s"
     .include "include/monitor/banner.s"
     .include "include/monitor/monitor.s"
     
@@ -11,6 +12,8 @@
     .include "include/utils/str_utils.s"
     .include "include/io/io_generic.s"
     .include "include/io/spi.s"
+
+    .include "include/io/sd/init.s"
 
     .ifdef GRAPHIC_OUTPUT
     .include "include/io/graphic/graphic.s"

@@ -8,7 +8,7 @@ import { SdCardState } from './states'
 export class SdCard implements ISpiDeviceInterface {
   selected: boolean = false
 
-  private _currentState: SdCardState = SdCardState.Uninitialized
+  private _currentState: SdCardState = SdCardState.Idle
   private _stateHandlers = {
     [SdCardState.Uninitialized]: new SdCardUninitializedState(),
     [SdCardState.Idle]: new SdCardIdleState(),
