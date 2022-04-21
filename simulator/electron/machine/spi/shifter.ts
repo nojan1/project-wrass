@@ -12,8 +12,10 @@ export class Shifter {
   constructor(initialData?: number[]) {
     if (initialData) {
       this._data = initialData
+      this._data.push(0x0)
       this._currentWriteByte = initialData.length - 1
-      this._currentWriteBit = 7
+      this._currentWriteBit = 0
+      this.empty = false
     }
   }
 
@@ -66,7 +68,6 @@ export class Shifter {
       }
     }
 
-    // console.log(`Shifting out ${dataOut}`)
     return dataOut
   }
 

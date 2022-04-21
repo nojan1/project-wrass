@@ -8,7 +8,7 @@ sd_dummy_boot_pulses:
     lda #0
     jsr spi_set_device
 
-    ldx #9
+    ldx #10
 .send_pulse:
     lda #$FF
     jsr spi_transcieve
@@ -53,6 +53,9 @@ sd_cmd0:
     ; Read the remaining 7 bits
     ldx #$40
     jsr spi_read
+
+    jsr puthex
+    jsr newline
 
     cmp #1 ; Only the "In idle state" flag should be set
     beq .done

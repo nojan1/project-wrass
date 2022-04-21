@@ -81,7 +81,7 @@ brk_spi_read:
 .bit_loop:
     stx SPI_BITMASK
 
-.clock:
+    lda IO_VIA1_PORTA
     jsr spi_clk
     beq .got_zero
 

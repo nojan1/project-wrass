@@ -11,7 +11,7 @@ export class SdCardUninitializedState implements ISdCardStateHandler {
     dataOut: number
     newState?: SdCardState | undefined
   } {
-    if (selected && dataIn === 1) this._pulsesRecieved++
+    if (!selected && dataIn === 1) this._pulsesRecieved++
 
     return {
       dataOut: 0,

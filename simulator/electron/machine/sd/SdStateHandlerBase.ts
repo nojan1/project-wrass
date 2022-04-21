@@ -22,10 +22,12 @@ export abstract class SdStateHandlerBase implements ISdCardStateHandler {
     if (this._isSending) {
       const dataOut = this._isBusy ? 1 : this._buffer.shiftOut()
       if (!this._isBusy && this._buffer.empty) {
+        console.log('all bits sent')
         this._isSending = false
         this._buffer = new Shifter()
       }
-      console.log(`Sending ${dataOut}`)
+      //   console.log(`Sending ${dataOut}`)
+
       return { dataOut }
     } else {
       //   console.log(`Shifting in ${dataIn}`)

@@ -88,11 +88,8 @@ reset:
     lda #0b01110101
     sta IO_VIA1_DDRA
 
-    ; jsr sd_dummy_boot_pulses
+    jsr sd_dummy_boot_pulses
     jsr sd_cmd0
-
-    jsr puthex
-    jsr newline
 
     lda ERROR
     jsr puthex

@@ -28,6 +28,7 @@ export const useFitToParent = (
   }, [ref, baseWidth, baseHeight, margin, setWidth, setHeight])
 
   useEffect(() => {
+    onResize()
     window.addEventListener('resize', onResize)
 
     return () => {
