@@ -1,4 +1,5 @@
 import fs from 'fs/promises'
+import { app } from 'electron'
 import { R1Flags, SdSpiCommands } from './commands'
 import { SdStateHandlerBase } from './SdStateHandlerBase'
 
@@ -26,12 +27,18 @@ export class SdCardReadyState extends SdStateHandlerBase {
 
   private async readBlock(address: number): Promise<number[]> {
     try {
-      const file = await fs.open('../sd-card.img', 0)
-      const buffer = new Uint8Array()
-      await fs.read(file, buffer, address * this._blockSize, this._blockSize)
+      const file = await fs.open(
+        app.getAppPath() + '/testfiles/sd-card.img',
+        'r'
+      )
+      const buffer = new Uint8Array(this._blockSize)
+      await file.read(buffer, 0, this._blockSize, address * this._blockSize)
+
+      await file.close()
 
       return [R1Flags.Success, 0b11111110, ...Array.from(buffer), 0xaa, 0xab]
     } catch (error) {
+      console.log('Error reading image', error)
       return [R1Flags.ParameterError]
     }
   }

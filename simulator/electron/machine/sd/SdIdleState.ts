@@ -1,5 +1,6 @@
 import { R1Flags, SdSpiCommands } from './commands'
 import { SdStateHandlerBase } from './SdStateHandlerBase'
+import { SdCardState } from './states'
 
 export class SdCardIdleState extends SdStateHandlerBase {
   private _loadingTicks: number = 0
@@ -23,9 +24,12 @@ export class SdCardIdleState extends SdStateHandlerBase {
       this._isBusy = true
       this._loadingTicks = 5
 
-      return Promise.resolve([
-        command === SdSpiCommands.CMD0 ? R1Flags.InIdleState : R1Flags.Success,
-      ])
+      if (command === SdSpiCommands.CMD0) {
+        this._requestedStateChange = SdCardState.Ready
+        return Promise.resolve([R1Flags.InIdleState])
+      }
+
+      return Promise.resolve([R1Flags.Success])
     } else {
       console.log(`Got invalid command ${command}`)
       return Promise.resolve([R1Flags.IllegalCommand])

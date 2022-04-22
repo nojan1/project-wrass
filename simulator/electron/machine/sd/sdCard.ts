@@ -11,8 +11,13 @@ export class SdCard implements ISpiDeviceInterface {
   private _currentState: SdCardState = SdCardState.Uninitialized
   private _stateHandlers = {
     [SdCardState.Uninitialized]: new SdCardUninitializedState(),
-    [SdCardState.Idle]: new SdCardIdleState(),
-    [SdCardState.Ready]: new SdCardReadyState(),
+    [SdCardState.Idle]: new SdCardIdleState(this.setState.bind(this)),
+    [SdCardState.Ready]: new SdCardReadyState(this.setState.bind(this)),
+  }
+
+  private setState(newState: SdCardState) {
+    console.log(`SD-Card is now in state ${newState}`)
+    this._currentState = newState
   }
 
   onClock(dataIn: number): number {

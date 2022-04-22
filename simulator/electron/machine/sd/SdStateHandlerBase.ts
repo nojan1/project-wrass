@@ -3,10 +3,16 @@ import { R1Flags, SdSpiCommands } from './commands'
 import { ISdCardStateHandler } from './sdState'
 import { SdCardState } from './states'
 
+export type StateChangeCallback = (newState: SdCardState) => void
+
 export abstract class SdStateHandlerBase implements ISdCardStateHandler {
   private _buffer = new Shifter()
   private _isSending = false
   protected _isBusy = false
+  protected _requestedStateChange: SdCardState | undefined
+
+  // eslint-disable-next-line no-useless-constructor
+  constructor(protected _stateChangeCallback: StateChangeCallback) {}
 
   onClock(
     dataIn: number,
@@ -25,12 +31,15 @@ export abstract class SdStateHandlerBase implements ISdCardStateHandler {
         console.log('all bits sent')
         this._isSending = false
         this._buffer = new Shifter()
+
+        if (this._requestedStateChange) {
+          this._stateChangeCallback(this._requestedStateChange)
+          this._requestedStateChange = undefined
+        }
       }
-      //   console.log(`Sending ${dataOut}`)
 
       return { dataOut }
     } else {
-      //   console.log(`Shifting in ${dataIn}`)
       this._buffer.shiftIn(dataIn)
       if (this._buffer.bitLength() === 48) {
         // Got a complete command

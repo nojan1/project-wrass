@@ -1,3 +1,4 @@
+SD_CARD_SPI_DEVICE = 1
 
 ; Send the 72 dummy pulses required to boot an SD-card
 sd_dummy_boot_pulses:
@@ -28,7 +29,7 @@ sd_cmd0:
     lda #0
     sta ERROR
 
-    lda #1 ; SPI device 1
+    lda #SD_CARD_SPI_DEVICE
     jsr spi_set_device
 
     ; Send startbits and command index 0
@@ -54,9 +55,6 @@ sd_cmd0:
     ldx #$40
     jsr spi_read
 
-    jsr puthex
-    jsr newline
-
     cmp #1 ; Only the "In idle state" flag should be set
     beq .done
 
@@ -77,7 +75,7 @@ sd_cmd16:
     lda #0
     sta ERROR
 
-    lda #1 ; SPI device 1
+    lda #SD_CARD_SPI_DEVICE
     jsr spi_set_device
 
     ; Send startbits and command index 16
@@ -108,9 +106,6 @@ sd_cmd16:
     ; Read the remaining 7 bits
     ldx #$40
     jsr spi_read
-
-    jsr puthex
-    jsr newline
 
     cmp #0 ; Only the "In idle state" flag should be set
     beq .done
