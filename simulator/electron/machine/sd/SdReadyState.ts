@@ -1,10 +1,18 @@
 import fs from 'fs/promises'
-import { app } from 'electron'
+import path from 'path'
 import { R1Flags, SdSpiCommands } from './commands'
-import { SdStateHandlerBase } from './SdStateHandlerBase'
+import { SdStateHandlerBase, StateChangeCallback } from './SdStateHandlerBase'
 
 export class SdCardReadyState extends SdStateHandlerBase {
   private _blockSize = 0
+
+  // eslint-disable-next-line no-useless-constructor
+  constructor(
+    private _sdImagePath: string,
+    _stateChangeCallback: StateChangeCallback
+  ) {
+    super(_stateChangeCallback)
+  }
 
   protected handleCommand(
     command: SdSpiCommands,
@@ -27,10 +35,7 @@ export class SdCardReadyState extends SdStateHandlerBase {
 
   private async readBlock(address: number): Promise<number[]> {
     try {
-      const file = await fs.open(
-        app.getAppPath() + '/testfiles/sd-card.img',
-        'r'
-      )
+      const file = await fs.open(this.getSdImagePath(), 'r')
       const buffer = new Uint8Array(this._blockSize)
       await file.read(buffer, 0, this._blockSize, address * this._blockSize)
 
@@ -41,5 +46,10 @@ export class SdCardReadyState extends SdStateHandlerBase {
       console.log('Error reading image', error)
       return [R1Flags.ParameterError]
     }
+  }
+
+  private getSdImagePath() {
+    if (!this._sdImagePath) throw new Error('No image path provided')
+    return path.resolve(this._sdImagePath)
   }
 }

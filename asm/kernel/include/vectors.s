@@ -89,17 +89,16 @@ reset:
     sta IO_VIA1_DDRA
 
     jsr sd_dummy_boot_pulses
-; brk_before_cmd0:
+
     jsr sd_cmd0
     jsr check_and_print_error
-; brk_before_cmd16:
+
     jsr sd_cmd16
     jsr check_and_print_error
 
-brk_before_cmd17:
     ldx #0
-    ldy #0
-    lda #0
+    ldy #$20
+    lda #1
     jsr sd_read_block
     jsr check_and_print_error
 

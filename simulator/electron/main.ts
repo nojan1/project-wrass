@@ -56,6 +56,9 @@ function parseOptions() {
       type: 'string',
       choices: ['lcd', 'graphic'],
       default: 'lcd',
+    })
+    .option('sd-image', {
+      type: 'string',
     }).argv
 }
 
@@ -88,12 +91,12 @@ const createDebugger = async (options: any) => {
     : getTestProgramBuffer()
 
   symbols = options.listing ? await parseListing(options.listing) : null
-
   const boardContext = initBoard(
     (channel: string, data: any) => mainWindow?.webContents.send(channel, data),
     data,
     options.loadAddress,
-    options.resetAddress ?? options.loadAddress
+    options.resetAddress ?? options.loadAddress,
+    options.sdImage
   )
 
   const initialBreakpoints: Array<Breakpoint> = []

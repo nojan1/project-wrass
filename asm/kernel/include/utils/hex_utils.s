@@ -16,7 +16,7 @@ puthex:
 
 ; convert the hex number (0-15) stored in A to ascii and calls putc
 putchex:
-    cmp #9
+    cmp #10
     bcs .above_9
 
     clc

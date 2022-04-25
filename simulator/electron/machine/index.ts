@@ -49,7 +49,8 @@ export const initBoard = (
   sendData: SendDataCallback,
   loadData: Buffer | null = null,
   loadAdress: number = 0x020,
-  entryAddress: number = 0x8000
+  entryAddress: number = 0x8000,
+  sdImagePath: string
 ): BoardInitContext => {
   const lcdVia1 = new VIA()
   lcdVia1.registerCallbackHandler(new LcdController(sendData))
@@ -57,7 +58,7 @@ export const initBoard = (
   const via1 = new VIA()
   via1.registerCallbackHandler(
     new SpiViaCallbackHandler({
-      1: new SdCard(),
+      1: new SdCard(sdImagePath),
       2: new SpiEchoDevice(),
     })
   )

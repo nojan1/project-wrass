@@ -76,6 +76,17 @@ sd_read_block:
     jmp .inner_loop
 
 .end_of_packet:
+    ; Read the last 2 bytes up to 512... TODO: Revisit this
+    .repeat 2
+    lda #$FF
+    jsr spi_transcieve
+
+    ; Store the byte here...
+    jsr puthex
+    lda " "
+    jsr putc
+    .endrepeat
+
     ; Read CRC bytes
     lda #$FF
     jsr spi_transcieve
