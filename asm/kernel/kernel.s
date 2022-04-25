@@ -17,6 +17,8 @@
     .include "include/io/sd/init.s"
     .include "include/io/sd/ops.s"
 
+    .include "include/io/fs/partition.s"
+
     .ifdef GRAPHIC_OUTPUT
     .include "include/io/graphic/graphic.s"
     .include "include/io/graphic/io_graphic.s"

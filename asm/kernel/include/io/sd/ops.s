@@ -1,32 +1,43 @@
-; Read a block from the SD card using the block address stored in A, X and Y on the format
-; 0 X Y A
+; Read a block from the SD card (512 byte) using the block address stored in LBA_ADDRESS
 ; The data read will be put into SD_BUFFER
-; Mutates: A, X, Y
 sd_read_block:
     sei
-    
     pha
+    phx
+    phy
+
     lda #SD_CARD_SPI_DEVICE
     jsr spi_set_device
 
     lda #0
     sta ERROR
 
+    ; Store destination to memory, set the high byte to one below since it is
+    ; incremented below before the write starts
+    sta PARAM_16_3
+    lda #>SD_BUFFER - 1
+    sta PARAM_16_3 + 1
+    
     ; Send startbits and command index 17
     lda #%01010001
     jsr spi_transcieve
 
     ; Send parameters (32 bit), block address
-    lda #0
+    ldy #0
+
+    lda LBA_ADDRESS, y
     jsr spi_transcieve   
 
-    txa
+    iny
+    lda LBA_ADDRESS, y
     jsr spi_transcieve   
     
-    tya
+    iny
+    lda LBA_ADDRESS, y
     jsr spi_transcieve   
 
-    pla
+    iny
+    lda LBA_ADDRESS, y
     jsr spi_transcieve   
 
     ; Send CRC (ignored) and stop bit
@@ -41,9 +52,6 @@ sd_read_block:
     ldx #$40
     jsr spi_read
 
-    jsr puthex
-    jsr newline
-
     cmp #0
     bne .bad_token
 
@@ -51,42 +59,26 @@ sd_read_block:
     lda #$FF
     jsr spi_transcieve
 
-    jsr puthex
-    jsr newline
-
     cmp #$FE
     bne .bad_token
 
     ldx #3
 .outer_loop:
-    ldy #255
+    inc PARAM_16_3 + 1
+    ldy #0
     dex
     beq .end_of_packet
 .inner_loop:
     lda #$FF
     jsr spi_transcieve
 
-    ; Store the byte here...
-    jsr puthex
-    lda " "
-    jsr putc
+    sta (PARAM_16_3), y
 
-    dey
+    iny
     beq .outer_loop
     jmp .inner_loop
 
 .end_of_packet:
-    ; Read the last 2 bytes up to 512... TODO: Revisit this
-    .repeat 2
-    lda #$FF
-    jsr spi_transcieve
-
-    ; Store the byte here...
-    jsr puthex
-    lda " "
-    jsr putc
-    .endrepeat
-
     ; Read CRC bytes
     lda #$FF
     jsr spi_transcieve
@@ -106,5 +98,8 @@ sd_read_block:
     sta ERROR
 
 .done:
+    ply
+    plx
+    pla
     cli
     rts

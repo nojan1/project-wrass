@@ -13,12 +13,20 @@ SD_READ_TIMEOUT_string:
 SD_READ_ERROR_string:
     .string "SD_READ_ERROR"
 
+INVALID_MBR_string:
+    .string "INVALID_MBR"
+
+NO_VALID_PARTITION_string:
+    .string "NO_VALID_PARTITION_FOUND"
+
 error_messages:
     .db 0x0 ; Dummy
     .word SD_CARD_INIT_FAILED_string 
     .word SD_CARD_BLOCKSET_FAILED_string
     .word SD_READ_TIMEOUT_string
     .word SD_READ_ERROR_string
+    .word INVALID_MBR_string
+    .word NO_VALID_PARTITION_string
 
 ; Checks for error flag and prints the error
 ; Mutates: PARAM_16_1
