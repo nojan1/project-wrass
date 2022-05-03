@@ -19,6 +19,9 @@ INVALID_MBR_string:
 NO_VALID_PARTITION_string:
     .string "NO_VALID_PARTITION_FOUND"
 
+UNSUPPORTED_NUMBER_OF_FATS_string:
+    .string "UNSUPPORTED_NUMBER_OF_FATS"
+
 error_messages:
     .db 0x0 ; Dummy
     .word SD_CARD_INIT_FAILED_string 
@@ -27,6 +30,7 @@ error_messages:
     .word SD_READ_ERROR_string
     .word INVALID_MBR_string
     .word NO_VALID_PARTITION_string
+    .word UNSUPPORTED_NUMBER_OF_FATS_string
 
 ; Checks for error flag and prints the error
 ; Mutates: PARAM_16_1
