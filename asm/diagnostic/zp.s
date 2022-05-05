@@ -17,7 +17,8 @@ test_zp:
 .test_next:
     test_byte $1, .zp_loop_write_fail
     inc $1
-    bne .success
+    bne .test_next
+    jmp .success
 
 .zp_loop_write_fail:
     lda #ZP_LOOP_WRITE_FAIL
@@ -25,6 +26,7 @@ test_zp:
 
 .zp_first_write_broken:
     lda #ZP_FIRST_WRITE_FAIL
+    jmp .done
 
 .success:
     lda #0

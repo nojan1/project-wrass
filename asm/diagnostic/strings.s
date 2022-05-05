@@ -9,3 +9,6 @@ error_text:
 
 testing_zp_text:
     .string "Testing zero page: "
+
+testing_ram1_text:
+    .string "Testing RAM(1): "

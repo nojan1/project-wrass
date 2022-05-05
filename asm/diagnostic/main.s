@@ -62,6 +62,7 @@ INPUT_BUFFER = $0100 ; Will not be used but is needed for the shared code
     .include "strings.s"
 
     .include "zp.s"
+    .include "memory.s"
 
 reset:  
     ldx #$FF ;Set stackpointer to top of zero page
@@ -78,8 +79,17 @@ reset:
 
     jsr display_init
 
+; Zero page
     putstr_addr testing_zp_text
     pla
+    bne .error
+
+    putstr_addr ok_text
+    jsr newline
+
+; Ram1
+    putstr_addr testing_ram1_text
+    jsr test_lowmem
     bne .error
 
     putstr_addr ok_text
