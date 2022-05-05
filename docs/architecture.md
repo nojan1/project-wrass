@@ -11,7 +11,7 @@ Architecture
 | IO (2) / RAM (4)  | $A200 | $A3FF | 512 bytes |
 | RAM (5)           | $A400 | $BFFF | 7K        |
 | ROM (1) / RAM (6) | $C000 | $CFFF | 8k        |
-| ROM (2)           | $D000 | $FFFF | 8k        |
+| ROM (2)           | $E000 | $FFFF | 8k        |
 
 The different areas marked RAM 3-5 can be switched off by modifing the hardware register located at memory address $0000. It has the following composition:
 

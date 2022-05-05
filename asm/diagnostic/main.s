@@ -1,50 +1,12 @@
-ZP_FIRST_WRITE_FAIL = 1
-ZP_LOOP_WRITE_FAIL = ZP_FIRST_WRITE_FAIL
 
-MEM_CONTROL = $0
-PARAM_16_1 = $3
-CURRENT_LINE = PARAM_16_1 + 2
-CURRENT_COLUMN = CURRENT_LINE +1
-READ_POINTER = CURRENT_COLUMN + 1
-WRITE_POINTER = READ_POINTER + 1
+    .include "constants.s"
+    .include "macro.s"
 
-GRAPHICS_BASE = $A040
-GRAPHICS_CONTROL = GRAPHICS_BASE
-GRAPHICS_YOFFSET = GRAPHICS_CONTROL + 1
-GRAPHICS_XOFFSET = GRAPHICS_YOFFSET + 1
-GRAPHICS_INCREMENT = GRAPHICS_XOFFSET + 1
-GRAPHICS_ADDR_LOW = GRAPHICS_INCREMENT + 1
-GRAPHICS_ADDR_HIGH = GRAPHICS_ADDR_LOW + 1
-GRAPHICS_DATA = GRAPHICS_ADDR_HIGH + 1
+    .org $C000 ; Monitor / Basic area
+    .db $0, $1, $2, $3, $4, $5
 
-INPUT_BUFFER = $0100 ; Will not be used but is needed for the shared code
-
-    .macro test_byte, target, errorlabel
-    ldy #0
-    lda #0  
-    sta (\target),y
-    lda (\target),y
-    cmp #0
-    bne \errorlabel
-    lda #$FF  
-    sta (\target),y
-    lda (\target),y
-    cmp #$FF
-    bne \errorlabel
-    lda #$AA 
-    sta (\target),y
-    lda (\target),y
-    cmp #$AA
-    bne \errorlabel
-    .endmacro
- 
-    .macro putstr_addr, ptr
-    lda #<\ptr
-    sta PARAM_16_1
-    lda #>\ptr
-    sta PARAM_16_1 + 1
-    jsr putstr
-    .endmacro
+    .org $D000
+    .db $0, $1, $2, $3, $4, $5
 
     .org $E000 ; Kernel area
 
@@ -87,9 +49,35 @@ reset:
     putstr_addr ok_text
     jsr newline
 
+; Rom (1)
+    putstr_addr testing_rom1_text
+    jsr test_rom
+    bne .error
+
+    putstr_addr ok_text
+    jsr newline
+
 ; Ram1
+    lda #$01
+    sta MEM_HIGH
+    lda #$80
+    sta MEM_UPPER_BOUNDRY
+
     putstr_addr testing_ram1_text
-    jsr test_lowmem
+    jsr test_mem
+    bne .error
+
+    putstr_addr ok_text
+    jsr newline
+
+; Ram5
+    lda #$a3
+    sta MEM_HIGH
+    lda #$c0
+    sta MEM_UPPER_BOUNDRY
+
+    putstr_addr testing_ram5_text
+    jsr test_mem
     bne .error
 
     putstr_addr ok_text
@@ -103,6 +91,13 @@ reset:
     jsr newline
     putstr_addr error_text
     pla
+    jsr puthex
+
+    jsr newline
+    putstr_addr last_memory_text
+    lda MEM_HIGH
+    jsr puthex
+    lda MEM_LOW
     jsr puthex
 
 .done:
