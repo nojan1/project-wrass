@@ -128,8 +128,10 @@ parse_fat_header:
     putstr_addr number_of_fats_string
     lda SD_BUFFER + 0x10
     cmp #2
-    bne .bad_number_of_fats
+    beq .correct_number_of_fats
+    jmp .bad_number_of_fats
 
+.correct_number_of_fats:
     jsr puthex
 
     jsr newline
