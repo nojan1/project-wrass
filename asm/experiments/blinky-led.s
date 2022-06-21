@@ -24,5 +24,5 @@ loop:
 
 
     .org $FFFC
-    .word reset
+    .word reset 
     .word 0

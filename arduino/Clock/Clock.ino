@@ -5,8 +5,11 @@
 #define AUTO_CLOCK 5
 #define SINGLE_STEP_CLOCK 6
 
-const char ADDR[] = {22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 50};
-const char DATA[] = {39, 41, 43, 45, 47, 49, 51, 53};
+//const char ADDR[] = {22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52};
+const char ADDR[] = {52, 50, 48, 46, 44, 42, 40, 38, 36, 34, 32, 30, 28, 26, 24, 22};
+
+//const char DATA[] = {39, 41, 43, 45, 47, 49, 51, 53};
+const char DATA[] = {53, 51, 49, 47, 45, 43, 41, 39};
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -43,10 +46,9 @@ void loop() {
 
 void emitPulse(){
   digitalWrite(CLOCK_OUT, HIGH);   
-  delay(1);                      
+  delay(1);                 
+   readBuses();     
   digitalWrite(CLOCK_OUT, LOW);   
-
-  readBuses();
 }
 
 void readBuses(){

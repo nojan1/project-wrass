@@ -90,6 +90,15 @@ reset:
 
     jsr sd_dummy_boot_pulses
 
+    ; ; Temp 
+    ; jsr init_sd
+    
+    ; ; Wait here forever... and ever .... and ever
+    ; jmp *
+
+    jsr monitor_loop_start
+
+init_sd:
     jsr sd_cmd0
     jsr check_and_print_error
 
@@ -124,8 +133,4 @@ reset:
     jsr parse_fat_header
     jsr check_and_print_error
 
-.wait_loop:
-    nop
-    jmp .wait_loop
-
-    jsr monitor_loop_start
+    rts

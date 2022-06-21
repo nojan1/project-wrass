@@ -1,0 +1,15 @@
+[build_kernel]
+  command = "vasm6502_oldstyle"
+  args = ["-DGRAPHICOUTPUT", "-wdc02", "-dotdir", "-Fbin", "-L kernel/kernel.list", "-o kernel/kernel.bin", "kernel/kernel.s"]
+[build_kernel.options]
+  cwd = "${workspaceFolder}asm"
+
+[dep]
+  command = "pwd"
+[dep.options]
+  cwd = "${workspaceFolder}asm"
+
+
+[build_kernel_script]
+  command = "build.sh"
+  args = ["kernel/kernel.s", "kernel/kernel.list", "kernel/kernel.bin"]
