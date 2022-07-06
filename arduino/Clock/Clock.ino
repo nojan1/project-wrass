@@ -28,7 +28,7 @@ void setup() {
     pinMode(DATA[x], INPUT);
   }
 
-  //attachInterrupt(digitalPinToInterrupt(CLOCK_IN), readBuses, RISING);
+  attachInterrupt(digitalPinToInterrupt(CLOCK_IN), readBuses, RISING);
 
   Serial.begin(57600);
 }
@@ -46,8 +46,7 @@ void loop() {
 
 void emitPulse(){
   digitalWrite(CLOCK_OUT, HIGH);   
-  delay(1);                 
-   readBuses();     
+  delay(1);                    
   digitalWrite(CLOCK_OUT, LOW);   
 }
 

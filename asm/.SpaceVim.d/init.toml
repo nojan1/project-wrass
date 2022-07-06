@@ -1,0 +1,6 @@
+[[6502_syntax]]
+    repo = "asmM6502.vim"
+    # note: you need to disable merged feature
+    merged = false
+
+

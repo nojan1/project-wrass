@@ -30,6 +30,8 @@ reset:
     ldx #$FF ;Set stackpointer to top of zero page
     txs
 
+    jsr display_init
+    
     jsr test_zp
     pha
 
@@ -38,8 +40,6 @@ reset:
     sta READ_POINTER
     sta CURRENT_LINE
     sta CURRENT_COLUMN
-
-    jsr display_init
 
 ; Zero page
     putstr_addr testing_zp_text
@@ -56,6 +56,7 @@ reset:
 
     putstr_addr ok_text
     jsr newline
+
 
 ; Ram1
     lda #$01
