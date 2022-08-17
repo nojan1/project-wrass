@@ -1,3 +1,4 @@
+; Test a single byte in memory, where target is the memory addres to test and errorlabel is the destionation to jump on failure
     .macro test_byte, target, errorlabel
     ldy #0
     lda #0  

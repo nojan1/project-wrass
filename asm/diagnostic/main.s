@@ -72,9 +72,9 @@ reset:
     jsr newline
 
 ; Ram5
-    lda #$a3
+    lda #$A3
     sta MEM_HIGH
-    lda #$c0
+    lda #$C0
     sta MEM_UPPER_BOUNDRY
 
     putstr_addr testing_ram5_text

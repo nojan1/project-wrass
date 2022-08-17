@@ -91,15 +91,15 @@ monitor_loop:
     inx
     inx
 
-    cpx #$11 ; Have we checked the last available command?
-    bne .next_command
+    cpx #11 ; Have we checked the last available command?
+    bcc .next_command
 
     jmp _monitor_loop_command_error
      
 .command_recieved:
     ; We have a valid command
     ; Parse out the parameters
-
+    ; brk got command
     inx ; num parameters
     phx
     
