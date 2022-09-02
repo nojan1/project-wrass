@@ -12,7 +12,7 @@ export class SystemBus extends Memory {
   }
 
   getSubBusForAddress(address: number): BusInterface | null {
-    if (address >= 0xa000 && address <= 0xa1ff) return this._io
+    if (address >= 0xbc00 && address <= 0xbdff) return this._io
     if (address >= 0xc000 && address <= 0xffff) return this._rom
 
     return null

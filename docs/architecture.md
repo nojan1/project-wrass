@@ -7,9 +7,9 @@ Architecture
 | ----------------- | ----- | ----- | --------- |
 | RAM (1)           | $0000 | $7FFF | 32k       |
 | RAM (2)           | $8000 | $9FFF | 8k        |
-| IO (1) / RAM (3)  | $A000 | $A1FF | 512 bytes |
-| IO (2) / RAM (4)  | $A200 | $A3FF | 512 bytes |
-| RAM (5)           | $A400 | $BFFF | 7K        |
+| RAM (3)           | $A000 | $BBFF | 7K        |
+| IO (1) / RAM (4)  | $BC00 | $BDFF | 512 bytes |
+| IO (2) / RAM (5)  | $BE00 | $BFFF | 512 bytes |
 | ROM (1) / RAM (6) | $C000 | $CFFF | 8k        |
 | ROM (2)           | $E000 | $FFFF | 8k        |
 
@@ -17,8 +17,8 @@ The different areas marked RAM 3-5 can be switched off by modifing the hardware 
 
 | Bit | Description      |
 | --- | ---------------- |
-| 0   | Enable RAM (3)   |
-| 1   | Enable RAM (4)   |
+| 0   | Enable RAM (4)   |
+| 1   | Enable RAM (5)   |
 | 2   | Enable RAM (6)   |
 | 3   |                  |
 | 4   | Blinkenlight (0) |
@@ -35,14 +35,14 @@ The IO space region is a 1k byte range that is divided up into 16 different IO d
 
 | Line | Device  | Lower Address | Upper Address |
 | ---- | ------- | ------------- | ------------- |
-| 0    | IO Card | $A000         | $A03F         |
-| 1    | GPU     | $A040         | $A07F         |
-| 2    | LCD     | $A080         | $A0BF         |
-| 3    |         | $A0C0         | $A0FF         |
-| 4    |         | $A100         | $A13F         |
-| 5    |         | $A140         | $A17F         |
-| 6    |         | $A180         | $A1BF         |
-| 7    |         | $A1C0         | $A1FF         |
+| 0    | IO Card | $BC00         | $BC3F         |
+| 1    | GPU     | $BC40         | $BC7F         |
+| 2    | LCD     | $BC80         | $BCBF         |
+| 3    |         | $BCC0         | $BCFF         |
+| 4    |         | $BD00         | $BD3F         |
+| 5    |         | $BD40         | $BD7F         |
+| 6    |         | $BD80         | $BDBF         |
+| 7    |         | $BDC0         | $BDFF         |
 
 ## IO Line Allocation (2)
 
@@ -50,19 +50,19 @@ IO lines for user expansion
 
 | Line | Device | Lower Address | Upper Address |
 | ---- | ------ | ------------- | ------------- |
-| 8    |        | $A200         | $A23F         |
-| 9    |        | $A240         | $A27F         |
-| 10   |        | $A280         | $A2BF         |
-| 11   |        | $A2C0         | $A2FF         |
-| 12   |        | $A300         | $A33F         |
-| 13   |        | $A340         | $A37F         |
-| 14   |        | $A380         | $A3BF         |
-| 15   |        | $A3C0         | $A3FF         |
+| 8    |        | $BE00         | $BE3F         |
+| 9    |        | $BE40         | $BE7F         |
+| 10   |        | $BE80         | $BEBF         |
+| 11   |        | $BEC0         | $BEFF         |
+| 12   |        | $BF00         | $BF3F         |
+| 13   |        | $BF40         | $BF7F         |
+| 14   |        | $BF80         | $BFBF         |
+| 15   |        | $BFC0         | $BFFF         |
 
 # Reset sequence
 
 During the reset sequence the latch chip controlling the $0000 register is reset to 0. Resulting in all extra RAM banks being switched off. 
 
-Once the 6502 goes to its reset vector and control is handed over to the kernel it will modify it to enable RAM (4). If the user wants to use the external IO it is up to that user to switch off RAM (4) and handle anything that was stored there.
+Once the 6502 goes to its reset vector and control is handed over to the kernel it will modify it to enable RAM (5). If the user wants to use the external IO it is up to that user to switch off RAM (5) and handle anything that was stored there.
 
 The kernel will also use the blinkenlights to indicate the startup sequence. 

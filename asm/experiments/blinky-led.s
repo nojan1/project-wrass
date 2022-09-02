@@ -1,7 +1,7 @@
-PORTB = $6000
-PORTA = $6001
-DDRB = $6002
-DDRA = $6003
+PORTB = $A000
+PORTA = PORTB + 1 
+DDRB = PORTA + 1
+DDRA = DDRB + 1
    
     .org $C000
 reset:

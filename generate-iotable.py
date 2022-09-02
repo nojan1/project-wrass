@@ -1,7 +1,7 @@
 from email.mime import base
 
 
-baseAddr = 0xA000
+baseAddr = 0xBC00
 size = 1024
 numChunks = 16
 chunkSize = int(size / numChunks)
