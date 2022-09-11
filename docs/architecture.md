@@ -8,10 +8,10 @@ Architecture
 | RAM (1)           | $0000 | $7FFF | 32k       |
 | RAM (2)           | $8000 | $9FFF | 8k        |
 | RAM (3)           | $A000 | $BBFF | 7K        |
-| IO (1) / RAM (4)  | $BC00 | $BDFF | 512 bytes |
+| IO (1)            | $BC00 | $BDFF | 512 bytes |
 | IO (2) / RAM (5)  | $BE00 | $BFFF | 512 bytes |
 | ROM (1) / RAM (6) | $C000 | $CFFF | 8k        |
-| ROM (2)           | $E000 | $FFFF | 8k        |
+| ROM (2) / RAM (7) | $E000 | $FFFF | 8k        |
 
 The different areas marked RAM 3-5 can be switched off by modifing the hardware register located at memory address $0000. It has the following composition:
 
