@@ -114,7 +114,7 @@ void setupGPU() {
   attachInterrupt(digitalPinToInterrupt(CLOCK_IN), readBusesGPU, RISING);
   //attachInterrupt(digitalPinToInterrupt(CLOCK_IN), resetDatabus, FALLING);
 
-    Serial.println("GPU mode activated");
+  Serial.println("GPU mode activated");
 }
 
 void loopGPU() {

@@ -1,8 +1,8 @@
 import { SendDataCallback } from '.'
 import { ViaCallbackHandler } from './via'
 
-const NUM_COLS = 20
-const NUM_ROWS = 4
+const NUM_COLS = 16
+const NUM_ROWS = 2
 
 export class LcdController implements ViaCallbackHandler {
   private _data = 0

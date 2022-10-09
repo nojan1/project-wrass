@@ -2,8 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { useLcdText } from '../../hooks'
 
-const NUM_COLS = 20
-const NUM_ROWS = 4
+const NUM_COLS = 16
+const NUM_ROWS = 2
 
 const DisplayOuter = styled.div`
   display: flex;

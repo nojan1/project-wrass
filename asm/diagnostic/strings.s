@@ -5,19 +5,25 @@ err_text:
     .string "ERR"
 
 error_text:
-    .string "Error: "
+    .string "Err: "
 
 last_memory_text:
-    .string " last accessed memory $"
+    .string " @ a. mem $"
 
 testing_zp_text:
-    .string "Testing zero page: "
+    .string "Test zero page: "
 
 testing_rom1_text:
-    .string "Testing ROM(1): "
+    .string "Test ROM(1): "
 
 testing_ram1_text:
-    .string "Testing RAM(1): "
+    .string "Test RAM(1): "
 
-testing_ram5_text:
-    .string "Testing RAM(5): "
+testing_ram2_text: 
+    .string "Test RAM(2): "
+
+testing_ram3_text:
+    .string "Test RAM(3): "
+
+done_text:
+    .string "...done :)"

@@ -1,5 +1,7 @@
 CONTROL=$0
 
+    .org $C000
+    
 reset:
     ldx #$FF ;Set stackpointer to top of zero page
     txs

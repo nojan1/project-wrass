@@ -1,5 +1,5 @@
-NUM_ROWS = 4
-NUM_COLS = 20
+NUM_ROWS = 2
+NUM_COLS = 16
 
 ; Check for and return an available charactor from the input buffer
 ; The character will be placed in A

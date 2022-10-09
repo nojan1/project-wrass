@@ -21,6 +21,27 @@ newline:
 _newline_not_max_row:
     sta CURRENT_LINE
 
+    ; A now hold the current line we should be on
+    jsr goto_current_line ; go there
+
+    ; Overwrite the entire row with space
+    pha
+    lda #" "
+    ldx #NUM_COLS 
+.print_next:
+    jsr putc
+    dex
+    bne .print_next
+
+    pla
+    jsr goto_current_line ; Go back to start of row
+
+    pla
+    plx
+    rts
+
+goto_current_line:
+    pha
     tax
     lda #0
 _newline_offset_calculation_loop:
@@ -36,6 +57,5 @@ _newline_offset_calculated
     ora #$80 ; Set 7th bit
     jsr lcd_instruction
 
-    plx
     pla
     rts

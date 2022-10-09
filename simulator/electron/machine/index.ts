@@ -6,6 +6,7 @@ import { IoMultiplexer } from './io'
 import { IoCard } from './ioCard'
 import { KeyboardController } from './keyboardController'
 import { LcdController } from './lcdController'
+import { MemoryControlRegister } from './memoryControlRegister'
 import { MyDebugger } from './myDebugger'
 import { SdCard } from './sd/sdCard'
 import { SpiEchoDevice } from './spi/spiEchoDevice'
@@ -73,7 +74,8 @@ export const initBoard = (
     2: lcdVia1,
   })
 
-  const bus = new SystemBus(sendData, io)
+  const memoryControlRegister = new MemoryControlRegister(sendData)
+  const bus = new SystemBus(memoryControlRegister, io)
   if (loadData) setMemory(bus, loadData, loadAdress, entryAddress)
 
   const board = createBoard(bus)

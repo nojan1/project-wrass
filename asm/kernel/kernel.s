@@ -3,14 +3,21 @@
     .include "include/errors.s"
 
     .org $C000 ; Monitor OS area
+    .include "include/utils/hex_utils.s"
+
+    .ifdef BASIC
+    .include "include/basic/init.s"
+    .else
     .include "include/monitor/banner.s"
     .include "include/monitor/monitor.s"
-    
+
     .org $E000 ; Kernel area
 
-    .include "include/utils/hex_utils.s"
     .include "include/utils/str_utils.s"
     .include "include/utils/error_utils.s"
+    .endif
+
+    .include "include/keyboard.s"
     .include "include/io/io_generic.s"
     .include "include/io/spi.s"
 
@@ -27,7 +34,9 @@
     .include "include/io/lcd/io_lcd.s"
     .endif
 
+    .ifndef BASIC
     .include "include/vectors.s"
+    .endif
 
     .include "include/keymap.s"
 
