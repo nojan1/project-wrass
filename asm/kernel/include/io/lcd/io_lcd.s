@@ -26,7 +26,7 @@ _newline_not_max_row:
 
     ; Overwrite the entire row with space
     pha
-    lda #" "
+    lda #$20
     ldx #NUM_COLS 
 .print_next:
     jsr putc
@@ -42,18 +42,11 @@ _newline_not_max_row:
 
 goto_current_line:
     pha
-    tax
-    lda #0
-_newline_offset_calculation_loop:
-    cpx #0
-    beq _newline_offset_calculated
     
     clc
-    adc #NUM_COLS ; Add the number of characters on each LCD row
-    dex
-    jmp _newline_offset_calculation_loop
-
-_newline_offset_calculated
+    ror a
+    ror a
+    
     ora #$80 ; Set 7th bit
     jsr lcd_instruction
 

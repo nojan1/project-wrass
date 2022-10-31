@@ -111,8 +111,8 @@ unsigned int currentWrite = 0;
 void setupGPU() {
   resetDatabus();
 
-  attachInterrupt(digitalPinToInterrupt(CLOCK_IN), readBusesGPU, RISING);
-  //attachInterrupt(digitalPinToInterrupt(CLOCK_IN), resetDatabus, FALLING);
+  attachInterrupt(digitalPinToInterrupt(GPU_CS), readBusesGPU, FALLING);
+  //attachInterrupt(digitalPinToInterrupt(GPU_CS), resetDatabus, RISING);
 
   Serial.println("GPU mode activated");
 }
@@ -131,9 +131,7 @@ void resetDatabus() {
   }
 }
 
-void readBusesGPU(){
-  if(digitalRead(GPU_CS) == HIGH) return;
-  
+void readBusesGPU(){  
   unsigned int address = 0;
   for (int n = 0; n < 6; n += 1) {
     int bit = digitalRead(ADDR[n]) ? 1 : 0;
@@ -141,6 +139,8 @@ void readBusesGPU(){
   }
   
   if(digitalRead(READ_WRITE) == HIGH){
+    Serial.print("R ");
+    Serial.println(address, HEX);
     // Read operation 
     if(address == 6) {
       output(0); // No real VRAM to read from
@@ -154,6 +154,11 @@ void readBusesGPU(){
       int bit = digitalRead(DATA[n]) ? 1 : 0;
       data = (data << 1) + bit;
     }
+
+    // Serial.print("W ");
+    // Serial.print(address, HEX);
+    // Serial.print(", ");
+    // Serial.println(data, HEX);
 
     if(address == 6) {
       unsigned int memoryAddress = getMemoryAddress();
@@ -169,12 +174,12 @@ void readBusesGPU(){
 
         if(writeRow != row || writeCol != col + 1) {
           // We have moved.. need to set cursor position
-          /*Serial.write(0x1B);
-          Serial.print("[");
-          Serial.print(writeRow);
-          Serial.print(";");
-          Serial.print(writeCol);
-          Serial.print("H");*/
+          // Serial.write(0x1B);
+          // Serial.print("[");
+          // Serial.print(writeRow);
+          // Serial.print(";");
+          // Serial.print(writeCol);
+          // Serial.print("H");
 
           tempCurrentSend = (currentSend + 1) % 10;
           sprintf(sendBuffer[tempCurrentSend], "%c[%i;%iH", 0x1B, writeRow, writeCol);
@@ -184,6 +189,8 @@ void readBusesGPU(){
         sprintf(sendBuffer[tempCurrentSend], "%c", data);
         currentSend = tempCurrentSend;
         
+        // Serial.write(data);
+
         col = writeCol;
         row = writeRow;
       }
@@ -196,23 +203,22 @@ void readBusesGPU(){
     }else{
       registers[address % 6] = data;  
 
-      /*char output[20];
+      char output[20];
       sprintf(output, "Got register write  %04x  %02x", address, data);
-      Serial.println(output);  */
+      Serial.println(output); 
     }
   }
 }
 
 void output(unsigned int data) {
-   int tempCurrentSend = (currentSend + 1) % 10;
-   sprintf(sendBuffer[tempCurrentSend], "Attempting to output %02x", data);
-   currentSend = tempCurrentSend;
-  return;
+  //  int tempCurrentSend = (currentSend + 1) % 10;
+  //  sprintf(sendBuffer[tempCurrentSend], "Attempting to output %02x", data);
+  //  currentSend = tempCurrentSend;
   
-  for(int x = 0; x < 8; x++){
-    pinMode(DATA[x], OUTPUT);
-    digitalWrite(DATA[x], (data << x) & 1 ? HIGH : LOW);
-  }
+  // for(int x = 0; x < 8; x++){
+  //   pinMode(DATA[x], OUTPUT);
+  //   digitalWrite(DATA[x], (data << x) & 1 ? HIGH : LOW);
+  // }
 }
 
 unsigned int getMemoryAddress() {

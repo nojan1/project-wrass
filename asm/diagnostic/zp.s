@@ -17,6 +17,8 @@ test_zp:
 .test_next:
     test_byte $1, .zp_loop_write_fail
     inc $1
+    lda $1
+    cmp #255
     bne .test_next
     jmp .success
 

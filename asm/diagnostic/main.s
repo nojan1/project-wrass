@@ -26,12 +26,18 @@
     .include "zp.s"
     .include "memory.s"
 
+test:
+    .string "test"
+
 reset:  
     ldx #$FF ;Set stackpointer to top of zero page
     txs
 
     jsr display_init
     
+    ; jsr newline
+    ; putstr_addr test
+
     jsr test_zp
     pha
 
