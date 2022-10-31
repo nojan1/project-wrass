@@ -4,11 +4,11 @@ DEVICE = hx1k
 
 all: $(PROJ).rpt $(PROJ).bin
 
-%.json: %.v
-	yosys -p 'synth_ice40 -top top -json $@' $<
+%.json: $(wildcard *.v)
+	yosys -p 'synth_ice40 -top $(PROJ) -json $@' $?
 
 %.asc: %.json
-	nextpnr-ice40 --hx1k --package vq100 --json $< --pcf $(PIN_DEF) --asc $@
+	nextpnr-ice40 --top $(PROJ) --hx1k --package vq100 --json $< --pcf $(PIN_DEF) --asc $@
 
 %.bin: %.asc
 	icepack $< $@

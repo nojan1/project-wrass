@@ -1,5 +1,7 @@
 # Project Wrass
 
+![render](docs/render.png)
+
 The purpose of Project Wrass is to develop the **Wrass 1**.
 
 A 6502 based computer having the following specs.
@@ -20,7 +22,7 @@ A 6502 based computer having the following specs.
 
 ## Software
 
-The 16KB rom is bankable using an external switch. This allows the computer to run "2 sets" of software.
+The 16KB ROM is bankable using an external switch. This allows the computer to run "2 sets" of software.
 
 The existing one is a simple homebrew "monitor" giving access to simple read, write and jump commands.
 
