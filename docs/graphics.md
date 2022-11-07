@@ -6,9 +6,9 @@ The graphics unit is a separete IO device hooked up to one of the IO lines in th
 
 | Address | Register name           | Description                                                                                                                 |
 | ------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| $0000   | Control                 | Uset to control the overall operation of the graphics unit                                                                  |
-| $0001   | Y-Offset                | Global screen offset for render, bit 6 controls positive or negative offset, bit 7 is ignored                               |
-| $0002   | X-Offset                | Global screen offset for render, bit 6 controls positive or negative offset, bit 7 is ignored                               |
+| $0000   | Control                 | Used to control the overall operation of the graphics unit                                                                  |
+| $0001   | Y-Offset                | Global screen offset for render                                                                                             |
+| $0002   | X-Offset                | Global screen offset for render                                                                                             |
 | $0003   | Increment               | After a memory operation using the Read/Write register the address will increment/decrement (control by bit 7) by this much |
 | $0004   | Internal address (Low)  | When doing memory access this is the LOW part of the 16 bit address                                                         |
 | $0005   | Internal address (High) | When doing memory access this is the HIGH part of the 16 bit address                                                        |
@@ -22,10 +22,10 @@ The framebuffer, tilemap and color attributes are stored in seperate RAM. Writes
 
 | Type             | Lower Address | Upper Address |
 | ---------------- | ------------- | ------------- |
-| Framebuffer      | $C000         | $D2C0         |
-| Color Attributes | $D2C1         | $E581         |
-| Tilemap          | $E582         | $ED81         |
-| Colors           | $ED82         | $EE02         |
+| Framebuffer      | $0000         | $1FFF         |
+| Color Attributes | $2000         | $3FFF         |
+| Tilemap          | $4000         | $47FF         |
+| Colors           | $4800         | $4880         |
 
 ### Framebuffer format
 

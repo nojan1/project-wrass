@@ -13,7 +13,7 @@ A 6502 based computer having the following specs.
 > **Future specs**:  
 >
 > * VGA output of 640x480 with 256 colors
-> * IO Card with 6522 Vias and support for SPI
+> * IO Card with W65C22 Vias and support for SPI
 > * Support for SD cards on IO card
 > * 8Mhz CPU clock speed
 > * Global scroll registers for video

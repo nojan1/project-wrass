@@ -6,15 +6,14 @@ import { tileset } from './tileset'
 
 const DisplayWidth = 640
 const DisplayHeight = 480
-const CharCols = 80
-const CharRows = 60
+const TotalCharCols = 128
+const TotalCharRows = 64
 
-const MemoryBase = 0xc000
-const FramebufferStart = 0xc000 - MemoryBase
-const ColorAttributesStart = 0xd2c1 - MemoryBase
-const TilemapStart = 0xe582 - MemoryBase
-const ColorsStart = 0xed82 - MemoryBase
-const MemoryTop = 0xee02
+const FramebufferStart = 0x0000
+const ColorAttributesStart = FramebufferStart + 0x2000
+const TilemapStart = ColorAttributesStart + 0x2000
+const ColorsStart = TilemapStart + 0x800
+const MemoryTop = ColorsStart + 0x80
 
 export enum GpuRegisters {
   // eslint-disable-next-line no-unused-vars
@@ -35,7 +34,7 @@ export enum GpuRegisters {
 
 export class Gpu implements BusInterface {
   private _registers: Uint8ClampedArray
-  private _internalMemory = new Uint8ClampedArray(MemoryTop - MemoryBase + 1)
+  private _internalMemory = new Uint8ClampedArray(MemoryTop + 1)
 
   constructor(private _sendData: SendDataCallback) {
     this._registers = new Uint8ClampedArray([0x0, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0])
@@ -48,7 +47,7 @@ export class Gpu implements BusInterface {
       this._internalMemory[ColorsStart + i] = color
     })
 
-    for (let i = 0; i < CharCols * CharRows; i++) {
+    for (let i = 0; i < TotalCharCols * TotalCharRows; i++) {
       this._internalMemory[ColorAttributesStart + i] = 0b00010110
     }
 
@@ -63,15 +62,14 @@ export class Gpu implements BusInterface {
       const internalAddress =
         (this._registers[GpuRegisters.AddressHigh] << 8) &
         this._registers[GpuRegisters.AddressLow]
-      const arrayIndex = internalAddress - MemoryBase
 
       this.handleIncrement()
 
-      if (arrayIndex > this._internalMemory.length) {
+      if (internalAddress > this._internalMemory.length) {
         return 0
       }
 
-      return this._internalMemory[arrayIndex]
+      return this._internalMemory[internalAddress]
     }
 
     return this._registers[register]
@@ -92,12 +90,13 @@ export class Gpu implements BusInterface {
       const internalAddress =
         (this._registers[GpuRegisters.AddressHigh] << 8) |
         this._registers[GpuRegisters.AddressLow]
-      const arrayIndex = internalAddress - MemoryBase
+
+      // console.log(`Wrote ${value} to ${toHex(internalAddress, 4, true)}`)
 
       this.handleIncrement()
 
-      if (arrayIndex <= this._internalMemory.length) {
-        this._internalMemory[arrayIndex] = value
+      if (internalAddress <= this._internalMemory.length) {
+        this._internalMemory[internalAddress] = value
       }
     }
 
@@ -131,37 +130,53 @@ export class Gpu implements BusInterface {
   }
 
   private buildAndSendFramebuffer() {
-    const frameBuffer = new Uint8ClampedArray(DisplayWidth * DisplayHeight * 4)
+    const rawScreenbuffer = new Uint8ClampedArray(
+      DisplayWidth * DisplayHeight * 4
+    )
 
-    for (let pixelCol = 0; pixelCol < DisplayWidth; pixelCol++) {
-      for (let pixelRow = 0; pixelRow < DisplayHeight; pixelRow++) {
-        const col = ~~(pixelCol / 8)
-        const row = ~~(pixelRow / 8)
+    const scrollX = this._registers[GpuRegisters.XOffset]
+    const scrollY = this._registers[GpuRegisters.YOffset]
 
-        const subCol = pixelCol % 8
-        const subRow = pixelRow % 8
+    for (let scanline = 0; scanline < DisplayHeight; scanline++) {
+      for (let cycle = 0; cycle < DisplayWidth; cycle++) {
+        const offsetCycle = (cycle + (1024 - scrollX)) & 0x3ff
+        const offsetScanline = (scanline + (512 - scrollY)) & 0x1ff
 
-        const char =
-          this._internalMemory[FramebufferStart + col + row * CharCols]
-        const tile = this._internalMemory[TilemapStart + subRow + char * 8]
-        const bit = ((tile >> subCol) & 0x1) === 1
+        const charColumn = offsetCycle >> 3
+        const charRow = offsetScanline >> 3
+
+        const framebufferAddress = (charRow << 7) | charColumn
+
+        const tileNumber =
+          this._internalMemory[FramebufferStart + framebufferAddress]
+
+        const charRenderColumn = offsetCycle & 0x7
+        const charRenderRow = offsetScanline & 0x7
+
+        const tileDataAddress = charRenderRow + (tileNumber << 3)
+
+        const tileData = this._internalMemory[TilemapStart + tileDataAddress]
+        const pixelOn = ((tileData >> charRenderColumn) & 0x1) === 1
 
         const colorAttribute =
-          this._internalMemory[ColorAttributesStart + col + row * CharCols]
-        const colorIndex = bit
+          this._internalMemory[ColorAttributesStart + framebufferAddress]
+
+        const colorIndex = pixelOn
           ? (colorAttribute >> 4) & 0xf
           : colorAttribute & 0xf
 
         const color = this._internalMemory[ColorsStart + colorIndex]
-        const frameBufferIndex = (pixelRow * DisplayWidth + pixelCol) * 4
 
-        frameBuffer[frameBufferIndex + 0] = ((color >> 6) & 0b11) * 64
-        frameBuffer[frameBufferIndex + 1] = ((color >> 3) & 0b111) * 32
-        frameBuffer[frameBufferIndex + 2] = ((color >> 0) & 0b111) * 32
-        frameBuffer[frameBufferIndex + 3] = 255
+        // Simulator specific, the data to send to the render component
+        const screenBufferIndex = (scanline * DisplayWidth + cycle) * 4
+
+        rawScreenbuffer[screenBufferIndex + 0] = ((color >> 6) & 0b11) * 64
+        rawScreenbuffer[screenBufferIndex + 1] = ((color >> 3) & 0b111) * 32
+        rawScreenbuffer[screenBufferIndex + 2] = ((color >> 0) & 0b111) * 32
+        rawScreenbuffer[screenBufferIndex + 3] = 255
       }
     }
 
-    this._sendData('framebuffer-update', frameBuffer)
+    this._sendData('framebuffer-update', rawScreenbuffer)
   }
 }
