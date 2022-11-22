@@ -1,0 +1,4 @@
+*.out
+hardware.json
+.sconsign.dblite
+*.bin
