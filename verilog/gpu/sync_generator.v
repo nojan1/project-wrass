@@ -26,14 +26,14 @@ always @ (posedge pixel_clk or negedge rst) begin
         end
     
         if (cycle >= 640 || scanline >= 480) begin
-            vga_blank <= 1'b1;
+            vga_blank = 1'b1;
         end else begin
-            vga_blank <= 1'b0;
+            vga_blank = 1'b0;
         end
     end
 end
 
-assign vga_hs = cycle >= (640 + 16) && cycle <= (640 + 16 + 96);
-assign vga_vs = scanline >= (480 + 10) && scanline <= (480 + 10 + 2); 
+assign vga_hs = ~(cycle >= (640 + 16) && cycle < (640 + 16 + 96));
+assign vga_vs = ~(scanline >= (480 + 10) && scanline < (480 + 10 + 2)); 
 
 endmodule

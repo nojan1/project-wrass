@@ -2,3 +2,4 @@
 hardware.json
 .sconsign.dblite
 *.bin
+mem.txt
