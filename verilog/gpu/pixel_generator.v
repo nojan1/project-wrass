@@ -22,19 +22,20 @@ reg [7:0] color;
 always @ (posedge clk or negedge rst) begin
     if(rst == 0) begin
         step <= 0;
+        pixelOn <= 0;
     end else begin
         case (step)
             1: begin
-                clk_read_addr <= (cycle << 4) | (scanline >> 3);
+                clk_read_addr <= (cycle << 2) | (scanline >> 4);
             end 
             2: begin
                 tileNumber <= clk_read_data;
-                clk_read_addr <= 16'h4000 + (cycle & 7) + (tileNumber << 3);
+                clk_read_addr <= 16'h1800 + (cycle & 7) + (tileNumber << 3);
             end
             3: begin
                 // tileData = clk_read_data;
-                pixelOn <= (clk_read_data >> (scanline & 7)) & 1;
-                clk_read_addr <= 16'h2000 + (cycle << 4) | (scanline >> 3); 
+                pixelOn <= (clk_read_data >> (cycle & 7)) & 1;
+                clk_read_addr <= 16'h0800 + (cycle << 2) | (scanline >> 4); 
             end
         endcase
 
@@ -47,12 +48,12 @@ always @ (posedge clk or negedge rst) begin
 end
 
 always @ (posedge pixel_clk) begin
-    color = clk_read_addr[7:0];
-    // if(pixelOn) begin
-    //     color <= 0;
-    // end else begin
-    //     color <= 255;
-    // end
+    // color = clk_read_addr[7:0];
+    if(pixelOn) begin
+        color <= 0;
+    end else begin
+        color <= 255;
+    end
 end
 
 assign pixel_data = color;

@@ -7,7 +7,7 @@ module memory #(
     output reg [7:0] clk_read_data
 );
 
-    reg [7:0] mem [0:18448];
+    reg [7:0] mem [0:7000];
     
     // Interact with the memory block
     always @ (posedge clk) begin

@@ -1046,13 +1046,13 @@ const tileset = [
 
 const fs = require("fs");
 
-const TotalCharCols = 128;
-const TotalCharRows = 64;
+const TotalCharCols = 64;
+const TotalCharRows = 32;
 
 const FramebufferStart = 0x0000;
-const ColorAttributesStart = FramebufferStart + 0x2000;
-const TilemapStart = ColorAttributesStart + 0x2000;
-const ColorsStart = TilemapStart + 0x800;
+const ColorAttributesStart = FramebufferStart + 0x0800;
+const TilemapStart = ColorAttributesStart + 0x0800;
+const ColorsStart = TilemapStart + 0x0800;
 const MemSize = ColorsStart + 16;
 
 console.log(`Needs ${MemSize} bytes of memory`);
@@ -1070,6 +1070,32 @@ colors.forEach((color, i) => {
 for (let i = 0; i < TotalCharCols * TotalCharRows; i++) {
   mem[ColorAttributesStart + i] = 0b00010110;
 }
+
+mem[FramebufferStart + TotalCharCols * 5 + 10] = "H".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * 5 + 11] = "e".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * 5 + 12] = "l".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * 5 + 13] = "l".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * 5 + 14] = "o".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * 5 + 15] = " ".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * 5 + 16] = "W".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * 5 + 17] = "o".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * 5 + 18] = "r".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * 5 + 19] = "l".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * 5 + 20] = "d".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * 5 + 21] = "!".charCodeAt(0);
+
+mem[ColorAttributesStart + TotalCharCols * 5 + 10] = (1 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * 5 + 11] = (2 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * 5 + 12] = (3 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * 5 + 13] = (4 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * 5 + 14] = (5 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * 5 + 15] = (6 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * 5 + 16] = (7 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * 5 + 17] = (8 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * 5 + 18] = (9 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * 5 + 19] = (10 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * 5 + 20] = (11 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * 5 + 21] = (12 << 4) | 0;
 
 mem.map((x) => x.toString(16)).join("\n");
 

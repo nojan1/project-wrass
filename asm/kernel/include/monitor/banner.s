@@ -42,7 +42,7 @@ print_banner:
     ldx #$0B
     stx GRAPHICS_DATA
 
-    ldx #130
+    ldx #66
     stx GRAPHICS_ADDR_LOW
 
     ldx #$0C

@@ -6,12 +6,12 @@ import { tileset } from './tileset'
 
 const DisplayWidth = 640
 const DisplayHeight = 480
-const TotalCharCols = 128
-const TotalCharRows = 64
+const TotalCharCols = 64
+const TotalCharRows = 32
 
 const FramebufferStart = 0x0000
-const ColorAttributesStart = FramebufferStart + 0x2000
-const TilemapStart = ColorAttributesStart + 0x2000
+const ColorAttributesStart = FramebufferStart + 0x0800
+const TilemapStart = ColorAttributesStart + 0x0800
 const ColorsStart = TilemapStart + 0x800
 const MemoryTop = ColorsStart + 0x80
 
@@ -139,13 +139,13 @@ export class Gpu implements BusInterface {
 
     for (let scanline = 0; scanline < DisplayHeight; scanline++) {
       for (let cycle = 0; cycle < DisplayWidth; cycle++) {
-        const offsetCycle = (cycle + (1024 - scrollX)) & 0x3ff
-        const offsetScanline = (scanline + (512 - scrollY)) & 0x1ff
+        const offsetCycle = ((cycle >> 1) + (512 - scrollX)) & 0x1ff
+        const offsetScanline = ((scanline >> 1) + (256 - scrollY)) & 0x0ff
 
         const charColumn = offsetCycle >> 3
         const charRow = offsetScanline >> 3
 
-        const framebufferAddress = (charRow << 7) | charColumn
+        const framebufferAddress = (charRow << 6) | charColumn
 
         const tileNumber =
           this._internalMemory[FramebufferStart + framebufferAddress]

@@ -22,14 +22,14 @@ The framebuffer, tilemap and color attributes are stored in seperate RAM. Writes
 
 | Type             | Lower Address | Upper Address |
 | ---------------- | ------------- | ------------- |
-| Framebuffer      | $0000         | $1FFF         |
-| Color Attributes | $2000         | $3FFF         |
-| Tilemap          | $4000         | $47FF         |
-| Colors           | $4800         | $4880         |
+| Framebuffer      | $0000         | $07FF         |
+| Color Attributes | $0800         | $0FFF         |
+| Tilemap          | $1000         | $17FF         |
+| Colors           | $1800         | $180F         |
 
 ### Framebuffer format
 
-The framebuffer is composed of 80 * 60 bytes confirming to 80 columns and 60 rows layed out in row order. Each byte in the buffer matches a single tile in the tilemap. 
+The framebuffer is composed of 40 * 30 bytes confirming to 40 columns and 30 rows layed out in row order. Each byte in the buffer matches a single tile in the tilemap. 
 
 ### Color Attributes
 

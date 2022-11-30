@@ -35,7 +35,7 @@ goto_position:
     tya
     tax
 
-    ldy #128 ; Width of single line of full ressolution
+    ldy #64 ; Width of single line of full ressolution
     jsr advance_graphic_address
 
     pla
