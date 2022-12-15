@@ -1071,31 +1071,43 @@ for (let i = 0; i < TotalCharCols * TotalCharRows; i++) {
   mem[ColorAttributesStart + i] = 0b00010110;
 }
 
-mem[FramebufferStart + TotalCharCols * 5 + 10] = "H".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * 5 + 11] = "e".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * 5 + 12] = "l".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * 5 + 13] = "l".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * 5 + 14] = "o".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * 5 + 15] = " ".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * 5 + 16] = "W".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * 5 + 17] = "o".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * 5 + 18] = "r".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * 5 + 19] = "l".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * 5 + 20] = "d".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * 5 + 21] = "!".charCodeAt(0);
+const textX = 0;
+const textY = 0;
 
-mem[ColorAttributesStart + TotalCharCols * 5 + 10] = (1 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * 5 + 11] = (2 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * 5 + 12] = (3 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * 5 + 13] = (4 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * 5 + 14] = (5 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * 5 + 15] = (6 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * 5 + 16] = (7 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * 5 + 17] = (8 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * 5 + 18] = (9 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * 5 + 19] = (10 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * 5 + 20] = (11 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * 5 + 21] = (12 << 4) | 0;
+mem[FramebufferStart + TotalCharCols * textY + (textX + 1)] = "H".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * textY + (textX + 2)] = "e".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * textY + (textX + 3)] = "l".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * textY + (textX + 4)] = "l".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * textY + (textX + 5)] = "o".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * textY + (textX + 6)] = " ".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * textY + (textX + 7)] = "W".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * textY + (textX + 8)] = "o".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * textY + (textX + 9)] = "r".charCodeAt(0);
+mem[FramebufferStart + TotalCharCols * textY + (textX + 10)] = "l".charCodeAt(
+  0
+);
+mem[FramebufferStart + TotalCharCols * textY + (textX + 11)] = "d".charCodeAt(
+  0
+);
+mem[FramebufferStart + TotalCharCols * textY + (textX + 12)] = "!".charCodeAt(
+  0
+);
+
+mem[ColorAttributesStart + TotalCharCols * textY + (textX + 1)] = (1 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * textY + (textX + 2)] = (2 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * textY + (textX + 3)] = (3 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * textY + (textX + 4)] = (4 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * textY + (textX + 5)] = (5 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * textY + (textX + 6)] = (6 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * textY + (textX + 7)] = (7 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * textY + (textX + 8)] = (8 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * textY + (textX + 9)] = (9 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * textY + (textX + 10)] =
+  (10 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * textY + (textX + 11)] =
+  (11 << 4) | 0;
+mem[ColorAttributesStart + TotalCharCols * textY + (textX + 12)] =
+  (12 << 4) | 0;
 
 mem.map((x) => x.toString(16)).join("\n");
 

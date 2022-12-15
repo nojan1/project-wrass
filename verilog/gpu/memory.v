@@ -2,7 +2,7 @@ module memory #(
      parameter   INIT_FILE = "mem.txt"
 ) (
     input clk,
-    input [14:0] clk_read_addr,
+    input [12:0] clk_read_addr,
     
     output reg [7:0] clk_read_data
 );
@@ -22,7 +22,7 @@ module memory #(
         //     r_data <= mem[r_addr];
         // end
 
-        clk_read_data <= mem[clk_read_addr];
+        clk_read_data = mem[clk_read_addr];
     end
 
     initial if (INIT_FILE) begin

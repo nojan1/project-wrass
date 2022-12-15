@@ -20,7 +20,7 @@ wire [9:0] cycle;
 wire [8:0] scanline;
 wire [7:0] pixel_data;
 
-wire [14:0] clk_read_addr;
+wire [12:0] clk_read_addr;
 wire [7:0] clk_read_data;
 
 memory mem (
