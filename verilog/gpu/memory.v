@@ -1,28 +1,33 @@
 module memory #(
-     parameter   INIT_FILE = "mem.txt"
+     parameter  INIT_FILE = "",
+     parameter  ADDRESS_WIDTH = 10,
+     parameter  DATA_WIDTH = 8
 ) (
     input clk,
-    input [12:0] clk_read_addr,
+    input [ADDRESS_WIDTH - 1:0] read_addr,
+    input read_enable,
     
-    output reg [7:0] clk_read_data
+    input [ADDRESS_WIDTH - 1:0] write_addr,
+    input write_enable,
+    input [DATA_WIDTH - 1:0] write_data, 
+
+    output reg [DATA_WIDTH - 1:0] read_data
 );
 
-    reg [7:0] mem [0:7000];
+    reg [7:0] mem [0:(2**ADDRESS_WIDTH + 1) - 1];
     
     // Interact with the memory block
     always @ (posedge clk) begin
     
-        // // Write to memory
-        // if (w_en == 1'b1) begin
-        //     mem[w_addr] <= w_data;
-        // end
+        // Write to memory
+        if (write_enable == 1'b1) begin
+            mem[write_addr] <= write_data;
+        end
         
-        // // Read from memory
-        // if (r_en == 1'b1) begin
-        //     r_data <= mem[r_addr];
-        // end
-
-        clk_read_data = mem[clk_read_addr];
+        // Read from memory
+        if(read_enable == 1'b1) begin
+            read_data <= mem[read_addr];
+        end
     end
 
     initial if (INIT_FILE) begin

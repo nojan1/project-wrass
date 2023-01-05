@@ -1050,65 +1050,108 @@ const TotalCharCols = 64;
 const TotalCharRows = 32;
 
 const FramebufferStart = 0x0000;
-const ColorAttributesStart = FramebufferStart + 0x0800;
+const ColorAttributesStart = 0x0000;
 const TilemapStart = ColorAttributesStart + 0x0800;
-const ColorsStart = TilemapStart + 0x0800;
-const MemSize = ColorsStart + 16;
+const ColorsStart = 0x0;
 
-console.log(`Needs ${MemSize} bytes of memory`);
-
-const mem = new Uint8Array(MemSize).fill(0);
+const tile_memory = new Uint8Array(0x0800).fill(0);
+const attribute_memory = new Uint8Array(0x1000).fill(0);
+const color_memory = new Uint8Array(0xf).fill(0);
 
 tileset.forEach((data, i) => {
-  mem[TilemapStart + i] = data;
+  attribute_memory[TilemapStart + i] = data;
 });
 
 colors.forEach((color, i) => {
-  mem[ColorsStart + i] = color;
+  color_memory[ColorsStart + i] = color;
 });
 
 for (let i = 0; i < TotalCharCols * TotalCharRows; i++) {
-  mem[ColorAttributesStart + i] = 0b00010110;
+  attribute_memory[ColorAttributesStart + i] = 0b00010110;
 }
 
 const textX = 0;
 const textY = 0;
 
-mem[FramebufferStart + TotalCharCols * textY + (textX + 1)] = "H".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * textY + (textX + 2)] = "e".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * textY + (textX + 3)] = "l".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * textY + (textX + 4)] = "l".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * textY + (textX + 5)] = "o".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * textY + (textX + 6)] = " ".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * textY + (textX + 7)] = "W".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * textY + (textX + 8)] = "o".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * textY + (textX + 9)] = "r".charCodeAt(0);
-mem[FramebufferStart + TotalCharCols * textY + (textX + 10)] = "l".charCodeAt(
-  0
-);
-mem[FramebufferStart + TotalCharCols * textY + (textX + 11)] = "d".charCodeAt(
-  0
-);
-mem[FramebufferStart + TotalCharCols * textY + (textX + 12)] = "!".charCodeAt(
-  0
+const string = "Hello World!";
+const expectedTileIds = [];
+const expectedColorAttributes = [];
+
+[...string].forEach((c, i) => {
+  const colorAttribute = (((i + 1) << 4) | 0) & 0xff;
+  const tileId = c.charCodeAt(0);
+
+  tile_memory[FramebufferStart + TotalCharCols * textY + (textX + i)] = tileId;
+  attribute_memory[ColorAttributesStart + TotalCharCols * textY + (textX + i)] =
+    colorAttribute;
+
+  expectedTileIds.push(tileId);
+  expectedColorAttributes.push(colorAttribute);
+});
+
+let tileRowBlock = "";
+let colorOutput = "";
+for (let row = 0; row < 8; row++) {
+  tileRowBlock +=
+    expectedTileIds
+      .reduce((acc, id) => {
+        const theByte = attribute_memory[TilemapStart + id * 8 + row];
+        return [...acc, theByte.toString(16)];
+      }, [])
+      .join("\t") + "\n";
+
+  colorOutput +=
+    expectedTileIds
+      .map((x, i) => [x, expectedColorAttributes[i]])
+      .reduce((acc, [tileId, colorAttribute]) => {
+        const tileData = attribute_memory[TilemapStart + tileId * 8 + row];
+        const tilePixelColors = [...Array(8).keys()].map((i) => {
+          const pixelOn = tileData & (1 << (8 - i));
+          const colorIndex = pixelOn
+            ? (colorAttribute >> 4) & 0xf
+            : colorAttribute & 0xf;
+
+          return color_memory[ColorsStart + colorIndex].toString(16);
+        });
+
+        return [...acc, ...tilePixelColors];
+      }, [])
+      .join("\t") + "\n";
+}
+
+const tileMemoryHexData = [...tile_memory]
+  .map((x) => x.toString(16))
+  .join("\n");
+fs.writeFileSync("tile_mem.txt", tileMemoryHexData);
+fs.writeFileSync("tile_mem.raw", Buffer.from(tile_memory));
+
+const attributeMemoryHexData = [...attribute_memory]
+  .map((x) => x.toString(16))
+  .join("\n");
+fs.writeFileSync("attribute_mem.txt", attributeMemoryHexData);
+fs.writeFileSync("attribute_mem.raw", Buffer.from(attribute_memory));
+
+const colorMemoryHexData = [...color_memory]
+  .map((x) => x.toString(16))
+  .join("\n");
+fs.writeFileSync("color_mem.txt", colorMemoryHexData);
+fs.writeFileSync("color_mem.raw", Buffer.from(color_memory));
+
+fs.writeFileSync(
+  "debug-info.txt",
+  `Expected tile ids:
+${expectedTileIds.map((x) => x.toString(16)).join(", ")}
+
+Expected color attributes:
+${expectedColorAttributes.map((x) => x.toString(16)).join(", ")}
+
+Title data:
+${tileRowBlock}
+
+Output color:
+${colorOutput}`
 );
 
-mem[ColorAttributesStart + TotalCharCols * textY + (textX + 1)] = (1 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * textY + (textX + 2)] = (2 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * textY + (textX + 3)] = (3 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * textY + (textX + 4)] = (4 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * textY + (textX + 5)] = (5 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * textY + (textX + 6)] = (6 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * textY + (textX + 7)] = (7 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * textY + (textX + 8)] = (8 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * textY + (textX + 9)] = (9 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * textY + (textX + 10)] =
-  (10 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * textY + (textX + 11)] =
-  (11 << 4) | 0;
-mem[ColorAttributesStart + TotalCharCols * textY + (textX + 12)] =
-  (12 << 4) | 0;
-
-mem.map((x) => x.toString(16)).join("\n");
-
-fs.writeFileSync("mem.txt", mem.join("\n"));
+console.log(`Tile memory: ${tile_memory.byteLength.toString(16)}`);
+console.log(`Attribute memory: ${attribute_memory.byteLength.toString(16)}`);
+console.log(`Color memory: ${color_memory.byteLength.toString(16)}`);
