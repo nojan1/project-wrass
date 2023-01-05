@@ -1,5 +1,6 @@
 *.out
 hardware.json
+hardware.asc
 .sconsign.dblite
 *.bin
 *mem.txt

@@ -1,24 +1,15 @@
-module gpu (
-    input CLK100MHz,
-    input rst,
-    input [7:0] data,
-    input [3:0] addr,
-    input rw,
-    input cs_clock,
+`default_nettype none
+`define DUMPSTR(x) `"x.vcd`"
+`timescale 1ns / 10ps
 
-    output wire vga_hs,
-    output wire vga_vs,
-    output wire [2:0] vga_r,
-    output wire [2:0] vga_g,
-    output wire [2:0] vga_b,
-    output wire irq
-);
+module bus_interface_tb();
 
-wire pixel_clk;
-wire vga_blank;
-wire [9:0] cycle;
-wire [8:0] scanline;
-wire [7:0] pixel_data;
+reg CLK100MHz = 1;
+
+reg [7:0] data = 0;
+reg [3:0] addr = 0;
+reg rw = 1;
+reg cs_clock = 1;
 
 wire tile_memory_read_enable;
 wire [10:0] tile_memory_read_addr;
@@ -26,7 +17,6 @@ wire [7:0] tile_memory_read_data;
 wire tile_memory_write_enable;
 wire [10:0] tile_memory_write_addr;
 wire [7:0] tile_memory_write_data;
-
 
 wire attribute_memory_read_enable;
 wire [11:0] attribute_memory_read_addr;
@@ -84,47 +74,7 @@ memory #(
     .write_addr(color_memory_write_addr)
 );
 
-
-clock_divider #(.DIVISON(2)) vga_div (
-    .clk(CLK100MHz),
-    .rst(rst),
-    .tick(pixel_clk)
-);
-
-sync_generator sync_gen (
-    .pixel_clk(pixel_clk),
-    .rst(rst),
-
-    .cycle(cycle),
-    .scanline(scanline),
-    .vga_hs(vga_hs),
-    .vga_vs(vga_vs),
-    .vga_blank(vga_blank)
-);
-
-pixel_generator pixel_gen (
-    .rst(rst),
-    .pixel_clk(pixel_clk),
-    .clk(CLK100MHz),
-    .cycle(cycle),
-    .scanline(scanline),
-
-    .tile_memory_read_enable(tile_memory_read_enable),
-    .tile_memory_read_addr(tile_memory_read_addr),
-    .tile_memory_read_data(tile_memory_read_data),
-
-    .attribute_memory_read_enable(attribute_memory_read_enable),
-    .attribute_memory_read_addr(attribute_memory_read_addr),
-    .attribute_memory_read_data(attribute_memory_read_data),
-
-    .color_memory_read_enable(color_memory_read_enable),
-    .color_memory_read_addr(color_memory_read_addr),
-    .color_memory_read_data(color_memory_read_data),
-
-    .pixel_data(pixel_data)
-);
-
-bus_interface bus_interface (
+bus_interface uut (
     .data(data),
     .addr(addr),
     .rw(rw),
@@ -143,8 +93,30 @@ bus_interface bus_interface (
     .color_memory_write_data(color_memory_write_data) 
 );
 
-assign vga_r = (vga_blank == 1) ? 0 : pixel_data[2:0]; 
-assign vga_g = (vga_blank == 1) ? 0 : pixel_data[4:2]; 
-assign vga_b = (vga_blank == 1) ? 0 : pixel_data[7:5]; 
+always #0.5 CLK100MHz = ~CLK100MHz;
+
+initial begin
+$dumpfile(`DUMPSTR(`VCD_OUTPUT));
+    $dumpvars(0, bus_interface_tb);
+
+    #2
+
+    #1 addr = 4'h4; data = 8'h00; rw = 0; cs_clock = 0; #1 cs_clock = 1;
+    #1 addr = 4'h5; data = 8'h01; rw = 0; cs_clock = 0; #1 cs_clock = 1;
+    #1 addr = 4'h6; data = 8'haa; rw = 0; cs_clock = 0; #1 cs_clock = 1;
+
+    #1 addr = 4'h4; data = 8'h00; rw = 0; cs_clock = 0; #1 cs_clock = 1;
+    #1 addr = 4'h5; data = 8'h09; rw = 0; cs_clock = 0; #1 cs_clock = 1;
+    #1 addr = 4'h6; data = 8'h0e; rw = 0; cs_clock = 0; #1 cs_clock = 1;
+    
+    #1 addr = 4'h4; data = 8'h02; rw = 0; cs_clock = 0; #1 cs_clock = 1;
+    #1 addr = 4'h5; data = 8'h18; rw = 0; cs_clock = 0; #1 cs_clock = 1;
+    #1 addr = 4'h6; data = 8'hbe; rw = 0; cs_clock = 0; #1 cs_clock = 1;
+
+    #2
+
+    $display("End of simulation");
+    $finish;
+end
 
 endmodule

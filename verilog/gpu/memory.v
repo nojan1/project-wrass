@@ -14,7 +14,7 @@ module memory #(
     output reg [DATA_WIDTH - 1:0] read_data
 );
 
-    reg [7:0] mem [0:(2**ADDRESS_WIDTH + 1) - 1];
+    reg [7:0] mem [0:(2**ADDRESS_WIDTH) - 1];
     
     // Interact with the memory block
     always @ (posedge clk) begin
