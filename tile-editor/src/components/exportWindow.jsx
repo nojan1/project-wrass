@@ -43,7 +43,7 @@ const ExportWindow = ({ inExport, onClose, tilesToExport }) => {
     <ModalContent onClose={onClose}>
       <input
         type="checkbox"
-        value={jsOutput}
+        checked={jsOutput}
         onChange={(e) => setJsOutput(e.target.checked)}
       />
       <span> Use JS output</span>
