@@ -5,3 +5,6 @@ hardware.asc
 *.bin
 *mem.txt
 *mem.raw
+charset.json
+charset.bin
+debug-info.txt

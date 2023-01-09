@@ -1,23 +1,6 @@
-const colors = [
-  0x0, // '#000000'
-  0xff, // '#FFFFFF'
-  0b11010010, // '#68372B'
-  0b11010110, // '#70A4B2'
-  0b11010010, // '#6F3D86'
-  0b10010010, // '#588D43'
-  0b10010010, // '#352879'
-  0b10110110, // '#B8C76F'
-  0b11010000, // '#6F4F25'
-  0b10010000, // '#433900'
-  0b10011010, // '#9A6759'
-  0b10010010, // '#444444'
-  0b11011010, // '#6C6C6C'
-  0b10011010, // '#9AD284'
-  0b11011010, // '#6C5EB5'
-  0b10010010, // '#959595'
-];
+const fs = require("fs");
 
-const tileset = [
+const rawTileset = [
   0x00,
   0x00,
   0x00,
@@ -1044,114 +1027,49 @@ const tileset = [
   0x00, // U+007F
 ];
 
-const fs = require("fs");
+const characterSet = new Uint8ClampedArray(256 * 8);
 
-const TotalCharCols = 64;
-const TotalCharRows = 32;
+const setCharacter = (index, tile) => {
+  for (let i = 0; i < 8; i++) {
+    characterSet[index * 8 + i] = tile[i];
+  }
+};
 
-const FramebufferStart = 0x0000;
-const ColorAttributesStart = 0x0000;
-const TilemapStart = ColorAttributesStart + 0x0800;
-const ColorsStart = 0x0;
+for (let i = 33; i <= 126; i++) {
+  for (let x = 0; x < 8; x++) {
+    const indexFrom = i * 8 + x;
+    const indexTo = indexFrom - 32 * 8;
 
-const tile_memory = new Uint8Array(0x0800).fill(0);
-const attribute_memory = new Uint8Array(0x1000).fill(0);
-const color_memory = new Uint8Array(0xf).fill(0);
-
-tileset.forEach((data, i) => {
-  attribute_memory[TilemapStart + i] = data;
-});
-
-colors.forEach((color, i) => {
-  color_memory[ColorsStart + i] = color;
-});
-
-for (let i = 0; i < TotalCharCols * TotalCharRows; i++) {
-  attribute_memory[ColorAttributesStart + i] = 0b00010110;
+    characterSet[indexTo] = rawTileset[indexFrom];
+  }
 }
 
-const textX = 0;
-const textY = 0;
+// All writeable ascii characters are now from 1 to 94, custom characters can go from 95 to 127
+setCharacter(95, [0x80, 0x40, 0x20, 0x10, 0x8, 0x4, 0x2, 0x1]); // /
+setCharacter(96, [0x1, 0x2, 0x4, 0x8, 0x10, 0x20, 0x40, 0x80]); // \
+setCharacter(97, [0x81, 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x81]); // X
 
-const string = "Hello World!";
-const expectedTileIds = [];
-const expectedColorAttributes = [];
+// Create the reverse versions in the upper half
+for (let i = 0; i < 128 * 8; i++) {
+  const copyFrom = i;
+  const copyTo = i + 128 * 8;
 
-[...string].forEach((c, i) => {
-  const colorAttribute = (((i + 1) << 4) | 0) & 0xff;
-  const tileId = c.charCodeAt(0);
+  const inverted =
+    (characterSet[copyFrom] & 1 ? 0 : 1) |
+    (characterSet[copyFrom] & 2 ? 0 : 2) |
+    (characterSet[copyFrom] & 4 ? 0 : 4) |
+    (characterSet[copyFrom] & 8 ? 0 : 8) |
+    (characterSet[copyFrom] & 16 ? 0 : 16) |
+    (characterSet[copyFrom] & 32 ? 0 : 32) |
+    (characterSet[copyFrom] & 64 ? 0 : 64) |
+    (characterSet[copyFrom] & 128 ? 0 : 128);
 
-  tile_memory[FramebufferStart + TotalCharCols * textY + (textX + i)] = tileId;
-  attribute_memory[ColorAttributesStart + TotalCharCols * textY + (textX + i)] =
-    colorAttribute;
+  characterSet[copyTo] = inverted;
 
-  expectedTileIds.push(tileId);
-  expectedColorAttributes.push(colorAttribute);
-});
-
-let tileRowBlock = "";
-let colorOutput = "";
-for (let row = 0; row < 8; row++) {
-  tileRowBlock +=
-    expectedTileIds
-      .reduce((acc, id) => {
-        const theByte = attribute_memory[TilemapStart + id * 8 + row];
-        return [...acc, theByte.toString(16)];
-      }, [])
-      .join("\t") + "\n";
-
-  colorOutput +=
-    expectedTileIds
-      .map((x, i) => [x, expectedColorAttributes[i]])
-      .reduce((acc, [tileId, colorAttribute]) => {
-        const tileData = attribute_memory[TilemapStart + tileId * 8 + row];
-        const tilePixelColors = [...Array(8).keys()].map((i) => {
-          const pixelOn = tileData & (1 << i);
-          const colorIndex = pixelOn
-            ? (colorAttribute >> 4) & 0xf
-            : colorAttribute & 0xf;
-
-          return color_memory[ColorsStart + colorIndex].toString(16);
-        });
-
-        return [...acc, ...tilePixelColors];
-      }, [])
-      .join("\t") + "\n";
+  //   console.log(
+  //     `Copying from ${copyFrom} to ${copyTo}, ${characterSet[copyFrom]} => ${characterSet[copyTo]}}`
+  //   );
 }
 
-const tileMemoryHexData = [...tile_memory]
-  .map((x) => x.toString(16))
-  .join("\n");
-fs.writeFileSync("tile_mem.txt", tileMemoryHexData);
-fs.writeFileSync("tile_mem.raw", Buffer.from(tile_memory));
-
-const attributeMemoryHexData = [...attribute_memory]
-  .map((x) => x.toString(16))
-  .join("\n");
-fs.writeFileSync("attribute_mem.txt", attributeMemoryHexData);
-fs.writeFileSync("attribute_mem.raw", Buffer.from(attribute_memory));
-
-const colorMemoryHexData = [...color_memory]
-  .map((x) => x.toString(16))
-  .join("\n");
-fs.writeFileSync("color_mem.txt", colorMemoryHexData);
-fs.writeFileSync("color_mem.raw", Buffer.from(color_memory));
-
-fs.writeFileSync(
-  "debug-info.txt",
-  `Expected tile ids:
-${expectedTileIds.map((x) => x.toString(16)).join(", ")}
-
-Expected color attributes:
-${expectedColorAttributes.map((x) => x.toString(16)).join(", ")}
-
-Title data:
-${tileRowBlock}
-
-Output color:
-${colorOutput}`
-);
-
-console.log(`Tile memory: ${tile_memory.byteLength.toString(16)}`);
-console.log(`Attribute memory: ${attribute_memory.byteLength.toString(16)}`);
-console.log(`Color memory: ${color_memory.byteLength.toString(16)}`);
+fs.writeFileSync("charset.json", JSON.stringify([...characterSet], null, 2));
+fs.writeFileSync("charset.bin", Buffer.from(characterSet));
