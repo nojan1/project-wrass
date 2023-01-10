@@ -1,6 +1,18 @@
+; Transform ascii character i A into screencode and put into A
+c_to_sc:
+    sec
+    sbc #32
+    rts
+
 ; Put character from A into output
 ; ** Note this will be where the current address in the GPU just happens to be, it also assumes that the increment is 1! **
 putc:
+    jsr c_to_sc
+    ; fall through
+
+; Put screen code from A into output
+; ** Note this will be where the current address in the GPU just happens to be, it also assumes that the increment is 1! **
+putsc:
     inc CURRENT_COLUMN
     sta GRAPHICS_DATA
     rts

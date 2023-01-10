@@ -33,33 +33,33 @@ monitor_loop:
     jsr putc
 
 ; Temp...
-    lda GRAPHICS_XOFFSET
-derp:
-    clc
-    adc #1
-    cmp #255
-    beq derp2
-    sta GRAPHICS_XOFFSET
-    inc GRAPHICS_YOFFSET
+;     lda GRAPHICS_XOFFSET
+; derp:
+;     clc
+;     adc #1
+;     cmp #255
+;     beq derp2
+;     sta GRAPHICS_XOFFSET
+;     inc GRAPHICS_YOFFSET
 
-    ldx #0
-wait:
-    inx
-    bne wait
-    jmp derp
+;     ldx #0
+; wait:
+;     inx
+;     bne wait
+;     jmp derp
     
-derp2:
-    sec 
-    sbc #1
-    beq derp
-    sta GRAPHICS_XOFFSET
-    dec GRAPHICS_YOFFSET
+; derp2:
+;     sec 
+;     sbc #1
+;     beq derp
+;     sta GRAPHICS_XOFFSET
+;     dec GRAPHICS_YOFFSET
 
-    ldx #0
-wait2:
-    inx
-    bne wait2
-    jmp derp2 
+;     ldx #0
+; wait2:
+;     inx
+;     bne wait2
+;     jmp derp2 
 
 ; end temp
 

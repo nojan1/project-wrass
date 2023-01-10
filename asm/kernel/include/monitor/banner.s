@@ -14,21 +14,21 @@ tile_bottom_right:
     .db $c0,$64,$32,$19,$c,$6,$3,$1
 
 print_banner:
-    param1_addr tile_top_left
-    ldx #$0A
-    jsr copy_sprite
+    ; param1_addr tile_top_left
+    ; ldx #$0A
+    ; jsr copy_sprite
 
-    param1_addr tile_top_right
-    ldx #$0B
-    jsr copy_sprite
+    ; param1_addr tile_top_right
+    ; ldx #$0B
+    ; jsr copy_sprite
 
-    param1_addr tile_bottom_left
-    ldx #$0C
-    jsr copy_sprite
+    ; param1_addr tile_bottom_left
+    ; ldx #$0C
+    ; jsr copy_sprite
 
-    param1_addr tile_bottom_right
-    ldx #$0D
-    jsr copy_sprite
+    ; param1_addr tile_bottom_right
+    ; ldx #$0D
+    ; jsr copy_sprite
 
     ldx #GRAPHICS_ADDR_FRAMEBUFFER_HIGH
     stx GRAPHICS_ADDR_HIGH
