@@ -108,6 +108,7 @@ pixel_generator pixel_gen (
     .clk(CLK100MHz),
     .cycle(cycle),
     .scanline(scanline),
+    .vga_blank(vga_blank),
 
     .tile_memory_read_enable(tile_memory_read_enable),
     .tile_memory_read_addr(tile_memory_read_addr),

@@ -79,6 +79,7 @@ pixel_generator uut (
     .clk(CLK100MHz),
     .cycle(cycle),
     .scanline(scanline),
+    .vga_blank(1'b0),
 
     .tile_memory_read_enable(tile_memory_read_enable),
     .tile_memory_read_addr(tile_memory_read_addr),

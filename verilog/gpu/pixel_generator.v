@@ -2,6 +2,7 @@ module pixel_generator (
     input rst,
     input pixel_clk,
     input clk,
+    input vga_blank,
     input [9:0] cycle,
     input [8:0] scanline,
     input [7:0] tile_memory_read_data,
@@ -37,7 +38,7 @@ reg [2:0] charRenderRow;
 
 // There will be 3 clk between each pixel_clk, use these clock cycles to fetch stuff from RAM
 always @ (posedge clk or negedge rst) begin
-    if(rst == 0) begin
+    if(rst == 0 || vga_blank == 1) begin
         gottenPixelClock <= 0;
         step <= 0;
         pixelOn <= 0;
@@ -86,7 +87,7 @@ always @ (posedge clk or negedge rst) begin
                 2: begin
                     tileData = attribute_memory_read_data;
                     pixelOn = (tileData >> charRenderColumn) & 1;
-
+                    
                     color_memory_read_addr = pixelOn == 1 ? colorAttribute[7:4] : colorAttribute[3:0];
                     color_memory_read_enable = 1;
 
@@ -97,6 +98,7 @@ always @ (posedge clk or negedge rst) begin
     end
 end
 
-assign pixel_data =  /* pixel_clk == 1 ? */ color_memory_read_data /* : 0 */;
+assign pixel_data = color_memory_read_data;
+// assign pixel_data = color;
 
 endmodule
