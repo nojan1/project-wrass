@@ -148,7 +148,7 @@ const ColorsStart = 0x0;
 
 const tile_memory = new Uint8Array(0x0800).fill(0);
 const attribute_memory = new Uint8Array(0x1000).fill(0);
-const color_memory = new Uint8Array(0xf).fill(0);
+const color_memory = new Uint8Array(0x10).fill(0);
 
 tileset.forEach((data, i) => {
   attribute_memory[TilemapStart + i] = data;

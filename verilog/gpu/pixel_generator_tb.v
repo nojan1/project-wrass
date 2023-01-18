@@ -24,7 +24,7 @@ wire color_memory_read_enable;
 wire [3:0] color_memory_read_addr;
 wire [7:0] color_memory_read_data;
 
-clock_divider #(.DIVISON(2)) vga_div (
+clock_divider #(.DIVISON(4)) vga_div (
     .clk(CLK100MHz),
     .rst(rst),
     .tick(pixel_clk)

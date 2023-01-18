@@ -19,6 +19,7 @@ wire vga_blank;
 wire [9:0] cycle;
 wire [8:0] scanline;
 wire [7:0] pixel_data;
+wire [2:0] divider_count;
 
 wire tile_memory_read_enable;
 wire [10:0] tile_memory_read_addr;
@@ -26,7 +27,6 @@ wire [7:0] tile_memory_read_data;
 wire tile_memory_write_enable;
 wire [10:0] tile_memory_write_addr;
 wire [7:0] tile_memory_write_data;
-
 
 wire attribute_memory_read_enable;
 wire [11:0] attribute_memory_read_addr;
@@ -85,10 +85,11 @@ memory #(
 );
 
 
-clock_divider #(.DIVISON(2)) vga_div (
+clock_divider #(.DIVISON(4)) vga_div (
     .clk(CLK100MHz),
     .rst(rst),
-    .tick(pixel_clk)
+    .tick(pixel_clk),
+    .sub_count(divider_count)
 );
 
 sync_generator sync_gen (
@@ -109,6 +110,7 @@ pixel_generator pixel_gen (
     .cycle(cycle),
     .scanline(scanline),
     .vga_blank(vga_blank),
+    .divider_count(divider_count),
 
     .tile_memory_read_enable(tile_memory_read_enable),
     .tile_memory_read_addr(tile_memory_read_addr),
@@ -147,5 +149,7 @@ bus_interface bus_interface (
 assign vga_r = (vga_blank == 1) ? 0 : pixel_data[2:0]; 
 assign vga_g = (vga_blank == 1) ? 0 : pixel_data[4:2]; 
 assign vga_b = (vga_blank == 1) ? 0 : pixel_data[7:5]; 
+
+assign irq = pixel_clk;
 
 endmodule

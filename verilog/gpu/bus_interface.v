@@ -47,7 +47,7 @@ always @ (negedge cs_clock) begin
                 attribute_memory_write_data <= data; 
             end
 
-             if (memory_address >= 16'h1800) begin
+            if (memory_address >= 16'h1800) begin
                 // Write to colors
                 color_memory_write_enable <= 1;
                 color_memory_write_addr <= memory_address[3:0];
@@ -63,5 +63,9 @@ always @ (negedge cs_clock) begin
         end
     end
 end
+
+// always @ (posedge cs_clock) begin 
+//     data <= 8'bzzzzzzzz;
+// end
 
 endmodule

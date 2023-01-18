@@ -3,6 +3,7 @@ module pixel_generator (
     input pixel_clk,
     input clk,
     input vga_blank,
+    input [2:0] divider_count,
     input [9:0] cycle,
     input [8:0] scanline,
     input [7:0] tile_memory_read_data,
@@ -18,9 +19,9 @@ module pixel_generator (
     output [7:0] pixel_data
 );
 
-reg gottenPixelClock;
+// reg gottenPixelClock;
 
-reg [1:0] step;
+// reg [1:0] step;
 reg [7:0] tileNumber;
 reg [7:0] tileData;
 reg [7:0] colorAttribute;
@@ -38,9 +39,9 @@ reg [2:0] charRenderRow;
 
 // There will be 3 clk between each pixel_clk, use these clock cycles to fetch stuff from RAM
 always @ (posedge clk or negedge rst) begin
-    if(rst == 0 || vga_blank == 1) begin
-        gottenPixelClock <= 0;
-        step <= 0;
+    if(rst == 0) begin
+        // gottenPixelClock <= 0;
+        // step <= 0;
         pixelOn <= 0;
         color <= 0;
         offsetCycle <= 0;
@@ -55,14 +56,16 @@ always @ (posedge clk or negedge rst) begin
         colorAttribute <= 0;
         tile_memory_read_enable <= 0;
     end else begin
-        offsetCycle <= cycle[9:1] + 0;
-        offsetScanline <= scanline[8:1] + 0;
+        offsetCycle = cycle[9:1] + 0;
+        offsetScanline = scanline[8:1] + 0;
 
-        if(gottenPixelClock == 1 || pixel_clk == 1) begin
-            gottenPixelClock = 1;
+        // if(gottenPixelClock == 1 || pixel_clk == 1) begin
+        //     gottenPixelClock = 1;
 
-            case (step)
+            case (divider_count)
                 0: begin
+                    // color <= color_memory_read_data; 
+
                     charColumn = offsetCycle >> 3; 
                     charRow = offsetScanline >> 3;
 
@@ -74,7 +77,7 @@ always @ (posedge clk or negedge rst) begin
 
                     attribute_memory_read_addr = {1'b0, charRow, charColumn};
                     attribute_memory_read_enable = 1;
-                    step = step + 1;
+                    // step = step + 1;
                 end 
                 1: begin
                     tileNumber = tile_memory_read_data;
@@ -82,19 +85,22 @@ always @ (posedge clk or negedge rst) begin
 
                     attribute_memory_read_addr = {1'b1, tileNumber, charRenderRow};
                     attribute_memory_read_enable = 1;
-                    step = step + 1;
+                    // step = step + 1;
                 end
                 2: begin
                     tileData = attribute_memory_read_data;
                     pixelOn = (tileData >> charRenderColumn) & 1;
-                    
+                    // color = attribute_memory_read_data;                    
                     color_memory_read_addr = pixelOn == 1 ? colorAttribute[7:4] : colorAttribute[3:0];
+                    // color_memory_read_addr = pixelOn == 1 ? 4'b0001 : 4'b0000;
                     color_memory_read_enable = 1;
 
-                    step = 0;
+                    // step = 0;
                 end
             endcase
-        end
+        // end else begin
+        //     step <= 0;
+        // end
     end
 end
 

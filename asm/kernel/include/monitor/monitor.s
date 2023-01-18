@@ -113,6 +113,7 @@ monitor_loop:
     sta PARAM_16_2 + 1
 
     jsr str_startswith
+    ; brk after-startswith
     cmp #0
 
     bne .command_recieved
