@@ -1,11 +1,11 @@
 ;; Graphic addresses
-GRAPHICS_ADDR_FRAMEBUFFER_LOW = $00 
+GRAPHICS_ADDR_FRAMEBUFFER_LOW = $00
 GRAPHICS_ADDR_FRAMEBUFFER_HIGH = $00
 
 GRAPHICS_ADDR_COLORATTRIBUTES_LOW = $00
 GRAPHICS_ADDR_COLORATTRIBUTES_HIGH = $08
 
-GRAPHICS_ADDR_TILEMAP_LOW = $00 
+GRAPHICS_ADDR_TILEMAP_LOW = $00
 GRAPHICS_ADDR_TILEMAP_HIGH = $10
 
 GRAPHICS_ADDR_COLORS_LOW = $00
@@ -22,7 +22,7 @@ display_init:
     rts
 
 
-; Copy sprite data from the location referenced by PARAM_16_1 into sprite offset by x 
+; Copy sprite data from the location referenced by PARAM_16_1 into sprite offset by x
 copy_sprite:
     pha
     phy
@@ -50,7 +50,7 @@ copy_sprite:
     jmp .copy_next_byte
 
 .done:
-    ply 
+    ply
     pla
     rts
 
@@ -58,8 +58,9 @@ copy_sprite:
 advance_graphic_address:
     phx
     phy
-    pha 
-    lda GRAPHICS_INCREMENT
+    pha
+    ; Currently can't read from GPU registers
+    ; lda GRAPHICS_INCREMENT 
 
     sty GRAPHICS_INCREMENT ; We wil use the auto increment register
 .keep_incrementing:
@@ -68,7 +69,8 @@ advance_graphic_address:
     dex
     bne .keep_incrementing
 
-    sta GRAPHICS_INCREMENT ; Reset to what it was before
+    lda #1
+    sta GRAPHICS_INCREMENT ; Set graphics increment to 1 for now
     pla
     ply
     plx
