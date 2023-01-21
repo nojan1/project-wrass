@@ -2,7 +2,7 @@ module gpu (
     input CLK100MHz,
     input rst,
     input [7:0] data,
-    input [3:0] addr,
+    input [2:0] addr,
     input rw,
     input cs_clock,
 
@@ -147,8 +147,8 @@ bus_interface bus_interface (
 );
 
 assign vga_r = (vga_blank == 1) ? 0 : pixel_data[2:0]; 
-assign vga_g = (vga_blank == 1) ? 0 : pixel_data[4:2]; 
-assign vga_b = (vga_blank == 1) ? 0 : pixel_data[7:5]; 
+assign vga_g = (vga_blank == 1) ? 0 : pixel_data[5:3]; 
+assign vga_b = (vga_blank == 1) ? 0 : {pixel_data[7:6], pixel_data[6]}; 
 
 assign irq = pixel_clk;
 

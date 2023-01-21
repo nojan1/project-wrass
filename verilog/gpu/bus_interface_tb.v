@@ -7,7 +7,7 @@ module bus_interface_tb();
 reg CLK100MHz = 1;
 
 reg [7:0] data = 0;
-reg [3:0] addr = 0;
+reg [2:0] addr = 0;
 reg rw = 1;
 reg cs_clock = 1;
 

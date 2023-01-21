@@ -1,6 +1,6 @@
 module bus_interface (
     input [7:0] data,
-    input [3:0] addr,
+    input [2:0] addr,
     input rw,
     input cs_clock,
 

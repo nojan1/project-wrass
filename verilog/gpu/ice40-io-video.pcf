@@ -27,9 +27,8 @@ set_io data[7] 10
 set_io addr[0] 12 
 set_io addr[1] 13
 set_io addr[2] 16
-set_io addr[3] 20
 
 set_io rw 36
-set_io -pullup yes cs_clock 40
+set_io -pullup yes cs_clock 20
 set_io irq 21 
 set_io -pullup yes rst 37
