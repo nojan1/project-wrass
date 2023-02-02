@@ -11,7 +11,7 @@ reg rst = 0;
 always #1 CLK100MHz = ~CLK100MHz;
 
 wire [7:0] data = 0;
-wire [3:0] addr = 0;
+wire [2:0] addr = 0;
 wire rw = 0;
 wire cs_clock = 1;
 
