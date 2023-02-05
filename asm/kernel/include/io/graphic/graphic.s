@@ -14,9 +14,41 @@ GRAPHICS_ADDR_COLORS_HIGH = $18
 display_init:
     lda #1
     sta GRAPHICS_INCREMENT
+
+    ; Initialize framebuffer to empty
+    lda #0
+    ldy #8
+set_framebuffer_outer_loop:
+    ldx #0
+set_framebuffer_inner_loop:
+    sta GRAPHICS_DATA
+    inx
+    bne set_framebuffer_inner_loop
+    dey
+    bne set_framebuffer_outer_loop
+
+    ; Now initialize color attributes to default
+    lda #GRAPHICS_ADDR_COLORATTRIBUTES_HIGH
+    sta GRAPHICS_ADDR_HIGH
+    lda #GRAPHICS_ADDR_COLORATTRIBUTES_LOW
+    sta GRAPHICS_ADDR_LOW
+
+    lda #%00010110
+    ldy #8
+set_colorattribute_outer_loop:
+    ldx #0
+set_colorattribute_inner_loop:
+    sta GRAPHICS_DATA
+    inx
+    bne set_colorattribute_inner_loop
+    dey
+    bne set_colorattribute_outer_loop
+
+    ; Set address to top of framebuffer
+    lda #0
     lda #GRAPHICS_ADDR_FRAMEBUFFER_HIGH
     sta GRAPHICS_ADDR_HIGH
-    lda #0
+    lda #GRAPHICS_ADDR_FRAMEBUFFER_LOW
     sta GRAPHICS_ADDR_LOW
 
     rts

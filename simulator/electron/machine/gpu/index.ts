@@ -1,6 +1,6 @@
 import BusInterface from '6502.ts/lib/machine/bus/BusInterface'
 import { SendDataCallback } from '..'
-import { toHex } from '../../utils/output'
+// import { toHex } from '../../utils/output'
 import { colors } from './colors'
 import { tileset } from './tileset'
 
@@ -48,7 +48,8 @@ export class Gpu implements BusInterface {
     })
 
     for (let i = 0; i < TotalCharCols * TotalCharRows; i++) {
-      this._internalMemory[ColorAttributesStart + i] = 0b00010110
+      this._internalMemory[FramebufferStart + i] = ~~(Math.random() * 255)
+      this._internalMemory[ColorAttributesStart + i] = ~~(Math.random() * 255)
     }
 
     setTimeout(() => {

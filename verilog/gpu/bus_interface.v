@@ -16,51 +16,55 @@ module bus_interface (
     output reg [3:0] color_memory_write_addr,
     output reg [7:0] color_memory_write_data
 );
- 
-reg [7:0] registers [16:0];
 
-wire [15:0] memory_address = { registers[5], registers[4] };
-
-// TODO: Add support for RST
-integer i;
-initial begin
-  for (i=0;i<=15;i=i+1)
-    registers[i] = 0;
-end
+reg [7:0] increment;
+reg [15:0] internal_memory_address;
 
 always @ (negedge cs_clock) begin
+    color_memory_write_enable <= 0;
+    tile_memory_write_enable <= 0;
+    attribute_memory_write_enable <= 0;
+
     if(rw == 1'b0) begin
         // Write
-        if(addr == 6) begin 
-            // Perform memory op
-            if (memory_address < 16'h0800) begin
-                // Write to framebuffer
-                tile_memory_write_enable <= 1;
-                tile_memory_write_addr <= memory_address[10:0];
-                tile_memory_write_data <= data;
-            end             
-
-            if (memory_address >= 16'h0800 && memory_address < 16'h1800 ) begin
-                // Write to color attributes or tile map
-                attribute_memory_write_enable <= 1;
-                attribute_memory_write_addr <= memory_address - 16'h0800;
-                attribute_memory_write_data <= data; 
+        case (addr)
+            3: begin
+               increment <= data; 
             end
-
-            if (memory_address >= 16'h1800) begin
-                // Write to colors
-                color_memory_write_enable <= 1;
-                color_memory_write_addr <= memory_address[3:0];
-                color_memory_write_data <= data;
+            4: begin
+                internal_memory_address <= { internal_memory_address[15:8], data };
             end
-
-            if (registers[3] != 0) begin
-                registers[4] <= registers[4] + registers[3];
-                // TODO: Handle wrap around on the high byte
+            5: begin
+                internal_memory_address <= { data, internal_memory_address[7:0] };
             end
-        end else begin
-            registers[addr] <= data;
-        end
+            6: begin
+                // Perform memory op
+                if (internal_memory_address < 16'h0800) begin
+                    // Write to framebuffer
+                    tile_memory_write_enable = 1;
+                    tile_memory_write_addr = internal_memory_address[10:0];
+                    tile_memory_write_data = data;
+                end             
+
+                if (internal_memory_address >= 16'h0800 && internal_memory_address < 16'h1800 ) begin
+                    // Write to color attributes or tile map
+                    attribute_memory_write_enable = 1;
+                    attribute_memory_write_addr = internal_memory_address - 16'h0800;
+                    attribute_memory_write_data = data; 
+                end
+
+                if (internal_memory_address >= 16'h1800) begin
+                    // Write to colors
+                    color_memory_write_enable < 1;
+                    color_memory_write_addr = internal_memory_address[3:0];
+                    color_memory_write_data = data;
+                end
+
+                if (increment != 0) begin
+                    internal_memory_address <= internal_memory_address + increment;
+                end
+            end            
+        endcase
     end
 end
 
