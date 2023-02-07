@@ -132,6 +132,8 @@ bus_interface bus_interface (
     .addr(addr),
     .rw(rw),
     .cs_clock(cs_clock),
+    .clk(CLK100MHz),
+    .rst(rst),
 
     .tile_memory_write_enable(tile_memory_write_enable),
     .tile_memory_write_addr(tile_memory_write_addr),

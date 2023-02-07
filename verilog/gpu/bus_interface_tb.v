@@ -11,22 +11,22 @@ reg [2:0] addr = 0;
 reg rw = 1;
 reg cs_clock = 1;
 
-wire tile_memory_read_enable;
-wire [10:0] tile_memory_read_addr;
+reg tile_memory_read_enable;
+reg [10:0] tile_memory_read_addr;
 wire [7:0] tile_memory_read_data;
 wire tile_memory_write_enable;
 wire [10:0] tile_memory_write_addr;
 wire [7:0] tile_memory_write_data;
 
-wire attribute_memory_read_enable;
-wire [11:0] attribute_memory_read_addr;
+reg attribute_memory_read_enable;
+reg [11:0] attribute_memory_read_addr;
 wire [7:0] attribute_memory_read_data;
 wire attribute_memory_write_enable;
 wire [11:0] attribute_memory_write_addr;
 wire [7:0] attribute_memory_write_data;
 
-wire color_memory_read_enable;
-wire [3:0] color_memory_read_addr;
+reg color_memory_read_enable;
+reg [3:0] color_memory_read_addr;
 wire [7:0] color_memory_read_data;
 wire color_memory_write_enable;
 wire [3:0] color_memory_write_addr;
@@ -101,19 +101,31 @@ $dumpfile(`DUMPSTR(`VCD_OUTPUT));
 
     #2
 
+    // Write aa to 0100
     #1 addr = 4'h4; data = 8'h00; rw = 0; cs_clock = 0; #1 cs_clock = 1;
     #1 addr = 4'h5; data = 8'h01; rw = 0; cs_clock = 0; #1 cs_clock = 1;
     #1 addr = 4'h6; data = 8'haa; rw = 0; cs_clock = 0; #1 cs_clock = 1;
 
+    // Write 0e to 0900
     #1 addr = 4'h4; data = 8'h00; rw = 0; cs_clock = 0; #1 cs_clock = 1;
     #1 addr = 4'h5; data = 8'h09; rw = 0; cs_clock = 0; #1 cs_clock = 1;
     #1 addr = 4'h6; data = 8'h0e; rw = 0; cs_clock = 0; #1 cs_clock = 1;
     
+    // Write be to 1802
     #1 addr = 4'h4; data = 8'h02; rw = 0; cs_clock = 0; #1 cs_clock = 1;
     #1 addr = 4'h5; data = 8'h18; rw = 0; cs_clock = 0; #1 cs_clock = 1;
     #1 addr = 4'h6; data = 8'hbe; rw = 0; cs_clock = 0; #1 cs_clock = 1;
 
-    #2
+    // Read from 0100 in tile_memory, should be aa
+    #1 tile_memory_read_addr = 11'h0100; tile_memory_read_enable = 1;
+
+    // Read from 0100 in attribute_memory, should be 0e
+    #2 attribute_memory_read_addr = 12'h0100; attribute_memory_read_enable = 1;
+
+    // Read from 2 in color_memory, should be be
+    #2 color_memory_read_addr = 4'h2; color_memory_read_enable = 1;
+
+    #2 
 
     $display("End of simulation");
     $finish;
