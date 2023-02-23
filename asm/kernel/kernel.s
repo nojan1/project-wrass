@@ -17,6 +17,9 @@
     .include "include/utils/error_utils.s"
     .endif
 
+    .include "include/math/16bit.s"
+    .include "include/math/32bit.s"
+
     .include "include/keyboard.s"
     .include "include/io/io_generic.s"
     .include "include/io/spi.s"

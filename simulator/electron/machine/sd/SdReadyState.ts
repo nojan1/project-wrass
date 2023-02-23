@@ -23,6 +23,7 @@ export class SdCardReadyState extends SdStateHandlerBase {
       case SdSpiCommands.CMD16:
         // Set block size
         this._blockSize = argument
+        console.log(`Blocksize is now ${argument}`)
         return Promise.resolve([R1Flags.Success])
       case SdSpiCommands.CMD17:
         return this.readBlock(argument)

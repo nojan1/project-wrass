@@ -4,6 +4,8 @@ import { SendDataCallback } from '..'
 import { colors } from './colors'
 import { tileset } from './tileset'
 
+const refreshRate = 20 // in hz
+
 const DisplayWidth = 640
 const DisplayHeight = 480
 const TotalCharCols = 64
@@ -52,9 +54,10 @@ export class Gpu implements BusInterface {
       this._internalMemory[ColorAttributesStart + i] = ~~(Math.random() * 255)
     }
 
-    setTimeout(() => {
+    // Send one update every refreshRate HZ
+    setInterval(() => {
       this.buildAndSendFramebuffer()
-    }, 1000)
+    }, (1 / refreshRate) * 1000)
   }
 
   read(address: number): number {
@@ -102,7 +105,6 @@ export class Gpu implements BusInterface {
     }
 
     this._registers[register] = value
-    this.buildAndSendFramebuffer()
   }
 
   poke(address: number, value: number): void {

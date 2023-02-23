@@ -30,10 +30,10 @@ reset:
     jsr sd_dummy_boot_pulses
 
     ; ; Temp 
-    ; jsr init_sd
+    jsr init_sd
     
     ; ; Wait here forever... and ever .... and ever
-    ; jmp *
+    jmp *
 
     jsr monitor_loop_start
 

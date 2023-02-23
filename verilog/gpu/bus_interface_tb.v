@@ -79,6 +79,7 @@ bus_interface uut (
     .addr(addr),
     .rw(rw),
     .cs_clock(cs_clock),
+    .clk(CLK100MHz),
 
     .tile_memory_write_enable(tile_memory_write_enable),
     .tile_memory_write_addr(tile_memory_write_addr),
