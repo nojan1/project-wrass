@@ -29,11 +29,34 @@ reset:
 
     jsr sd_dummy_boot_pulses
 
+
+    ; lda #0
+    ; sta TERM_16_1_HIGH
+    ; lda #64
+    ; sta TERM_16_1_LOW
+
+    ; lda #0
+    ; sta TERM_16_2_HIGH
+    ; lda #2
+    ; sta TERM_16_2_LOW
+
+    ; jsr mul_16 
+
+    ; lda #10
+    ; sta TERM_16_2_LOW
+
+    ; jsr add_16
+
+    ; lda TERM_16_1_HIGH
+    ; jsr puthex 
+    ; lda TERM_16_1_LOW
+    ; jsr puthex
+    
     ; ; Temp 
-    jsr init_sd
+    ; jsr init_sd
     
     ; ; Wait here forever... and ever .... and ever
-    jmp *
+    ; jmp *
 
     jsr monitor_loop_start
 

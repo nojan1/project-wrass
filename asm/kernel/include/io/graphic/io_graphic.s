@@ -28,7 +28,7 @@ newline:
     iny
 
     jsr goto_position
-.exit:
+ 
     ply
     plx
     rts
@@ -39,6 +39,23 @@ goto_position:
 
     stx CURRENT_COLUMN
     sty CURRENT_LINE
+; brk before mul
+;     lda #64
+;     sta TERM_16_1_LOW
+;     lda #0
+;     sta TERM_16_1_HIGH
+;     sta TERM_16_2_HIGH
+;     sty TERM_16_2_LOW
+
+;     jsr mul_16
+; ; brk after mul
+;     stx TERM_16_2_LOW
+;     jsr add_16
+; ; brk after add
+;     lda TERM_16_1_HIGH
+;     sta GRAPHICS_ADDR_HIGH
+;     lda TERM_16_1_LOW
+;     sta GRAPHICS_ADDR_LOW
 
     stx GRAPHICS_ADDR_LOW ; We can use x as the initial framebuffer offset since it is first in memory
     lda #GRAPHICS_ADDR_FRAMEBUFFER_HIGH

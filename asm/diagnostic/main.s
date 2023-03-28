@@ -35,6 +35,8 @@ reset:
 
     jsr display_init
     
+    jmp *
+
     ; jsr newline
     ; putstr_addr test
 

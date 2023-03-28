@@ -75,9 +75,9 @@ always @ (negedge cs_clock) begin
                     internal_memory_address <= { data, internal_memory_address[7:0] };
                 end
                 6: begin
-                    perform_memory_write = 1'b1;
-                    memory_write_address = internal_memory_address;
-                    memory_write_data = data;
+                    perform_memory_write <= 1'b1;
+                    memory_write_address <= internal_memory_address;
+                    memory_write_data <= data;
 
                     if (increment != 0) begin
                         internal_memory_address <= internal_memory_address + increment;
@@ -86,6 +86,13 @@ always @ (negedge cs_clock) begin
             endcase
         end else begin
             // This is a read, not currently supoprted
+            case (addr)
+                6: begin
+                     if (increment != 0) begin
+                        internal_memory_address <= internal_memory_address + increment;
+                    end
+                end
+            endcase
         end
     end
 end
