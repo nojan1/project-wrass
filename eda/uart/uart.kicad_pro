@@ -247,7 +247,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "project-wrass.kicad_pro",
+    "filename": "uart.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -324,8 +324,12 @@
   },
   "sheets": [
     [
-      "108dad20-87ad-4a07-936f-608ec0418ff6",
+      "11545594-d6d6-4b37-a578-fa23933d5773",
       ""
+    ],
+    [
+      "07300109-a3a2-4acb-97d9-cd917026a3f9",
+      "Expansion header"
     ]
   ],
   "text_variables": {}
