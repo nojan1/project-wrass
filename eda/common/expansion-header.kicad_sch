@@ -1291,7 +1291,7 @@
   (symbol (lib_id "Device:C_Polarized") (at 90.17 38.1 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid e2804c49-a389-435b-99bf-f38da44499c7)
-    (property "Reference" "C2" (at 89.281 31.75 90)
+    (property "Reference" "C3" (at 89.281 31.75 90)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "100nf" (at 89.281 34.29 90)
@@ -1308,7 +1308,7 @@
     (instances
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
-          (reference "C2") (unit 1)
+          (reference "C3") (unit 1)
         )
       )
     )

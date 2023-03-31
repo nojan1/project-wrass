@@ -1189,10 +1189,10 @@
           (reference "#PWR015") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/58e4c198-6a2b-4c28-a1a8-589b85574c34/bcecd650-8eb4-42a7-a000-392fa6d28d65"
-          (reference "#PWR024") (unit 1)
+          (reference "#PWR026") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/c5eb56c0-461b-4cee-8fbe-1bd5aa80ac20/64001936-eb30-42b8-b9ac-6bd9af7e1ca4"
-          (reference "#PWR028") (unit 1)
+          (reference "#PWR030") (unit 1)
         )
       )
     )
@@ -1223,10 +1223,10 @@
           (reference "#PWR012") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/58e4c198-6a2b-4c28-a1a8-589b85574c34/bcecd650-8eb4-42a7-a000-392fa6d28d65"
-          (reference "#PWR023") (unit 1)
+          (reference "#PWR025") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/c5eb56c0-461b-4cee-8fbe-1bd5aa80ac20/64001936-eb30-42b8-b9ac-6bd9af7e1ca4"
-          (reference "#PWR027") (unit 1)
+          (reference "#PWR029") (unit 1)
         )
       )
     )
@@ -1241,7 +1241,7 @@
     (property "Value" "0.1uf" (at 104.14 135.255 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" (at 101.2952 137.16 0)
+    (property "Footprint" "Capacitor_THT:C_Rect_L7.2mm_W3.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" (at 101.2952 137.16 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 100.33 133.35 0)
@@ -1261,10 +1261,10 @@
           (reference "C10") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/58e4c198-6a2b-4c28-a1a8-589b85574c34/bcecd650-8eb4-42a7-a000-392fa6d28d65"
-          (reference "C10") (unit 1)
+          (reference "C11") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/c5eb56c0-461b-4cee-8fbe-1bd5aa80ac20/64001936-eb30-42b8-b9ac-6bd9af7e1ca4"
-          (reference "C12") (unit 1)
+          (reference "C13") (unit 1)
         )
       )
     )
@@ -1328,10 +1328,10 @@
           (reference "IC2") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/58e4c198-6a2b-4c28-a1a8-589b85574c34/bcecd650-8eb4-42a7-a000-392fa6d28d65"
-          (reference "U?") (unit 1)
+          (reference "U9") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/c5eb56c0-461b-4cee-8fbe-1bd5aa80ac20/64001936-eb30-42b8-b9ac-6bd9af7e1ca4"
-          (reference "IC4") (unit 1)
+          (reference "IC2") (unit 1)
         )
       )
     )
@@ -1346,7 +1346,7 @@
     (property "Value" "0.1uf" (at 118.11 135.255 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" (at 115.2652 137.16 0)
+    (property "Footprint" "Capacitor_THT:C_Rect_L7.2mm_W3.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" (at 115.2652 137.16 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 114.3 133.35 0)
@@ -1366,10 +1366,10 @@
           (reference "C9") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/58e4c198-6a2b-4c28-a1a8-589b85574c34/bcecd650-8eb4-42a7-a000-392fa6d28d65"
-          (reference "C11") (unit 1)
+          (reference "C12") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/c5eb56c0-461b-4cee-8fbe-1bd5aa80ac20/64001936-eb30-42b8-b9ac-6bd9af7e1ca4"
-          (reference "C13") (unit 1)
+          (reference "C14") (unit 1)
         )
       )
     )
@@ -1410,7 +1410,7 @@
           (reference "U1") (unit 2)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/c5eb56c0-461b-4cee-8fbe-1bd5aa80ac20/64001936-eb30-42b8-b9ac-6bd9af7e1ca4"
-          (reference "U6") (unit 3)
+          (reference "U1") (unit 3)
         )
       )
     )
@@ -1441,10 +1441,10 @@
           (reference "#PWR011") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/58e4c198-6a2b-4c28-a1a8-589b85574c34/bcecd650-8eb4-42a7-a000-392fa6d28d65"
-          (reference "#PWR026") (unit 1)
+          (reference "#PWR028") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/c5eb56c0-461b-4cee-8fbe-1bd5aa80ac20/64001936-eb30-42b8-b9ac-6bd9af7e1ca4"
-          (reference "#PWR030") (unit 1)
+          (reference "#PWR032") (unit 1)
         )
       )
     )
@@ -1478,10 +1478,10 @@
           (reference "#PWR016") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/58e4c198-6a2b-4c28-a1a8-589b85574c34/bcecd650-8eb4-42a7-a000-392fa6d28d65"
-          (reference "#PWR025") (unit 1)
+          (reference "#PWR027") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/c5eb56c0-461b-4cee-8fbe-1bd5aa80ac20/64001936-eb30-42b8-b9ac-6bd9af7e1ca4"
-          (reference "#PWR029") (unit 1)
+          (reference "#PWR031") (unit 1)
         )
       )
     )
@@ -1545,10 +1545,10 @@
           (reference "IC1") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/58e4c198-6a2b-4c28-a1a8-589b85574c34/bcecd650-8eb4-42a7-a000-392fa6d28d65"
-          (reference "U?") (unit 1)
+          (reference "U8") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/c5eb56c0-461b-4cee-8fbe-1bd5aa80ac20/64001936-eb30-42b8-b9ac-6bd9af7e1ca4"
-          (reference "IC3") (unit 1)
+          (reference "IC1") (unit 1)
         )
       )
     )
@@ -1589,7 +1589,7 @@
           (reference "U1") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/c5eb56c0-461b-4cee-8fbe-1bd5aa80ac20/64001936-eb30-42b8-b9ac-6bd9af7e1ca4"
-          (reference "U6") (unit 4)
+          (reference "U1") (unit 4)
         )
       )
     )

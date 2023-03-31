@@ -399,7 +399,7 @@
           (reference "#PWR02") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/6450b7fb-1287-48ad-899d-2faf7b3277a5"
-          (reference "#PWR021") (unit 1)
+          (reference "#PWR023") (unit 1)
         )
       )
     )
@@ -427,7 +427,7 @@
           (reference "#PWR01") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/6450b7fb-1287-48ad-899d-2faf7b3277a5"
-          (reference "#PWR022") (unit 1)
+          (reference "#PWR024") (unit 1)
         )
       )
     )
@@ -442,7 +442,7 @@
     (property "Value" "0.1uf" (at 22.86 73.025 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" (at 20.0152 74.93 0)
+    (property "Footprint" "Capacitor_THT:C_Rect_L7.2mm_W3.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" (at 20.0152 74.93 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 19.05 71.12 0)
@@ -462,7 +462,7 @@
           (reference "C9") (unit 1)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/6450b7fb-1287-48ad-899d-2faf7b3277a5"
-          (reference "C9") (unit 1)
+          (reference "C10") (unit 1)
         )
       )
     )
@@ -471,7 +471,7 @@
   (symbol (lib_id "74xx:74LS139") (at 33.02 71.12 0) (unit 3)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid bd6906b7-129c-4988-a3ef-18e2197d7f21)
-    (property "Reference" "U6" (at 39.37 70.485 0)
+    (property "Reference" "U7" (at 39.37 70.485 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "74HCT139" (at 39.37 73.025 0)
@@ -502,7 +502,7 @@
     (instances
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/6450b7fb-1287-48ad-899d-2faf7b3277a5"
-          (reference "U6") (unit 3)
+          (reference "U7") (unit 3)
         )
       )
     )
@@ -511,7 +511,7 @@
   (symbol (lib_id "74xx:74LS139") (at 64.77 43.18 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid fdcf46ea-05c0-41b2-ae16-40d9484003ba)
-    (property "Reference" "U6" (at 64.77 34.29 0)
+    (property "Reference" "U7" (at 64.77 34.29 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "74HCT139" (at 64.77 36.83 0)
@@ -542,7 +542,7 @@
     (instances
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/6450b7fb-1287-48ad-899d-2faf7b3277a5"
-          (reference "U6") (unit 1)
+          (reference "U7") (unit 1)
         )
       )
     )
