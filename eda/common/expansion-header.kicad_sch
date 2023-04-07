@@ -1098,6 +1098,11 @@
     (pin "8" (uuid 0e474786-5924-46fa-a3e7-33d5ca7182c9))
     (pin "9" (uuid 79b0f11c-a831-4002-83f9-328d35d510b7))
     (instances
+      (project "fpga_gpu"
+        (path "/1109c9a4-a9ef-4407-8781-29fe7740bcaf/e520acf4-60a8-4598-8dc0-60738d0b1043/67c1a8cf-e42b-4097-97dd-eb2d8cef1b43"
+          (reference "J2") (unit 1)
+        )
+      )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
           (reference "J2") (unit 1)
@@ -1124,6 +1129,11 @@
     (pin "1" (uuid d999b858-3833-45d8-8017-635fd02a3ee2))
     (pin "2" (uuid f9088f66-3893-4895-8431-d5efb64025a0))
     (instances
+      (project "fpga_gpu"
+        (path "/1109c9a4-a9ef-4407-8781-29fe7740bcaf/e520acf4-60a8-4598-8dc0-60738d0b1043/67c1a8cf-e42b-4097-97dd-eb2d8cef1b43"
+          (reference "JP3") (unit 1)
+        )
+      )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
           (reference "JP3") (unit 1)
@@ -1150,6 +1160,11 @@
     (pin "1" (uuid 906e44d3-2c0b-4d27-ae41-c90813152f98))
     (pin "2" (uuid 335f7b15-06e9-4a81-b75a-7f116ee3fdfb))
     (instances
+      (project "fpga_gpu"
+        (path "/1109c9a4-a9ef-4407-8781-29fe7740bcaf/e520acf4-60a8-4598-8dc0-60738d0b1043/67c1a8cf-e42b-4097-97dd-eb2d8cef1b43"
+          (reference "JP5") (unit 1)
+        )
+      )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
           (reference "JP5") (unit 1)
@@ -1176,6 +1191,11 @@
     (pin "1" (uuid d5f9d347-51be-415a-b09a-ddb91d70daef))
     (pin "2" (uuid c3c57d02-43b7-41ed-b223-14f03939929b))
     (instances
+      (project "fpga_gpu"
+        (path "/1109c9a4-a9ef-4407-8781-29fe7740bcaf/e520acf4-60a8-4598-8dc0-60738d0b1043/67c1a8cf-e42b-4097-97dd-eb2d8cef1b43"
+          (reference "JP7") (unit 1)
+        )
+      )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
           (reference "JP7") (unit 1)
@@ -1202,6 +1222,11 @@
     (pin "1" (uuid 1df1a018-5926-4a70-a9ff-57ff674e5a1e))
     (pin "2" (uuid 0b563074-cf61-4adb-8d2c-6f456ceb7371))
     (instances
+      (project "fpga_gpu"
+        (path "/1109c9a4-a9ef-4407-8781-29fe7740bcaf/e520acf4-60a8-4598-8dc0-60738d0b1043/67c1a8cf-e42b-4097-97dd-eb2d8cef1b43"
+          (reference "JP4") (unit 1)
+        )
+      )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
           (reference "JP4") (unit 1)
@@ -1228,6 +1253,11 @@
     (pin "1" (uuid 567de539-3857-40e7-bf9b-31779d0b7fd5))
     (pin "2" (uuid 255bbf97-b1fd-47c9-b0b2-c65e2b411e4b))
     (instances
+      (project "fpga_gpu"
+        (path "/1109c9a4-a9ef-4407-8781-29fe7740bcaf/e520acf4-60a8-4598-8dc0-60738d0b1043/67c1a8cf-e42b-4097-97dd-eb2d8cef1b43"
+          (reference "JP2") (unit 1)
+        )
+      )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
           (reference "JP2") (unit 1)
@@ -1254,6 +1284,11 @@
     (pin "1" (uuid a30e391c-92a8-4e3f-9fda-32da24b69970))
     (pin "2" (uuid 7a02aa62-0674-4264-a068-5e42e773aabe))
     (instances
+      (project "fpga_gpu"
+        (path "/1109c9a4-a9ef-4407-8781-29fe7740bcaf/e520acf4-60a8-4598-8dc0-60738d0b1043/67c1a8cf-e42b-4097-97dd-eb2d8cef1b43"
+          (reference "JP6") (unit 1)
+        )
+      )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
           (reference "JP6") (unit 1)
@@ -1280,6 +1315,11 @@
     (pin "1" (uuid a321688d-289d-4a2e-9f01-a57275b99994))
     (pin "2" (uuid 83576e89-43ba-4957-9d6c-aa0a5333f3e0))
     (instances
+      (project "fpga_gpu"
+        (path "/1109c9a4-a9ef-4407-8781-29fe7740bcaf/e520acf4-60a8-4598-8dc0-60738d0b1043/67c1a8cf-e42b-4097-97dd-eb2d8cef1b43"
+          (reference "JP8") (unit 1)
+        )
+      )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
           (reference "JP8") (unit 1)
@@ -1291,7 +1331,7 @@
   (symbol (lib_id "Device:C_Polarized") (at 90.17 38.1 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid e2804c49-a389-435b-99bf-f38da44499c7)
-    (property "Reference" "C3" (at 89.281 31.75 90)
+    (property "Reference" "C18" (at 89.281 31.75 90)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "100nf" (at 89.281 34.29 90)
@@ -1306,6 +1346,11 @@
     (pin "1" (uuid da7931ea-d0e4-4cbe-a507-c653899b5c23))
     (pin "2" (uuid 5c0e587e-aff2-4102-871f-08cee903a97e))
     (instances
+      (project "fpga_gpu"
+        (path "/1109c9a4-a9ef-4407-8781-29fe7740bcaf/e520acf4-60a8-4598-8dc0-60738d0b1043/67c1a8cf-e42b-4097-97dd-eb2d8cef1b43"
+          (reference "C18") (unit 1)
+        )
+      )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
           (reference "C3") (unit 1)
@@ -1332,6 +1377,11 @@
     (pin "1" (uuid b4da9599-d06a-4c9b-bd41-e5d08e3c8486))
     (pin "2" (uuid 20c8a8e2-4dd0-4779-b992-ea49592c3576))
     (instances
+      (project "fpga_gpu"
+        (path "/1109c9a4-a9ef-4407-8781-29fe7740bcaf/e520acf4-60a8-4598-8dc0-60738d0b1043/67c1a8cf-e42b-4097-97dd-eb2d8cef1b43"
+          (reference "JP1") (unit 1)
+        )
+      )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
           (reference "JP1") (unit 1)
