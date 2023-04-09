@@ -1025,7 +1025,7 @@
     (effects (font (size 1.27 1.27)) (justify right))
     (uuid b5d7b3e2-c4ac-44b4-a17b-0419c5fd5292)
   )
-  (hierarchical_label "~{RST}" (shape output) (at 106.68 92.71 0) (fields_autoplaced)
+  (hierarchical_label "~{RST}" (shape bidirectional) (at 106.68 92.71 0) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify left))
     (uuid c8d56169-7607-4f61-9c95-328df7fe8dc4)
   )
