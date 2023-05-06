@@ -1108,6 +1108,11 @@
           (reference "J2") (unit 1)
         )
       )
+      (project "io-card"
+        (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "J2") (unit 1)
+        )
+      )
     )
   )
 
@@ -1136,6 +1141,11 @@
       )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
+          (reference "JP3") (unit 1)
+        )
+      )
+      (project "io-card"
+        (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
           (reference "JP3") (unit 1)
         )
       )
@@ -1170,6 +1180,11 @@
           (reference "JP5") (unit 1)
         )
       )
+      (project "io-card"
+        (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "JP5") (unit 1)
+        )
+      )
     )
   )
 
@@ -1198,6 +1213,11 @@
       )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
+          (reference "JP7") (unit 1)
+        )
+      )
+      (project "io-card"
+        (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
           (reference "JP7") (unit 1)
         )
       )
@@ -1232,6 +1252,11 @@
           (reference "JP4") (unit 1)
         )
       )
+      (project "io-card"
+        (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "JP4") (unit 1)
+        )
+      )
     )
   )
 
@@ -1260,6 +1285,11 @@
       )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
+          (reference "JP2") (unit 1)
+        )
+      )
+      (project "io-card"
+        (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
           (reference "JP2") (unit 1)
         )
       )
@@ -1294,6 +1324,11 @@
           (reference "JP6") (unit 1)
         )
       )
+      (project "io-card"
+        (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "JP6") (unit 1)
+        )
+      )
     )
   )
 
@@ -1322,6 +1357,11 @@
       )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
+          (reference "JP8") (unit 1)
+        )
+      )
+      (project "io-card"
+        (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
           (reference "JP8") (unit 1)
         )
       )
@@ -1356,6 +1396,11 @@
           (reference "C3") (unit 1)
         )
       )
+      (project "io-card"
+        (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "C18") (unit 1)
+        )
+      )
     )
   )
 
@@ -1384,6 +1429,11 @@
       )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
+          (reference "JP1") (unit 1)
+        )
+      )
+      (project "io-card"
+        (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
           (reference "JP1") (unit 1)
         )
       )
