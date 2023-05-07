@@ -1051,7 +1051,7 @@
     (property "Value" "Bus expansion" (at 90.17 46.99 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_2x20_P2.54mm_Vertical" (at 88.9 72.39 0)
+    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_2x20_P2.54mm_Horizontal" (at 88.9 72.39 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 88.9 72.39 0)
@@ -1113,6 +1113,11 @@
           (reference "J2") (unit 1)
         )
       )
+      (project "expansion_skeleton"
+        (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
+          (reference "J2") (unit 1)
+        )
+      )
     )
   )
 
@@ -1146,6 +1151,11 @@
       )
       (project "io-card"
         (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "JP3") (unit 1)
+        )
+      )
+      (project "expansion_skeleton"
+        (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
           (reference "JP3") (unit 1)
         )
       )
@@ -1185,6 +1195,11 @@
           (reference "JP5") (unit 1)
         )
       )
+      (project "expansion_skeleton"
+        (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
+          (reference "JP5") (unit 1)
+        )
+      )
     )
   )
 
@@ -1218,6 +1233,11 @@
       )
       (project "io-card"
         (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "JP7") (unit 1)
+        )
+      )
+      (project "expansion_skeleton"
+        (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
           (reference "JP7") (unit 1)
         )
       )
@@ -1257,6 +1277,11 @@
           (reference "JP4") (unit 1)
         )
       )
+      (project "expansion_skeleton"
+        (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
+          (reference "JP4") (unit 1)
+        )
+      )
     )
   )
 
@@ -1290,6 +1315,11 @@
       )
       (project "io-card"
         (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "JP2") (unit 1)
+        )
+      )
+      (project "expansion_skeleton"
+        (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
           (reference "JP2") (unit 1)
         )
       )
@@ -1329,6 +1359,11 @@
           (reference "JP6") (unit 1)
         )
       )
+      (project "expansion_skeleton"
+        (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
+          (reference "JP6") (unit 1)
+        )
+      )
     )
   )
 
@@ -1362,6 +1397,11 @@
       )
       (project "io-card"
         (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "JP8") (unit 1)
+        )
+      )
+      (project "expansion_skeleton"
+        (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
           (reference "JP8") (unit 1)
         )
       )
@@ -1401,6 +1441,11 @@
           (reference "C18") (unit 1)
         )
       )
+      (project "expansion_skeleton"
+        (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
+          (reference "C18") (unit 1)
+        )
+      )
     )
   )
 
@@ -1434,6 +1479,11 @@
       )
       (project "io-card"
         (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "JP1") (unit 1)
+        )
+      )
+      (project "expansion_skeleton"
+        (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
           (reference "JP1") (unit 1)
         )
       )

@@ -1256,7 +1256,7 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 0298d33f-4a00-4a11-a7f9-3648c3d398d4)
   )
-  (label "Q6" (at 193.04 130.81 0)
+  (label "Q6" (at 193.04 130.81 0) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 36002bc2-2b13-49bd-82e3-f6cdd964bba2)
   )
@@ -1501,7 +1501,7 @@
           (reference "U16") (unit 2)
         )
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/58e4c198-6a2b-4c28-a1a8-589b85574c34"
-          (reference "U16") (unit 2)
+          (reference "U2") (unit 2)
         )
       )
     )
