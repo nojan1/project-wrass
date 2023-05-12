@@ -476,7 +476,7 @@
       "idf": "",
       "netlist": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "fpga_gpu.step",
       "vrml": ""
     },
     "page_layout_descr_file": ""
