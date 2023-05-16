@@ -1113,6 +1113,11 @@
           (reference "J2") (unit 1)
         )
       )
+      (project "audio-card"
+        (path "/b2d5e230-38ae-42d2-af04-44d0ea9b43d4/3cc771bc-60dc-4045-bf81-4205e16595d5"
+          (reference "J2") (unit 1)
+        )
+      )
       (project "expansion_skeleton"
         (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
           (reference "J2") (unit 1)
@@ -1151,6 +1156,11 @@
       )
       (project "io-card"
         (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "JP3") (unit 1)
+        )
+      )
+      (project "audio-card"
+        (path "/b2d5e230-38ae-42d2-af04-44d0ea9b43d4/3cc771bc-60dc-4045-bf81-4205e16595d5"
           (reference "JP3") (unit 1)
         )
       )
@@ -1195,6 +1205,11 @@
           (reference "JP5") (unit 1)
         )
       )
+      (project "audio-card"
+        (path "/b2d5e230-38ae-42d2-af04-44d0ea9b43d4/3cc771bc-60dc-4045-bf81-4205e16595d5"
+          (reference "JP5") (unit 1)
+        )
+      )
       (project "expansion_skeleton"
         (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
           (reference "JP5") (unit 1)
@@ -1233,6 +1248,11 @@
       )
       (project "io-card"
         (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "JP7") (unit 1)
+        )
+      )
+      (project "audio-card"
+        (path "/b2d5e230-38ae-42d2-af04-44d0ea9b43d4/3cc771bc-60dc-4045-bf81-4205e16595d5"
           (reference "JP7") (unit 1)
         )
       )
@@ -1277,6 +1297,11 @@
           (reference "JP4") (unit 1)
         )
       )
+      (project "audio-card"
+        (path "/b2d5e230-38ae-42d2-af04-44d0ea9b43d4/3cc771bc-60dc-4045-bf81-4205e16595d5"
+          (reference "JP4") (unit 1)
+        )
+      )
       (project "expansion_skeleton"
         (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
           (reference "JP4") (unit 1)
@@ -1315,6 +1340,11 @@
       )
       (project "io-card"
         (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "JP2") (unit 1)
+        )
+      )
+      (project "audio-card"
+        (path "/b2d5e230-38ae-42d2-af04-44d0ea9b43d4/3cc771bc-60dc-4045-bf81-4205e16595d5"
           (reference "JP2") (unit 1)
         )
       )
@@ -1359,6 +1389,11 @@
           (reference "JP6") (unit 1)
         )
       )
+      (project "audio-card"
+        (path "/b2d5e230-38ae-42d2-af04-44d0ea9b43d4/3cc771bc-60dc-4045-bf81-4205e16595d5"
+          (reference "JP6") (unit 1)
+        )
+      )
       (project "expansion_skeleton"
         (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
           (reference "JP6") (unit 1)
@@ -1397,6 +1432,11 @@
       )
       (project "io-card"
         (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "JP8") (unit 1)
+        )
+      )
+      (project "audio-card"
+        (path "/b2d5e230-38ae-42d2-af04-44d0ea9b43d4/3cc771bc-60dc-4045-bf81-4205e16595d5"
           (reference "JP8") (unit 1)
         )
       )
@@ -1441,6 +1481,11 @@
           (reference "C18") (unit 1)
         )
       )
+      (project "audio-card"
+        (path "/b2d5e230-38ae-42d2-af04-44d0ea9b43d4/3cc771bc-60dc-4045-bf81-4205e16595d5"
+          (reference "C18") (unit 1)
+        )
+      )
       (project "expansion_skeleton"
         (path "/f65326c0-118f-43ae-8d7d-86cc11609fcf/a49eac83-5c79-4825-9699-833a4117337f"
           (reference "C18") (unit 1)
@@ -1479,6 +1524,11 @@
       )
       (project "io-card"
         (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
+          (reference "JP1") (unit 1)
+        )
+      )
+      (project "audio-card"
+        (path "/b2d5e230-38ae-42d2-af04-44d0ea9b43d4/3cc771bc-60dc-4045-bf81-4205e16595d5"
           (reference "JP1") (unit 1)
         )
       )
