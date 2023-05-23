@@ -1,0 +1,17 @@
++5   |  GND
++3.3 |  GND
+IO0  |  EXTCLK
+IO1  |  GND
+IO2  |  LED1
+IO3  |  LED2
+IO4  |  Blue2
+IO5  |  Blue1
+IO6  |  Blue0
+IO7  |  Green2
+A0   |  Green1
+CLK  |  Green0
+A1   |  Red2
+A2   |  Red1
+RW   |  Red0
+CS   |  VSync
+RST  |  HSync

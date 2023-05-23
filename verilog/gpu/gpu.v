@@ -4,14 +4,14 @@ module gpu (
     input [7:0] data,
     input [2:0] addr,
     input rw,
-    input cs_clock,
+    input cs,
+    input cpu_clk,
 
     output wire vga_hs,
     output wire vga_vs,
     output wire [2:0] vga_r,
     output wire [2:0] vga_g,
-    output wire [2:0] vga_b,
-    output wire irq
+    output wire [2:0] vga_b
 );
 
 wire pixel_clk;
@@ -131,7 +131,8 @@ bus_interface bus_interface (
     .data(data),
     .addr(addr),
     .rw(rw),
-    .cs_clock(cs_clock),
+    .cs(cs),
+    .cpu_clk(cpu_clk),
     .clk(CLK100MHz),
     .rst(rst),
 
@@ -151,7 +152,5 @@ bus_interface bus_interface (
 assign vga_r = (vga_blank == 1) ? 0 : pixel_data[2:0]; 
 assign vga_g = (vga_blank == 1) ? 0 : pixel_data[5:3]; 
 assign vga_b = (vga_blank == 1) ? 0 : {pixel_data[7:6], pixel_data[6]}; 
-
-assign irq = pixel_clk;
 
 endmodule

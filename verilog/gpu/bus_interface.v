@@ -2,9 +2,10 @@ module bus_interface (
     input [7:0] data,
     input [2:0] addr,
     input rw,
-    input cs_clock,
-    input clk,
+    input cs,
+    input cpu_clk,
     input rst,
+    input clk,
 
     output reg tile_memory_write_enable,
     output reg [10:0] tile_memory_write_addr,
@@ -58,10 +59,10 @@ always @ (posedge clk) begin
     end
 end
 
-always @ (negedge cs_clock) begin
+always @ (posedge cpu_clk) begin
     perform_memory_write = 1'b0;
 
-    if(cs_clock == 1'b0) begin
+    if(cs == 1'b0) begin
         if(rw == 1'b0) begin
             // Write
             case (addr)

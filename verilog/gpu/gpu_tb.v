@@ -13,12 +13,12 @@ always #1 CLK100MHz = ~CLK100MHz;
 wire [7:0] data = 0;
 wire [2:0] addr = 0;
 wire rw = 0;
-wire cs_clock = 1;
+wire cs = 1;
+wire cpu_clk = 0;
 
 wire [2:0] vga_r;
 wire [2:0] vga_g;
 wire [2:0] vga_b;
-wire irq;
 wire vga_hs;
 wire vga_vs;
 
@@ -28,14 +28,14 @@ gpu uut (
     .data(data),
     .addr(addr),
     .rw(rw),
-    .cs_clock(cs_clock),
+    .cs(cs),
+    .cpu_clk(cpu_clk),
 
     .vga_hs(vga_hs),
     .vga_vs(vga_vs),
     .vga_r(vga_r),
     .vga_g(vga_g),
-    .vga_b(vga_b),
-    .irq(irq)
+    .vga_b(vga_b)
 );
 
 initial begin
