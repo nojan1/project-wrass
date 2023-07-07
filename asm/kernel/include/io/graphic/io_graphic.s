@@ -6,19 +6,22 @@ c_to_sc:
 
 ; Put character from A into output
 ; ** Note this will be where the current address in the GPU just happens to be, it also assumes that the increment is 1! **
-putc:
+gpu_putc:
+    pha
     jsr c_to_sc
-    ; fall through
+    jsr gpu_putsc
+    pla
+    rts
 
 ; Put screen code from A into output
 ; ** Note this will be where the current address in the GPU just happens to be, it also assumes that the increment is 1! **
-putsc:
+gpu_putsc:
     inc CURRENT_COLUMN
     sta GRAPHICS_DATA
     rts
 
 ; Put newline into output
-newline:
+gpu_newline:
     phx
     phy
 
@@ -27,14 +30,14 @@ newline:
     ldy CURRENT_LINE
     iny
 
-    jsr goto_position
+    jsr gpu_goto_position
  
     ply
     plx
     rts
 
 ; Advance the framebuffer address to the location reference by x and y
-goto_position:
+gpu_goto_position:
     pha
 
     stx CURRENT_COLUMN
@@ -71,7 +74,7 @@ goto_position:
     rts
 
 ; Remove the last character at the current GPU address
-ereasec: 
+gpu_ereasec: 
     pha
     dec GRAPHICS_ADDR_LOW
 

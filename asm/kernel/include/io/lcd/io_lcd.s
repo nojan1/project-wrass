@@ -1,12 +1,12 @@
 ; Put character from A into output
-putc:
+lcd_putc:
     pha
         jsr print_char ; Temporary, refactor to remove double call
     pla
     rts
 
 ; Put newline into output
-newline:
+lcd_newline:
     pha
     phx
     
@@ -22,7 +22,7 @@ _newline_not_max_row:
     sta CURRENT_LINE
 
     ; A now hold the current line we should be on
-    jsr goto_current_line ; go there
+    jsr lcd_goto_current_line ; go there
 
     ; Overwrite the entire row with space
     pha
@@ -34,13 +34,13 @@ _newline_not_max_row:
     bne .print_next
 
     pla
-    jsr goto_current_line ; Go back to start of row
+    jsr lcd_goto_current_line ; Go back to start of row
 
     pla
     plx
     rts
 
-goto_current_line:
+lcd_goto_current_line:
     pha
     
     clc
@@ -51,4 +51,7 @@ goto_current_line:
     jsr lcd_instruction
 
     pla
+    rts
+
+lcd_ereasec:
     rts

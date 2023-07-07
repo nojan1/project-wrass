@@ -29,12 +29,19 @@
 
     .include "include/io/fs/partition.s"
 
-    .ifdef GRAPHIC_OUTPUT
+    .ifndef NO_GPU
     .include "include/io/graphic/graphic.s"
     .include "include/io/graphic/io_graphic.s"
-    .else
+    .endif
+
+    .ifndef NO_LCD
     .include "include/io/lcd/lcd_8bit.s"
     .include "include/io/lcd/io_lcd.s"
+    .endif
+    
+    .ifndef NO_UART
+    .include "include/io/uart/uart.s"
+    .include "include/io/uart/io_uart.s"
     .endif
 
     .ifndef BASIC

@@ -42,3 +42,105 @@ _putstr_end:
     ply
     pla
     rts
+
+; Put character in A onto configured outputs
+putc:
+   .ifndef NO_GPU
+   pha 
+   lda IO_CONTROL
+   and GPU_OUTPUT
+   beq _no_gpu_output
+   pla
+   jsr gpu_putc
+   .endif
+
+_no_gpu_output:
+   .ifndef NO_UART
+   pha 
+   lda IO_CONTROL
+   and UART_OUTPUT
+   beq _no_uart_output
+   pla
+   jsr uart_putc
+   .endif
+
+_no_uart_output:
+   .ifndef NO_LCD
+   pha 
+   lda IO_CONTROL
+   and LCD_OUTPUT
+   beq _no_lcd_output
+   pla
+   jsr lcd_putc
+   .endif
+
+_no_lcd_output:
+   rts
+
+; Put newline onto configured outputs
+newline:
+   .ifndef NO_GPU
+   pha 
+   lda IO_CONTROL
+   and GPU_OUTPUT
+   beq _newline_no_gpu_output
+   pla
+   jsr gpu_newline
+   .endif
+
+_newline_no_gpu_output:
+   .ifndef NO_UART
+   pha 
+   lda IO_CONTROL
+   and UART_OUTPUT
+   beq _newline_no_uart_output
+   pla
+   jsr uart_newline
+   .endif
+
+_newline_no_uart_output:
+   .ifndef NO_LCD
+   pha 
+   lda IO_CONTROL
+   and LCD_OUTPUT
+   beq _newline_no_lcd_output
+   pla
+   jsr lcd_newline
+   .endif
+
+_newline_no_lcd_output:
+   rts
+
+; Erease last character from configured outputs
+ereasec:
+   .ifndef NO_GPU
+   pha 
+   lda IO_CONTROL
+   and GPU_OUTPUT
+   beq _ereasec_no_gpu_output
+   pla
+   jsr gpu_ereasec
+   .endif
+
+_ereasec_no_gpu_output:
+   .ifndef NO_UART
+   pha 
+   lda IO_CONTROL
+   and UART_OUTPUT
+   beq _ereasec_no_uart_output
+   pla
+   jsr uart_ereasec
+   .endif
+
+_ereasec_no_uart_output:
+   .ifndef NO_LCD
+   pha 
+   lda IO_CONTROL
+   and LCD_OUTPUT
+   beq _ereasec_no_lcd_output
+   pla
+   jsr lcd_ereasec
+   .endif
+
+_ereasec_no_lcd_output:
+   rts

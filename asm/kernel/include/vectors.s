@@ -17,7 +17,16 @@ reset:
     sta CURRENT_LINE
     sta CURRENT_COLUMN
 
-    jsr display_init
+    .ifndef NO_GPU
+    jsr gpu_display_init
+    .endif
+    
+    .ifndef NO_LCD
+    jsr lcd_display_init
+    .endif
+
+    lda KEYBOARD_INPUT | GPU_OUTPUT
+    sta IO_CONTROL
 
     ; KEYBOARD INTERFACE SETUP
     lda #0

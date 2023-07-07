@@ -11,7 +11,7 @@ GRAPHICS_ADDR_TILEMAP_HIGH = $10
 GRAPHICS_ADDR_COLORS_LOW = $00
 GRAPHICS_ADDR_COLORS_HIGH = $18
 
-display_init:
+gpu_display_init:
     lda #1
     sta GRAPHICS_INCREMENT
 
