@@ -34,7 +34,7 @@ memory #(
     .ADDRESS_WIDTH(11),
     .INIT_FILE("tile_mem.txt")
 ) tile_memory (
-    .clk(CLK100MHz),
+    .read_clk(CLK100MHz),
     .read_enable(tile_memory_read_enable),
     .read_addr(tile_memory_read_addr),
     .read_data(tile_memory_read_data),
@@ -48,7 +48,7 @@ memory #(
     .ADDRESS_WIDTH(12),
     .INIT_FILE("attribute_mem.txt")
 ) attribute_memory (
-    .clk(CLK100MHz),
+    .read_clk(CLK100MHz),
     .read_enable(attribute_memory_read_enable),
     .read_addr(attribute_memory_read_addr),
     .read_data(attribute_memory_read_data),
@@ -62,7 +62,7 @@ memory #(
     .ADDRESS_WIDTH(4),
     .INIT_FILE("color_mem.txt")
 ) color_memory (
-    .clk(CLK100MHz),
+    .read_clk(CLK100MHz),
     .read_enable(color_memory_read_enable),
     .read_addr(color_memory_read_addr),
     .read_data(color_memory_read_data),

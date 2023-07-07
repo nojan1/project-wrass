@@ -23,56 +23,12 @@ module bus_interface (
 reg [7:0] increment;
 reg [15:0] internal_memory_address;
 
-// reg perform_memory_write;
-// reg [15:0] memory_write_address;
-// reg [7:0] memory_write_data;
-
 initial begin
     increment <= 1'b1;
     internal_memory_address <= 16'h0;
-    // perform_memory_write <= 1'b0;
 end
 
-// always @ (clk) begin
-//     if(clk == 0) begin
-
-//     end else begin 
-//         tile_memory_write_enable <= 0;
-//         attribute_memory_write_enable <= 0;
-//         color_memory_write_enable <= 0;
-//     end
-
-//     if(perform_memory_write == 1'b1) begin
-//         // Perform memory op
-//         if (memory_write_address < 16'h0800) begin
-//             // Write to framebuffer
-//             tile_memory_write_enable = 1;
-//             tile_memory_write_addr = memory_write_address[10:0];
-//             tile_memory_write_data = memory_write_data;
-//         end             
-
-//         if (memory_write_address >= 16'h0800 && memory_write_address < 16'h1800 ) begin
-//             // Write to color attributes or tile map
-//             attribute_memory_write_enable = 1;
-//             attribute_memory_write_addr = memory_write_address - 16'h0800;
-//             attribute_memory_write_data = memory_write_data; 
-//         end
-
-//         if (memory_write_address >= 16'h1800) begin
-//             // Write to colors
-//             color_memory_write_enable = 1;
-//             color_memory_write_addr = memory_write_address[3:0];
-//             color_memory_write_data = memory_write_data;
-//         end
-//     end else begin
-//         tile_memory_write_enable = 0;
-//         attribute_memory_write_enable = 0;
-//         color_memory_write_enable = 0;
-//     end
-// end
-
 always @ (posedge cpu_clk) begin
-    // perform_memory_write = 1'b0;
     tile_memory_write_enable <= 0;
     attribute_memory_write_enable <= 0;
     color_memory_write_enable <= 0;
@@ -91,29 +47,25 @@ always @ (posedge cpu_clk) begin
                     internal_memory_address <= { data, internal_memory_address[7:0] };
                 end
                 6: begin
-                    // perform_memory_write <= 1'b1;
-                    // memory_write_address <= internal_memory_address;
-                    // memory_write_data <= data;
-
                     if (internal_memory_address < 16'h0800) begin
                         // Write to framebuffer
-                        tile_memory_write_enable = 1;
-                        tile_memory_write_addr = internal_memory_address[10:0];
-                        tile_memory_write_data = data;
+                        tile_memory_write_enable <= 1;
+                        tile_memory_write_addr <= internal_memory_address[10:0];
+                        tile_memory_write_data <= data;
                     end             
 
                     if (internal_memory_address >= 16'h0800 && internal_memory_address < 16'h1800 ) begin
                         // Write to color attributes or tile map
-                        attribute_memory_write_enable = 1;
-                        attribute_memory_write_addr = internal_memory_address - 16'h0800;
-                        attribute_memory_write_data = data; 
+                        attribute_memory_write_enable <= 1;
+                        attribute_memory_write_addr <= internal_memory_address - 16'h0800;
+                        attribute_memory_write_data <= data; 
                     end
 
                     if (internal_memory_address >= 16'h1800) begin
                         // Write to colors
-                        color_memory_write_enable = 1;
-                        color_memory_write_addr = internal_memory_address[3:0];
-                        color_memory_write_data = data;
+                        color_memory_write_enable <= 1;
+                        color_memory_write_addr <= internal_memory_address[3:0];
+                        color_memory_write_data <= data;
                     end
 
                     if (increment != 0) begin
