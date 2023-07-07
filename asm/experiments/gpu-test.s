@@ -24,18 +24,23 @@ reset:
     sta CURRENT_COLUMN
 
 .screen_top:
+    ldx #GRAPHICS_ADDR_FRAMEBUFFER_HIGH
+    stx GRAPHICS_ADDR_HIGH
+    ldx #GRAPHICS_ADDR_FRAMEBUFFER_LOW
+    stx GRAPHICS_ADDR_LOW
     ldx #0
+
 .print_loop:
     putstr_addr hello_msg
-    jsr newline
+;jsr newline
 
-    inx
-    cpx #60
-    bne .print_loop
+;   inx
+;   cpx #60
+;   bne .print_loop
 
-    ldx #0
-    ldy #0
-    jsr goto_position
+;   ldx #0
+;   ldy #0
+;   jsr goto_position
     jmp .screen_top 
 
 nmi:

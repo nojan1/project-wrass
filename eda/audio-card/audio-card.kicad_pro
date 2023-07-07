@@ -479,6 +479,10 @@
     [
       "a873cf7b-f425-4549-930b-fc2c78a0dd54",
       "Channel"
+    ],
+    [
+      "81bf8bdc-56c6-47e5-9b6d-a7f31f779338",
+      "Output stage"
     ]
   ],
   "text_variables": {}

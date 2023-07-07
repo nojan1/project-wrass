@@ -23,7 +23,6 @@ reg [7:0] tileNumber;
 reg [7:0] tileData;
 reg [7:0] colorAttribute;
 reg [7:0] color;
-// wire pixelOn;
 
 wire [9:0] offsetCycle = cycle[9:1] + 0;
 wire [8:0] offsetScanline = scanline[8:1] + 0;
@@ -37,16 +36,7 @@ wire [2:0] charRenderRow = offsetScanline & 3'h7;
 // There will be 3 clk between each pixel_clk, use these clock cycles to fetch stuff from RAM
 always @ (negedge clk or negedge rst) begin
     if(rst == 0) begin
-        // gottenPixelClock <= 0;
-        // step <= 0;
-        // pixelOn <= 0;
         color <= 0;
-        // offsetCycle <= 0;
-        // offsetScanline <= 0;
-        // charColumn <= 0;
-        // charRow <= 0;
-        // charRenderColumn <= 0;
-        // charRenderRow <= 0;
         tile_memory_read_addr <= 0;
         tileNumber <= 0;
         tileData <= 0;
@@ -55,14 +45,6 @@ always @ (negedge clk or negedge rst) begin
     end else begin
         case (divider_count)
             0: begin
-                // color <= color_memory_read_data; 
-
-                // charColumn = offsetCycle >> 3; 
-                // charRow = offsetScanline >> 3;
-
-                // charRenderColumn = offsetCycle & 3'h7;
-                // charRenderRow = offsetScanline & 3'h7;
-
                 tile_memory_read_addr = {charRow, charColumn};
                 tile_memory_read_enable = 1;
 
@@ -78,11 +60,8 @@ always @ (negedge clk or negedge rst) begin
             end
             2: begin
                 tileData = attribute_memory_read_data;
-                // pixelOn = (tileData >> charRenderColumn) & 1;
-                   
+
                 color_memory_read_addr = tileData[charRenderColumn+:1] ? colorAttribute[7:4] : colorAttribute[3:0];
-                // color_memory_read_addr = ((tileData >> charRenderColumn) & 1) == 1'b1 ? colorAttribute[7:4] : colorAttribute[3:0];
-                // color_memory_read_addr = pixelOn == 1 ? 4'b0001 : 4'b0000;
                 color_memory_read_enable = 1;
             end
         endcase
@@ -90,6 +69,5 @@ always @ (negedge clk or negedge rst) begin
 end
 
 assign pixel_data = color_memory_read_data;
-// assign pixel_data = color;
 
 endmodule

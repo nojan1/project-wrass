@@ -1,0 +1,5 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "74ls593")(type "KiCad")(uri "${KIPRJMOD}/74ls593.kicad_sym")(options "")(descr ""))
+  (lib (name "counters")(type "KiCad")(uri "${KIPRJMOD}/counters.kicad_sym")(options "")(descr ""))
+)
