@@ -33,12 +33,11 @@ reset:
     ldx #$FF ;Set stackpointer to top of zero page
     txs
 
-    jsr display_init
-    
-    jmp *
-
-    ; jsr newline
-    ; putstr_addr test
+    .ifdef GRAPHIC_OUTPUT
+    jsr gpu_display_init
+    .else
+    jsr lcd_display_init
+    .endif
 
     jsr test_zp
     pha
