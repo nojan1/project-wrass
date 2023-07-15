@@ -11,12 +11,14 @@
     .org $E000 ; Kernel area
 
     .include "../kernel/include/utils/hex_utils.s"
-    .include "../kernel/include/io/io_generic.s"
+    .include "io_generic.s"
 
-    .ifdef GRAPHIC_OUTPUT
+    .ifndef NO_GPU
     .include "../kernel/include/io/graphic/graphic.s"
     .include "../kernel/include/io/graphic/io_graphic.s"
-    .else
+    .endif
+
+    .ifndef NO_LCD
     .include "../kernel/include/io/lcd/lcd_8bit.s"
     .include "../kernel/include/io/lcd/io_lcd.s"
     .endif
@@ -33,9 +35,10 @@ reset:
     ldx #$FF ;Set stackpointer to top of zero page
     txs
 
-    .ifdef GRAPHIC_OUTPUT
+    .ifndef NO_GPU
     jsr gpu_display_init
-    .else
+    .endif
+    .ifndef NO_LCD
     jsr lcd_display_init
     .endif
 
