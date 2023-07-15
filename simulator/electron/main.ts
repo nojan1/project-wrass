@@ -6,6 +6,7 @@ import { deferWork } from './utils/deferWork'
 import { parseListing, SymbolListing } from './utils/listingParser'
 import { loadMemoryFromFile } from './utils/memoryFile'
 import { annotateDisassembly, toHex } from './utils/output'
+import runTests from './testing'
 
 const yargs = require('yargs')
 const { hideBin } = require('yargs/helpers')
@@ -30,7 +31,7 @@ function parseOptions() {
         'The path to the binary file that should be loaded in to memory',
     })
     .option('listing', {
-      alias: 'l',
+	  alias: 'l',
       type: 'string',
       description:
         'The path to a listing file for the binary, it will be used to decorate disassembly and set breakpoints',
@@ -53,13 +54,19 @@ function parseOptions() {
       description: 'Set breakpoint on address provded',
     })
     .option('display', {
+      alias: 'd',
       type: 'string',
       choices: ['lcd', 'graphic'],
       default: 'lcd',
     })
     .option('sd-image', {
       type: 'string',
-    }).argv
+    })
+	.option('test-directory', {
+	  alias: 't',
+	  type: 'string',
+	  description: 'Directory to scan for test files, including this will cause the simulator to start in testmode and wont make a window'
+	}).argv
 }
 
 function createWindow(options: any) {
@@ -212,19 +219,32 @@ async function registerListeners({
 
 const options = parseOptions()
 
-app
-  .on('ready', () => createWindow(options))
-  .whenReady()
-  .then(() => createDebugger(options))
-  .then(registerListeners)
-  .catch(e => console.error(e))
+if(options.testDirectory){
+	// Run in test mode
+	console.log("Entering test mode")
 
-app.on('window-all-closed', () => {
-  app.quit()
-})
+	if(options.file) {
+		runTests(options)
+	}else{
+		console.error("Unable to run tests without a program file specified.. exiting")
+	}
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow(options)
-  }
-})
+	app.quit();
+} else {
+	app
+	  .on('ready', () => createWindow(options))
+	  .whenReady()
+	  .then(() => createDebugger(options))
+	  .then(registerListeners)
+	  .catch(e => console.error(e))
+
+	app.on('window-all-closed', () => {
+	  app.quit()
+	})
+
+	app.on('activate', () => {
+	  if (BrowserWindow.getAllWindows().length === 0) {
+		createWindow(options)
+	  }
+	})
+}
