@@ -221,8 +221,6 @@ const options = parseOptions()
 
 if(options.testDirectory){
 	// Run in test mode
-	console.log("Entering test mode")
-
 	if(options.file) {
 		runTests(options)
 	}else{

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ARGS="-dotdir -wdc02 -Fbin -DGRAPHIC_OUTPUT"
+ARGS="-dotdir -wdc02 -Fbin -DNO_LCD"
 COMPILER="vasm6502_oldstyle"
 
 if [[ -z "$1" || -z "$2" ]]; then
