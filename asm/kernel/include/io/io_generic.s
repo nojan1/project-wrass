@@ -50,7 +50,7 @@ putc:
 
    .ifndef NO_GPU 
    lda IO_CONTROL
-   and GPU_OUTPUT
+   and #GPU_OUTPUT
    beq _no_gpu_output
    txa
    jsr gpu_putc
@@ -59,7 +59,7 @@ putc:
 _no_gpu_output:
    .ifndef NO_UART 
    lda IO_CONTROL
-   and UART_OUTPUT
+   and #UART_OUTPUT
    beq _no_uart_output
    txa
    jsr uart_putc
@@ -68,7 +68,7 @@ _no_gpu_output:
 _no_uart_output:
    .ifndef NO_LCD 
    lda IO_CONTROL
-   and LCD_OUTPUT
+   and #LCD_OUTPUT
    beq _no_lcd_output
    txa
    jsr lcd_putc
@@ -85,7 +85,7 @@ newline:
 
    .ifndef NO_GPU
    lda IO_CONTROL
-   and GPU_OUTPUT
+   and #GPU_OUTPUT
    beq _newline_no_gpu_output
    txa
    jsr gpu_newline
@@ -94,7 +94,7 @@ newline:
 _newline_no_gpu_output:
    .ifndef NO_UART
    lda IO_CONTROL
-   and UART_OUTPUT
+   and #UART_OUTPUT
    beq _newline_no_uart_output
    txa
    jsr uart_newline
@@ -103,7 +103,7 @@ _newline_no_gpu_output:
 _newline_no_uart_output:
    .ifndef NO_LCD
    lda IO_CONTROL
-   and LCD_OUTPUT
+   and #LCD_OUTPUT
    beq _newline_no_lcd_output
    txa
    jsr lcd_newline
@@ -120,7 +120,7 @@ ereasec:
 
    .ifndef NO_GPU
    lda IO_CONTROL
-   and GPU_OUTPUT
+   and #GPU_OUTPUT
    beq _ereasec_no_gpu_output
    txa
    jsr gpu_ereasec
@@ -129,7 +129,7 @@ ereasec:
 _ereasec_no_gpu_output:
    .ifndef NO_UART
    lda IO_CONTROL
-   and UART_OUTPUT
+   and #UART_OUTPUT
    beq _ereasec_no_uart_output
    txa
    jsr uart_ereasec
@@ -138,7 +138,7 @@ _ereasec_no_gpu_output:
 _ereasec_no_uart_output:
    .ifndef NO_LCD
    lda IO_CONTROL
-   and LCD_OUTPUT
+   and #LCD_OUTPUT
    beq _ereasec_no_lcd_output
    txa
    jsr lcd_ereasec
