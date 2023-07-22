@@ -483,6 +483,26 @@
     [
       "81bf8bdc-56c6-47e5-9b6d-a7f31f779338",
       "Output stage"
+    ],
+    [
+      "03d0b405-5ddb-4e47-aa2e-818dab920315",
+      "VCA"
+    ],
+    [
+      "8d4ac66b-c244-4fda-aa16-582d96b5489d",
+      "VCO"
+    ],
+    [
+      "05b8725b-75e3-48cf-b3ec-16b42bd750af",
+      "Envelope generator"
+    ],
+    [
+      "5ce3a726-f046-47af-b9ec-68b97923e72c",
+      "Power"
+    ],
+    [
+      "c695fd73-bc9d-468c-9684-e15fbb3ea60a",
+      "Mixer"
     ]
   ],
   "text_variables": {}

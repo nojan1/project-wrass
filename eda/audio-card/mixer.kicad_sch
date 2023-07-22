@@ -1,0 +1,27 @@
+(kicad_sch (version 20230121) (generator eeschema)
+
+  (uuid 2af1c350-b3bf-4839-8704-384335b1dfc8)
+
+  (paper "A4")
+
+  (lib_symbols
+  )
+
+
+  (hierarchical_label "Channel2" (shape output) (at 38.1 40.64 180) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify right))
+    (uuid 288206e1-2396-4d8c-9888-5907348c053c)
+  )
+  (hierarchical_label "SignalOut" (shape output) (at 224.79 85.09 0) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify left))
+    (uuid 7da66003-21d5-4331-a293-b71eb85b7ee1)
+  )
+  (hierarchical_label "Channel3" (shape output) (at 38.1 46.99 180) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify right))
+    (uuid 9803fcee-8e65-4762-b413-62d2ae12076e)
+  )
+  (hierarchical_label "Channel1" (shape output) (at 38.1 34.29 180) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify right))
+    (uuid c2a788f4-ac98-4d78-a85e-3ede4044672e)
+  )
+)

@@ -1,0 +1,15 @@
+(kicad_sch (version 20230121) (generator eeschema)
+
+  (uuid 45d7d6ea-0fe7-40da-b3ad-08f76ea889e8)
+
+  (paper "A4")
+
+  (lib_symbols
+  )
+
+
+  (hierarchical_label "Signal" (shape output) (at 226.06 59.69 180) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify right))
+    (uuid 71878354-3e05-4356-8a77-f00efd9d04bb)
+  )
+)
