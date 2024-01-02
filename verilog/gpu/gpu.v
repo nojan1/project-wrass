@@ -42,7 +42,7 @@ wire color_memory_write_enable;
 wire [3:0] color_memory_write_addr;
 wire [7:0] color_memory_write_data;
 
-wire cpu_clk_inv = ~cpu_clk;
+//wire cpu_clk_inv = ~cpu_clk;
 
 memory #(
     .ADDRESS_WIDTH(11),
@@ -53,7 +53,7 @@ memory #(
     .read_addr(tile_memory_read_addr),
     .read_data(tile_memory_read_data),
 
-    .write_clk(cpu_clk_inv),
+    .write_clk(cpu_clk),
     .write_enable(tile_memory_write_enable),
     .write_data(tile_memory_write_data),
     .write_addr(tile_memory_write_addr)
@@ -68,7 +68,7 @@ memory #(
     .read_addr(attribute_memory_read_addr),
     .read_data(attribute_memory_read_data),
 
-    .write_clk(cpu_clk_inv),
+    .write_clk(cpu_clk),
     .write_enable(attribute_memory_write_enable),
     .write_data(attribute_memory_write_data),
     .write_addr(attribute_memory_write_addr)
@@ -83,7 +83,7 @@ memory #(
     .read_addr(color_memory_read_addr),
     .read_data(color_memory_read_data),
 
-    .write_clk(cpu_clk_inv),
+    .write_clk(cpu_clk),
     .write_enable(color_memory_write_enable),
     .write_data(color_memory_write_data),
     .write_addr(color_memory_write_addr)

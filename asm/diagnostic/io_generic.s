@@ -48,6 +48,8 @@ newline:
    pha
    lda #13
    sta UART_TRANSMIT
+   lda #10
+   sta UART_TRANSMIT
    pla
    .endif
 
