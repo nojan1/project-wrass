@@ -1361,7 +1361,7 @@
     (property "Value" "Conn_02x25_Odd_Even" (at 156.21 46.99 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_2x25_P2.54mm_Horizontal" (at 154.94 79.502 0)
+    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_2x25_P2.54mm_Vertical" (at 154.94 79.502 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 154.94 79.502 0)
@@ -1420,6 +1420,11 @@
     (instances
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
+          (reference "J2") (unit 1)
+        )
+      )
+      (project "io-card"
+        (path "/88a1e5ee-bcfe-4f55-a7a9-4b7b5eaf475b/5d80791e-4732-481b-8542-898a0c887aef"
           (reference "J2") (unit 1)
         )
       )
