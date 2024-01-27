@@ -1418,6 +1418,11 @@
     (pin "8" (uuid a64c9e9c-ecd6-4cfc-8d45-f187dfa09050))
     (pin "9" (uuid 02520d1d-4672-4035-a870-23411efae80d))
     (instances
+      (project "fpga_gpu"
+        (path "/1109c9a4-a9ef-4407-8781-29fe7740bcaf/e520acf4-60a8-4598-8dc0-60738d0b1043/67c1a8cf-e42b-4097-97dd-eb2d8cef1b43"
+          (reference "J2") (unit 1)
+        )
+      )
       (project "uart"
         (path "/11545594-d6d6-4b37-a578-fa23933d5773/07300109-a3a2-4acb-97d9-cd917026a3f9"
           (reference "J2") (unit 1)

@@ -466,6 +466,10 @@
       },
       {
         "netclass": "Power",
+        "pattern": "+3.3V"
+      },
+      {
+        "netclass": "Power",
         "pattern": "+3V3"
       }
     ]
@@ -539,6 +543,10 @@
     [
       "b14d1b3b-6f87-4df9-b137-ddc8188fd4bc",
       "VGA Connector"
+    ],
+    [
+      "4f6e6b4e-f6d3-404f-85b4-98f0c5211d1b",
+      "Audio"
     ]
   ],
   "text_variables": {}
