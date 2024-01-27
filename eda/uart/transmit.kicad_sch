@@ -520,6 +520,7 @@
   )
 
   (no_connect (at 104.14 134.62) (uuid 0a805d0c-9667-41cb-831d-b27160af5ab9))
+  (no_connect (at 224.79 35.56) (uuid 1c76c8a0-7405-4af2-a752-cbfa498364da))
   (no_connect (at 104.14 124.46) (uuid 218a8aff-72cf-41a0-96c7-ed4f2e59b84f))
   (no_connect (at 104.14 121.92) (uuid 28e7027f-5a92-4397-b9ac-7f49a9852daf))
   (no_connect (at 104.14 127) (uuid 3bb56aa6-9cbd-4acf-93c6-1069347a0c48))
