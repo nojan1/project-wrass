@@ -1820,7 +1820,7 @@
     (property "Value" "100n" (at 44.45 179.705 0)
       (effects (font (size 1.27 1.27)) (justify left) hide)
     )
-    (property "Footprint" "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" (at 41.6052 181.61 0)
+    (property "Footprint" "Capacitor_THT:C_Disc_D3.8mm_W2.6mm_P2.50mm" (at 41.6052 181.61 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 40.64 177.8 0)
