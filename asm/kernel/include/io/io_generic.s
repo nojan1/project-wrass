@@ -45,6 +45,7 @@ _putstr_end:
 
 ; Put character in A onto configured outputs
 putc:
+   pha
    phx 
    tax
 
@@ -76,6 +77,7 @@ _no_uart_output:
 
 _no_lcd_output:
    plx
+   pla
    rts
 
 ; Put newline onto configured outputs

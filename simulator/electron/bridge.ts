@@ -34,6 +34,10 @@ contextBridge.exposeInMainWorld('Main', {
     ipcRenderer.send('update-request')
   },
 
+  uartTransmit: (value: number) => {
+    ipcRenderer.send('uartTransmit', value)
+  },
+
   /**
    * Provide an easier way to listen to events
    */

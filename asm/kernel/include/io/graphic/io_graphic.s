@@ -42,7 +42,7 @@ gpu_goto_position:
 
     stx CURRENT_COLUMN
     sty CURRENT_LINE
-; brk before mul
+; b-rk before mul
 ;     lda #64
 ;     sta TERM_16_1_LOW
 ;     lda #0
@@ -51,10 +51,10 @@ gpu_goto_position:
 ;     sty TERM_16_2_LOW
 
 ;     jsr mul_16
-; ; brk after mul
+; ; b-rk after mul
 ;     stx TERM_16_2_LOW
 ;     jsr add_16
-; ; brk after add
+; ; b-rk after add
 ;     lda TERM_16_1_HIGH
 ;     sta GRAPHICS_ADDR_HIGH
 ;     lda TERM_16_1_LOW

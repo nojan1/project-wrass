@@ -25,7 +25,8 @@ reset:
     jsr lcd_display_init
     .endif
 
-    lda #(KEYBOARD_INPUT | GPU_OUTPUT)
+    ; lda #(KEYBOARD_INPUT | GPU_OUTPUT)
+    lda #(KEYBOARD_INPUT | GPU_OUTPUT | UART_OUTPUT)
     sta IO_CONTROL
 
     ; KEYBOARD INTERFACE SETUP

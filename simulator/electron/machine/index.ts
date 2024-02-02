@@ -13,6 +13,7 @@ import { SpiEchoDevice } from './spi/spiEchoDevice'
 import { SpiViaCallbackHandler } from './spi/spiViaCallbackHandler'
 import { SystemBus } from './systemBus'
 import { VIA } from './via'
+import { Uart } from './uart'
 
 export type SendDataCallback = (channel: string, data: any) => void
 
@@ -72,6 +73,7 @@ export const initBoard = (
     0: new IoCard(via1, via2),
     1: new Gpu(sendData),
     2: lcdVia1,
+    3: new Uart(sendData),
   })
 
   const memoryControlRegister = new MemoryControlRegister(sendData)

@@ -7,3 +7,5 @@ export const useLcdText = () => useBridgeBoundState<string>('lcd-update')
 
 export const useFramebuffer = () =>
   useBridgeBoundState<Uint8ClampedArray>('framebuffer-update')
+
+export const useUartRecieve = () => useBridgeBoundState<number>('uart-recieve')

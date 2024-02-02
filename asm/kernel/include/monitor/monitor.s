@@ -41,7 +41,7 @@ monitor_loop:
     cmp #$0a ; Was enter pressed?
     beq .command_entered
 
-    cmp #$08
+    cmp #$08 ; Backspace
     beq .erase
 
     jsr putc
@@ -79,9 +79,7 @@ monitor_loop:
     inx
     lda commands, x
     sta PARAM_16_2 + 1
-
     jsr str_startswith
-    ; brk after-startswith
     cmp #0
 
     bne .command_recieved
@@ -201,6 +199,7 @@ read_command_implementation:
 
 write_command_implementation:
     nop
+; brk write-command
     lda PARAM_16_3
     ldy #0
     sta (PARAM_16_2),y
