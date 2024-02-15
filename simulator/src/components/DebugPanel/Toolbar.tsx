@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChevronsRight, Play, Search } from 'react-feather'
+import { ChevronsRight, Play, Search, Terminal } from 'react-feather'
 import styled from 'styled-components'
 import { useMachineContext } from '../../context/machine'
 
@@ -63,6 +63,14 @@ const Toolbar: React.FunctionComponent<ToolbarProps> = ({
         disabled={debuggerRunning}
       >
         <Search />
+      </ToolbarButton>
+      <ToolbarButton
+        type="button"
+        onClick={() => window.Main.openSerialTerminal()}
+        title="Serial terminal"
+        disabled={false}
+      >
+        <Terminal />
       </ToolbarButton>
     </ToolbarContainer>
   )

@@ -5,8 +5,18 @@ NUM_COLS = 16
 ; The character will be placed in A
 ; If no character is available A will be set to 0
 getc:
-    sei
     phx
+    sei
+   .ifndef NO_UART 
+   lda IO_CONTROL
+   and #UART_INPUT_ENABLE
+   beq _no_uart_input
+   jsr uart_getc
+   bcc _no_uart_input
+   jmp _getc_return
+_no_uart_input:
+   .endif
+
     lda READ_POINTER
     cmp WRITE_POINTER
     bne _getc_character_available ;Is the read pointer behind the write pointer?

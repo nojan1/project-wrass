@@ -34,6 +34,11 @@ contextBridge.exposeInMainWorld('Main', {
     ipcRenderer.send('update-request')
   },
 
+  openSerialTerminal: () => {
+    console.log('Open serial terminal was called')
+    ipcRenderer.send('open-serialterminal')
+  },
+
   uartTransmit: (value: number) => {
     ipcRenderer.send('uartTransmit', value)
   },

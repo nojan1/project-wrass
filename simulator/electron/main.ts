@@ -11,7 +11,9 @@ import runTests from './testing'
 const yargs = require('yargs')
 const { hideBin } = require('yargs/helpers')
 
-let mainWindow: BrowserWindow | null
+let windows: BrowserWindow[] = []
+
+// let mainWindow: BrowserWindow | null
 let symbols: SymbolListing | null
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
@@ -31,7 +33,7 @@ function parseOptions() {
         'The path to the binary file that should be loaded in to memory',
     })
     .option('listing', {
-	  alias: 'l',
+      alias: 'l',
       type: 'string',
       description:
         'The path to a listing file for the binary, it will be used to decorate disassembly and set breakpoints',
@@ -62,15 +64,16 @@ function parseOptions() {
     .option('sd-image', {
       type: 'string',
     })
-	.option('test-directory', {
-	  alias: 't',
-	  type: 'string',
-	  description: 'Directory to scan for test files, including this will cause the simulator to start in testmode and wont make a window'
-	}).argv
+    .option('test-directory', {
+      alias: 't',
+      type: 'string',
+      description:
+        'Directory to scan for test files, including this will cause the simulator to start in testmode and wont make a window',
+    }).argv
 }
 
 function createWindow(options: any) {
-  mainWindow = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     // icon: path.join(assetsPath, 'assets', 'icon.png'),
     width: 1200,
     height: 770,
@@ -82,13 +85,15 @@ function createWindow(options: any) {
     },
   })
 
+  windows.push(mainWindow)
+
   if (!app.isPackaged) mainWindow.webContents.openDevTools()
 
   const url = `${MAIN_WINDOW_WEBPACK_ENTRY}?display=${options.display}`
   mainWindow.loadURL(url)
 
   mainWindow.on('closed', () => {
-    mainWindow = null
+    windows = windows.filter(w => w !== mainWindow)
   })
 }
 
@@ -99,7 +104,8 @@ const createDebugger = async (options: any) => {
 
   symbols = options.listing ? await parseListing(options.listing) : null
   const boardContext = initBoard(
-    (channel: string, data: any) => mainWindow?.webContents.send(channel, data),
+    (channel: string, data: any) =>
+      windows.forEach(w => w.webContents.send(channel, data)),
     data,
     options.loadAddress,
     options.resetAddress ?? options.loadAddress,
@@ -215,34 +221,60 @@ async function registerListeners({
     event.sender.send('initial-breakpoints', initialBreakpoints)
     sendUpdates(event.sender)
   })
+
+  ipcMain.on('open-serialterminal', () => {
+    const terminalWindow = new BrowserWindow({
+      width: 800,
+      height: 600,
+      backgroundColor: '#191622',
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true,
+        preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      },
+    })
+
+    windows.push(terminalWindow)
+
+    if (!app.isPackaged) terminalWindow.webContents.openDevTools()
+
+    const url = `${MAIN_WINDOW_WEBPACK_ENTRY}#serialTerminal`
+    terminalWindow.loadURL(url)
+
+    terminalWindow.on('closed', () => {
+      windows = windows.filter(w => w !== terminalWindow)
+    })
+  })
 }
 
 const options = parseOptions()
 
-if(options.testDirectory){
-	// Run in test mode
-	if(options.file) {
-		runTests(options)
-	}else{
-		console.error("Unable to run tests without a program file specified.. exiting")
-	}
+if (options.testDirectory) {
+  // Run in test mode
+  if (options.file) {
+    runTests(options)
+  } else {
+    console.error(
+      'Unable to run tests without a program file specified.. exiting'
+    )
+  }
 
-	app.quit();
+  app.quit()
 } else {
-	app
-	  .on('ready', () => createWindow(options))
-	  .whenReady()
-	  .then(() => createDebugger(options))
-	  .then(registerListeners)
-	  .catch(e => console.error(e))
+  app
+    .on('ready', () => createWindow(options))
+    .whenReady()
+    .then(() => createDebugger(options))
+    .then(registerListeners)
+    .catch(e => console.error(e))
 
-	app.on('window-all-closed', () => {
-	  app.quit()
-	})
+  app.on('window-all-closed', () => {
+    app.quit()
+  })
 
-	app.on('activate', () => {
-	  if (BrowserWindow.getAllWindows().length === 0) {
-		createWindow(options)
-	  }
-	})
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow(options)
+    }
+  })
 }

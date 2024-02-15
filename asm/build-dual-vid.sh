@@ -12,4 +12,4 @@ $COMPILER $ARGS -DNO_GPU -o .out-lcd.bin $2
 $COMPILER $ARGS -DNO_LCD -o .out-gfx.bin $2
 
 cat .out-lcd.bin .out-gfx.bin > $1
-rm .out-lcd.bin .out-gfx.bin
+#rm .out-lcd.bin .out-gfx.bin
