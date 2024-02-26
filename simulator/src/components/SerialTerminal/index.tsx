@@ -66,6 +66,8 @@ const SerialTerminal: React.FunctionComponent = () => {
         window.Main.uartTransmit(inputData.charCodeAt(i))
       }
 
+      window.Main.uartTransmit(10) // Newline
+
       setInputData('')
     }
   }

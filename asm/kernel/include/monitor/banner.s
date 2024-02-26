@@ -52,10 +52,10 @@ print_banner:
     jsr gpu_putsc
 
     ldx #0
-    ldy #4
+    ldy #3
     jsr gpu_goto_position
-    .else
-    jsr newline
     .endif
+    
+    jsr newline
 
     rts

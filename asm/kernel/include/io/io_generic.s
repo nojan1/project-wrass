@@ -57,7 +57,6 @@ _putstr_loop:
 _putstr_end:
     ply
     pla
-; brk rts from putstr
     rts
 
 ; Put character in A onto configured outputs
