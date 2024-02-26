@@ -4,7 +4,7 @@ import { ipcMain } from 'electron'
 
 export class Uart implements BusInterface {
   private writeBuffer = new FIFO<number>(16)
-  private readBuffer = new FIFO<number>(16)
+  private readBuffer = new FIFO<number>()
 
   constructor(private sendData: SendDataCallback) {
     setInterval(() => {
@@ -35,7 +35,7 @@ export class Uart implements BusInterface {
           (0 << 4) |
           (0 << 3) |
           ((this.readBuffer.count() > 0 ? 1 : 0) << 2) |
-          ((this.readBuffer.count() === 16 ? 1 : 0) << 1) |
+          ((this.readBuffer.count() >= 16 ? 1 : 0) << 1) |
           0
 
         // console.log(`Status is now: ${status.toString(2)}`)

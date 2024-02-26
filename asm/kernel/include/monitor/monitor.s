@@ -7,6 +7,14 @@ write_command_string:
 jump_command_string:
     .string "jump"
 
+load_command_string:
+    .string "load"
+
+
+sd_command_string:
+    .string "sd"
+
+
 commands:
     ; read <addr>
     .word read_command_string ; command string
@@ -23,6 +31,17 @@ commands:
     .byte 1 ; num parameters
     .word jump_command_implementation
 
+    ; load <addr>
+    .word load_command_string ; command string
+    .byte 1 ; num parameters
+    .word load_command_implementation
+
+    ; sd
+    .word sd_command_string ; command string
+    .byte 0 ; num parameters
+    .word sd_command_implementation
+commands_end:
+
 monitor_loop_start:
     jsr print_banner
 
@@ -35,8 +54,7 @@ monitor_loop:
     ldx #0
 .read:
     jsr getc
-    cmp #0
-    beq .read
+    bcc .read
 
     cmp #$0a ; Was enter pressed?
     beq .command_entered
@@ -90,7 +108,7 @@ monitor_loop:
     inx
     inx
 
-    cpx #11 ; Have we checked the last available command?
+    cpx #(commands_end - commands) ; Have we checked the last available command?
     bcc .next_command
 
     jmp _monitor_loop_command_error
@@ -98,7 +116,6 @@ monitor_loop:
 .command_recieved:
     ; We have a valid command
     ; Parse out the parameters
-    ; brk got command
     inx ; num parameters
     phx
     
@@ -125,11 +142,7 @@ monitor_loop:
 
     dex
     beq .parameters_parsed
-
-; This code should work but the emulated CPU doesn't support indirect JMP
-;     inx ; firt part of handler address
-;     jmp (commands, x)
-
+    
 ; Do old school jumping instead
 .parameters_parsed
     plx
@@ -206,11 +219,78 @@ write_command_implementation:
     jmp _command_execution_complete
 
 jump_command_implementation:
-brk_jmpcommand:
     nop
-    ldy #0
-    lda (PARAM_16_2), y
+
+    ; Put the return point on the stack
+    lda #>(_command_execution_complete - 1)
     pha
-    lda (PARAM_16_2 + 1), y
+    lda #<(_command_execution_complete - 1)
     pha
+
+    ; Put the user provided address as return address on stack
+    lda PARAM_16_2        ; Load low part of address
+    sec
+    sbc #1                ; Subtract 1 to account for rts incrementing PC
+    tay                   ; Move to Y 
+    lda PARAM_16_2 + 1    ; Load high part
+    sbc #0                ; Subtract if carry set
+    pha                   ; Push high part on stack
+    phy                   ; Push low part on stack
+
+    ; "Return" to the user provided address
     rts
+
+load_instruction_string:
+    .string "Reading HEX bytes, end with \n"
+
+load_command_implementation:
+    nop
+    jsr newline
+    putstr_addr load_instruction_string
+    jsr newline
+
+    ; Destination address in PARAM_16_2
+    ldy #0 ; Y will be used for offset
+
+    ; Read first hex char
+.load_read_1:
+    jsr getc
+    bcc .load_read_1
+    cmp #10 ;If we get a newline stop reading
+    beq .load_done
+
+    jsr convert_hex
+
+    ; A now contains half a byte worth of data, shift the lower 4 bits to top
+    asl 
+    asl
+    asl
+    asl
+    sta VAR_8BIT_1
+
+    ; Read second hex char
+.load_read_2:
+    jsr getc
+    bcc .load_read_2
+    cmp #13 ; If we get a newline stop reading
+    beq .load_done
+
+    jsr convert_hex
+
+    ; OR the two parts together
+    ora VAR_8BIT_1
+
+    ; Write byte to ram
+    sta (PARAM_16_2), y
+    iny
+    bne .load_read_1
+    inc PARAM_16_2 ; Y wrapped around, increment the address
+    jmp .load_read_1
+    
+.load_done:
+    jmp _command_execution_complete
+
+sd_command_implementation:
+    nop
+    jsr init_sd
+    jmp _command_execution_complete

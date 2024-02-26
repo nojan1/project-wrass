@@ -17,16 +17,22 @@ getc:
 _no_uart_input:
    .endif
 
-    lda READ_POINTER
-    cmp WRITE_POINTER
-    bne _getc_character_available ;Is the read pointer behind the write pointer?
-    lda #$0
-    jmp _getc_return
+   lda READ_POINTER
+   cmp WRITE_POINTER
+   bne _getc_character_available ;Is the read pointer behind the write pointer?
+   lda #$0
+   clc
+   jmp _getc_return
 
 _getc_character_available:
-    ldx READ_POINTER
-    lda INPUT_BUFFER, x
-    inc READ_POINTER
+   ldx READ_POINTER
+   lda INPUT_BUFFER, x
+   inc READ_POINTER
+
+   clc
+   cmp #0
+   beq _getc_return
+   sec
 
 _getc_return:
     plx
@@ -51,6 +57,7 @@ _putstr_loop:
 _putstr_end:
     ply
     pla
+; brk rts from putstr
     rts
 
 ; Put character in A onto configured outputs
