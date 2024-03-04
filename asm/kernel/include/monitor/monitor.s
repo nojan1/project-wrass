@@ -59,6 +59,9 @@ monitor_loop:
     cmp #$0a ; Was enter pressed?
     beq .command_entered
 
+    cmp #$0d
+    beq .command_entered
+
     cmp #$08 ; Backspace
     beq .erase
 
@@ -258,6 +261,8 @@ load_command_implementation:
     bcc .load_read_1
     cmp #10 ;If we get a newline stop reading
     beq .load_done
+    cmp #13
+    beq .load_done
 
     jsr convert_hex
 
@@ -272,7 +277,9 @@ load_command_implementation:
 .load_read_2:
     jsr getc
     bcc .load_read_2
-    cmp #13 ; If we get a newline stop reading
+    cmp #10 ; If we get a newline stop reading
+    beq .load_done
+    cmp #13
     beq .load_done
 
     jsr convert_hex
@@ -284,7 +291,8 @@ load_command_implementation:
     sta (PARAM_16_2), y
     iny
     bne .load_read_1
-    inc PARAM_16_2 ; Y wrapped around, increment the address
+    inc PARAM_16_2 + 1 ; Y wrapped around, increment the address
+    ldy #0
     jmp .load_read_1
     
 .load_done:

@@ -1,6 +1,6 @@
-putstr=$E21B
     .include "setup.s"
 
+    jsr sys_newline
     putstr_addr the_string
     rts
 

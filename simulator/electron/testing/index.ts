@@ -39,12 +39,26 @@ const runTests = async (options: any) => {
     withFileTypes: true,
   })
 
-  files
-    .filter(file => file.isFile() && file.name.endsWith('.test.js'))
-    .forEach(async file => {
-      const testFilePath = path.resolve(options.testDirectory, file.name)
-      await runTestFile(testFilePath, symbols, options)
-    })
+  console.log('Test run starting...\n')
+
+  await Promise.all(
+    files
+      .filter(file => file.isFile() && file.name.endsWith('.test.js'))
+      .map(async file => {
+        const testFilePath = path.resolve(options.testDirectory, file.name)
+        console.log(`file: ${file.name}`)
+        console.log('-----------------------------------\n')
+        await runTestFile(testFilePath, symbols, options)
+      })
+  )
+
+  console.log('\nTest run finished')
+}
+
+const printFail = (name: string, err: unknown) => {
+  console.error(`\u001b[31m[FAIL]\u001b[0m \t${name}`)
+  console.error(err, 'Error running arrange callback')
+  console.log('')
 }
 
 const runTestFile = async (
@@ -75,45 +89,43 @@ const runTestFile = async (
     })
     script.runInContext(testFuncContext)
 
-    testSetups.forEach(async ({ name, context }) => {
-      let sut: BoardInitContext | null = null
+    await Promise.all(
+      testSetups.map(async ({ name, context }) => {
+        let sut: BoardInitContext | null = null
 
-      try {
-        sut = await createSut(options, symbols)
-      } catch (err) {
-        console.error(err, `Error initializing board for test ${name}`)
-        return
-      }
+        try {
+          sut = await createSut(options, symbols)
+        } catch (err) {
+          console.error(err, `Error initializing board for test ${name}`)
+          return
+        }
 
-      const testContext: TestMethodContext = { ...sut }
+        const testContext: TestMethodContext = { ...sut }
 
-      try {
-        context.arrangeCallbacks.forEach(func => func(testContext))
-      } catch (err) {
-        console.error(`${name}\t Failed!`)
-        console.error(err, 'Error running arrange callback')
-        return
-      }
+        try {
+          context.arrangeCallbacks.forEach(func => func(testContext))
+        } catch (err) {
+          printFail(name, err)
+          return
+        }
 
-      try {
-        context.actStepDefinitions.forEach(definition => {
-          
-        })
-      } catch (err) {
-        console.error(`${name}\t Failed!`)
-        console.error(err, 'Error running act step')
-      }
+        try {
+          context.actStepDefinitions.forEach(definition => {})
+        } catch (err) {
+          printFail(name, err)
+          return
+        }
 
-      try {
-        context.assertCallbacks.forEach(func => func(testContext))
-      } catch (err) {
-        console.error(`${name}\t Failed!`)
-        console.error(err)
-        return
-      }
+        try {
+          context.assertCallbacks.forEach(func => func(testContext))
+        } catch (err) {
+          printFail(name, err)
+          return
+        }
 
-      console.log(`${name}\tSuccess!`)
-    })
+        console.log(`\u001b[32m[SUCCESS]\u001b[0m \t${name}`)
+      })
+    )
   } catch (err) {
     console.error(err, `Error ocurred loading ${path}`)
   }

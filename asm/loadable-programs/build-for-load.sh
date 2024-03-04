@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ARGS="-dotdir -wdc02 -Fbin -DNO_LCD"
 COMPILER="vasm6502_oldstyle"

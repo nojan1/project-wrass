@@ -252,14 +252,12 @@ const options = parseOptions()
 if (options.testDirectory) {
   // Run in test mode
   if (options.file) {
-    runTests(options)
+    runTests(options).finally(() => app.quit())
   } else {
     console.error(
       'Unable to run tests without a program file specified.. exiting'
     )
   }
-
-  app.quit()
 } else {
   app
     .on('ready', () => createWindow(options))

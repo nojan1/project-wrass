@@ -11,7 +11,7 @@ uart_waitsend:
 _uart_transmit_buffer_full:
    lda UART_STATUS
    and UART_TRANSMIT_BUFFER_FULL
-   bne _uart_transmit_buffer_full
+   beq _uart_transmit_buffer_full
 
    pla
    rts

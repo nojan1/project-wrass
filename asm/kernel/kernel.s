@@ -50,6 +50,8 @@
 
     .include "include/keymap.s"
 
+    .include "exports.s"
+
     .org $FFFA
     .word nmi
     .word reset

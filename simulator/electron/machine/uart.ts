@@ -2,21 +2,40 @@ import BusInterface from '6502.ts/lib/machine/bus/BusInterface'
 import { SendDataCallback } from '.'
 import { ipcMain } from 'electron'
 
+import readline from 'readline'
+
 export class Uart implements BusInterface {
   private writeBuffer = new FIFO<number>(16)
   private readBuffer = new FIFO<number>()
+
+  private useStdInOut = false
 
   constructor(private sendData: SendDataCallback) {
     setInterval(() => {
       while (this.writeBuffer.count() > 0) {
         const value = this.writeBuffer.dequeue()
         sendData('uart-recieve', { value })
-        // console.log(String.fromCharCode(value))
+
+        if (this.useStdInOut) console.log(String.fromCharCode(value))
       }
     }, 50)
 
     ipcMain.on('uartTransmit', (_, value: number) => {
       this.readBuffer.enqueue(value)
+    })
+
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+      terminal: false,
+    })
+
+    rl.on('line', line => {
+      for (let i = 0; i < line.length; i++) {
+        this.readBuffer.enqueue(line.charCodeAt(i))
+      }
+
+      this.readBuffer.enqueue(10)
     })
   }
 
@@ -30,12 +49,12 @@ export class Uart implements BusInterface {
         // eslint-disable-next-line no-case-declarations
         const status =
           ((this.readBuffer.count() > 0 ? 1 : 0) << 7) |
-          ((this.writeBuffer.count() === 16 ? 1 : 0) << 6) |
+          ((this.writeBuffer.count() === 16 ? 0 : 1) << 6) |
           (0 << 5) |
           (0 << 4) |
           (0 << 3) |
-          ((this.readBuffer.count() > 0 ? 1 : 0) << 2) |
-          ((this.readBuffer.count() >= 16 ? 1 : 0) << 1) |
+          ((this.writeBuffer.count() > 0 ? 1 : 0) << 2) |
+          ((this.readBuffer.count() >= 16 ? 0 : 1) << 1) |
           0
 
         // console.log(`Status is now: ${status.toString(2)}`)

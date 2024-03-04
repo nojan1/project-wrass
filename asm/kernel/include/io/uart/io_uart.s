@@ -3,7 +3,7 @@ uart_putc:
 _uart_putc_check_again:
    lda UART_STATUS
    and #UART_TRANSMIT_BUFFER_FULL
-   bne _uart_putc_check_again
+   beq _uart_putc_check_again
    pla
    sta UART_TRANSMIT
    rts
@@ -25,6 +25,10 @@ uart_getc:
    and #UART_RECIEVE_BUFFER_NONEMPTY
    beq _uart_getc_no_byte
    lda UART_RECIEVE
+   ; cmp #13
+   ; bne _uart_got_valid_char
+   ; lda #10
+; _uart_got_valid_char:
    sec
    jmp _uart_getc_got_byte
 _uart_getc_no_byte:
