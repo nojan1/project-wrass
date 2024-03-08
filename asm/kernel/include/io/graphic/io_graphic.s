@@ -1,3 +1,6 @@
+GPU_LINE_BYTES = 64
+GPU_TEXT_LINES = 30
+
 ; Transform ascii character i A into screencode and put into A
 c_to_sc:
     sec
@@ -25,11 +28,21 @@ gpu_newline:
     phx
     phy
 
-    ldx #0
-
     ldy CURRENT_LINE
-    iny
+    cpy #GPU_TEXT_LINES
+    bne _gpu_newline_not_at_bottom
+    ; We have reach the bottom of the screen
+    ; We should do something smart here like scrolling the screen....
 
+    ; But for now just jump to the first line beacause cheat
+    ldy #0
+    jmp _gpu_newline_done
+
+_gpu_newline_not_at_bottom:
+    iny
+    
+_gpu_newline_done:
+    ldx #0
     jsr gpu_goto_position
  
     ply
@@ -67,7 +80,7 @@ gpu_goto_position:
     tya
     tax
 
-    ldy #64 ; Width of single line of full ressolution
+    ldy #GPU_LINE_BYTES ; Width of single line of full ressolution
     jsr advance_graphic_address
 
     pla

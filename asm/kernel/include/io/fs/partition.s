@@ -11,7 +11,6 @@ parse_mbr:
     sei
     pha
 
-; brk checking mbr
     lda SD_BUFFER + 511
     cmp #$AA
     bne .invalid_mbr
