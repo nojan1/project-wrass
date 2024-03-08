@@ -1,22 +1,33 @@
-;; Graphic addresses
-GRAPHICS_ADDR_FRAMEBUFFER_LOW = $00
-GRAPHICS_ADDR_FRAMEBUFFER_HIGH = $00
-
-GRAPHICS_ADDR_COLORATTRIBUTES_LOW = $00
-GRAPHICS_ADDR_COLORATTRIBUTES_HIGH = $08
-
-GRAPHICS_ADDR_TILEMAP_LOW = $00
-GRAPHICS_ADDR_TILEMAP_HIGH = $10
-
-GRAPHICS_ADDR_COLORS_LOW = $00
-GRAPHICS_ADDR_COLORS_HIGH = $18
+COLOR_ATTRIBUTE_DEFAULT = %00010110
+CHARACTER_DEFAULT = 0
 
 gpu_display_init:
     lda #1
     sta GRAPHICS_INCREMENT
 
     ; Initialize framebuffer to empty
-    lda #0
+    lda #CHARACTER_DEFAULT
+    ldy #COLOR_ATTRIBUTE_DEFAULT
+    jsr clear_screen
+
+    ; Set address to top of framebuffer
+    lda #GRAPHICS_ADDR_FRAMEBUFFER_HIGH
+    sta GRAPHICS_ADDR_HIGH
+    lda #GRAPHICS_ADDR_FRAMEBUFFER_LOW
+    sta GRAPHICS_ADDR_LOW
+
+    rts
+
+; Clear the screen by filling it with the character in A and color attribute in Y
+clear_screen:
+    phy
+
+    ; Start by setting the characters
+    ldy #GRAPHICS_ADDR_FRAMEBUFFER_HIGH
+    sty GRAPHICS_ADDR_HIGH
+    ldy #GRAPHICS_ADDR_FRAMEBUFFER_LOW
+    sty GRAPHICS_ADDR_LOW
+
     ldy #8
 set_framebuffer_outer_loop:
     ldx #0
@@ -27,13 +38,13 @@ set_framebuffer_inner_loop:
     dey
     bne set_framebuffer_outer_loop
 
-    ; Now initialize color attributes to default
+    ; Now initialize color attributes
     lda #GRAPHICS_ADDR_COLORATTRIBUTES_HIGH
     sta GRAPHICS_ADDR_HIGH
     lda #GRAPHICS_ADDR_COLORATTRIBUTES_LOW
     sta GRAPHICS_ADDR_LOW
 
-    lda #%00010110
+    pla
     ldy #8
 set_colorattribute_outer_loop:
     ldx #0
@@ -44,15 +55,7 @@ set_colorattribute_inner_loop:
     dey
     bne set_colorattribute_outer_loop
 
-    ; Set address to top of framebuffer
-    lda #0
-    lda #GRAPHICS_ADDR_FRAMEBUFFER_HIGH
-    sta GRAPHICS_ADDR_HIGH
-    lda #GRAPHICS_ADDR_FRAMEBUFFER_LOW
-    sta GRAPHICS_ADDR_LOW
-
     rts
-
 
 ; Copy sprite data from the location referenced by PARAM_16_1 into sprite offset by x
 copy_sprite:

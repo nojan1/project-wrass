@@ -8,7 +8,8 @@ if [[ -z "$1" ]]; then
   exit 1
 fi
 
-$COMPILER $ARGS -L a.list -o a.out $1 >&2
+$COMPILER $ARGS -L a.list -o a.out $@ >&2
+[[ $? != 0 ]] && exit $?
 
 echo "load 0400"
 hexdump -ve '1/1 "%.2x"' a.out

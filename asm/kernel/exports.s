@@ -1,3 +1,15 @@
+    .macro ifndef_nop, define, ptr
+    .ifndef \define
+    jmp \ptr
+    .else
+    nop
+    nop
+    rts
+    .endif
+    .endmacro
+
+
+
 ; IO Generic
 sys_getc:
     jmp getc
@@ -16,17 +28,13 @@ sys_ereasec:
 
 ; UART
 sys_uart_sendbyte:
-    jmp uart_sendbyte
-
+    ifndef_nop NO_UART, uart_sendbyte
 ; GPU
 sys_copy_sprite:
-    .ifndef NO_GPU
-    jmp copy_sprite
-    .else
-    nop
-    nop
-    rts
-    .endif
+    ifndef_nop NO_GPU, copy_sprite
+
+sys_clear_screen:
+    ifndef_nop NO_GPU, clear_screen
 
 ; SPI
 sys_spi_set_device:

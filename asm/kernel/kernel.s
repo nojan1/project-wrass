@@ -12,6 +12,7 @@
     .include "include/monitor/monitor.s"
 
     .org $E000 ; Kernel area
+    .include "exports.s"
 
     .include "include/utils/str_utils.s"
     .include "include/utils/error_utils.s"
@@ -49,8 +50,6 @@
     .endif
 
     .include "include/keymap.s"
-
-    .include "exports.s"
 
     .org $FFFA
     .word nmi
