@@ -5963,6 +5963,12 @@
 		(uuid "16c4d525-051c-4255-8270-cea667c965a3")
 	)
 	(junction
+		(at 148.59 30.48)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "26cffcb6-2fd7-450f-aea3-74f54a40a564")
+	)
+	(junction
 		(at 146.05 60.96)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5973,12 +5979,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "2d8b719b-86a4-43f8-b154-3cd59d3aad69")
-	)
-	(junction
-		(at 39.878 101.346)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "2fb3daae-8dd4-4f77-9d7f-d287765e2db1")
 	)
 	(junction
 		(at 36.83 157.48)
@@ -6059,16 +6059,16 @@
 		(uuid "81d8d38d-48b3-4043-ad3d-14c38d0ea82d")
 	)
 	(junction
-		(at 39.878 110.49)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "8a33054a-325e-4746-b214-d86bc749ace5")
-	)
-	(junction
 		(at 100.33 39.37)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "9093a7a0-b8c5-4416-a45a-221b3927b1f1")
+	)
+	(junction
+		(at 148.59 19.05)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a2511b2d-c342-45ae-a142-977b9797d23b")
 	)
 	(junction
 		(at 255.27 125.73)
@@ -7193,16 +7193,6 @@
 	)
 	(wire
 		(pts
-			(xy 39.878 92.202) (xy 39.878 101.346)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8fa5fa1f-a184-4482-8e1d-86e5e4c93d63")
-	)
-	(wire
-		(pts
 			(xy 102.87 156.21) (xy 102.87 157.48)
 		)
 		(stroke
@@ -7280,6 +7270,16 @@
 			(type default)
 		)
 		(uuid "9bd7f633-d662-457a-9f07-006b3e9465ea")
+	)
+	(bus
+		(pts
+			(xy 148.59 30.48) (xy 148.59 57.15)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9c0990f0-eff6-4bfd-a201-f05b58907292")
 	)
 	(wire
 		(pts
@@ -7363,7 +7363,7 @@
 	)
 	(bus
 		(pts
-			(xy 95.25 19.05) (xy 262.89 19.05)
+			(xy 95.25 19.05) (xy 148.59 19.05)
 		)
 		(stroke
 			(width 0)
@@ -7513,16 +7513,6 @@
 	)
 	(wire
 		(pts
-			(xy 39.878 101.346) (xy 39.878 110.49)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b5c4f15b-f2e6-455d-b631-3b14fdb47f91")
-	)
-	(wire
-		(pts
 			(xy 115.57 157.48) (xy 115.57 167.64)
 		)
 		(stroke
@@ -7633,16 +7623,6 @@
 	)
 	(wire
 		(pts
-			(xy 29.464 92.202) (xy 39.878 92.202)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c461ed02-6dc4-4f62-be9e-78389b6d57cf")
-	)
-	(wire
-		(pts
 			(xy 39.878 119.888) (xy 39.878 129.286)
 		)
 		(stroke
@@ -7743,7 +7723,7 @@
 	)
 	(bus
 		(pts
-			(xy 148.59 19.05) (xy 148.59 57.15)
+			(xy 148.59 19.05) (xy 148.59 30.48)
 		)
 		(stroke
 			(width 0)
@@ -8001,15 +7981,15 @@
 		)
 		(uuid "ed126c9b-dd7e-4cba-9ff6-7792e4cec55a")
 	)
-	(wire
+	(bus
 		(pts
-			(xy 29.464 101.346) (xy 39.878 101.346)
+			(xy 148.59 19.05) (xy 262.89 19.05)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "ef3e9d4b-d009-491d-b516-2e4693a16f37")
+		(uuid "efc9e943-b426-4d50-bfbb-c4950e8d3d2f")
 	)
 	(wire
 		(pts
@@ -9774,71 +9754,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
-		(at 26.924 101.346 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "3508a9d5-982d-4f4d-93de-39415023caf1")
-		(property "Reference" "H2"
-			(at 25.654 95.504 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "MountingHole_Pad"
-			(at 25.654 98.044 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "MountingHole:MountingHole_2.5mm_Pad_Via"
-			(at 26.924 101.346 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 26.924 101.346 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 26.924 101.346 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "14d3d4da-5453-494d-b7c8-c3eef568da79")
-		)
-		(instances
-			(project "uart"
-				(path "/11545594-d6d6-4b37-a578-fa23933d5773"
-					(reference "H2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 45.72 67.31 270)
 		(unit 1)
@@ -10347,71 +10262,6 @@
 			(project "uart"
 				(path "/11545594-d6d6-4b37-a578-fa23933d5773"
 					(reference "C2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
-		(at 26.924 92.202 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "4c3d50e8-50ec-444e-98ad-f25c17773486")
-		(property "Reference" "H1"
-			(at 25.654 86.36 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "MountingHole_Pad"
-			(at 25.654 88.9 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "MountingHole:MountingHole_2.5mm_Pad_Via"
-			(at 26.924 92.202 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 26.924 92.202 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 26.924 92.202 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "31748a75-9302-46a7-a024-a35a9198f289")
-		)
-		(instances
-			(project "uart"
-				(path "/11545594-d6d6-4b37-a578-fa23933d5773"
-					(reference "H1")
 					(unit 1)
 				)
 			)

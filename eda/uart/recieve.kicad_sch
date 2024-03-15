@@ -2855,7 +2855,7 @@
 		(uuid "1df74c66-2f73-4e73-9e9e-b75157e1b20a")
 	)
 	(bus_entry
-		(at 173.99 61.468)
+		(at 173.99 59.69)
 		(size 2.54 2.54)
 		(stroke
 			(width 0)
@@ -3106,7 +3106,7 @@
 	)
 	(bus
 		(pts
-			(xy 173.99 61.468) (xy 173.99 62.23)
+			(xy 173.99 59.69) (xy 173.99 62.23)
 		)
 		(stroke
 			(width 0)
@@ -3276,7 +3276,7 @@
 	)
 	(bus
 		(pts
-			(xy 173.99 36.83) (xy 173.99 61.468)
+			(xy 173.99 36.83) (xy 173.99 59.69)
 		)
 		(stroke
 			(width 0)
@@ -3383,16 +3383,6 @@
 			(type default)
 		)
 		(uuid "4725b8e2-c9d3-495a-b043-2e34685262dd")
-	)
-	(wire
-		(pts
-			(xy 176.53 64.008) (xy 176.53 62.23)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "486d621d-e23c-4853-b63a-e8b7c96ed936")
 	)
 	(wire
 		(pts
@@ -4951,8 +4941,8 @@
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
-		(on_board yes)
-		(dnp no)
+		(on_board no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "44eb0849-4cdf-4657-872e-14c66293e8ad")
 		(property "Reference" "U11"
@@ -5659,8 +5649,8 @@
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
-		(on_board yes)
-		(dnp no)
+		(on_board no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "9a966b1b-d860-4e2a-9684-09fcebdb1fa5")
 		(property "Reference" "C17"
