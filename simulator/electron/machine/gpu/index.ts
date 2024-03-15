@@ -1,10 +1,9 @@
 import BusInterface from '6502.ts/lib/machine/bus/BusInterface'
 import { SendDataCallback } from '..'
-// import { toHex } from '../../utils/output'
 import { colors } from './colors'
 import { tileset } from './tileset'
 
-const refreshRate = 20 // in hz
+const refreshRate = 30 // in hz
 
 const DisplayWidth = 640
 const DisplayHeight = 480
@@ -37,6 +36,7 @@ export enum GpuRegisters {
 export class Gpu implements BusInterface {
   private _registers: Uint8ClampedArray
   private _internalMemory = new Uint8ClampedArray(MemoryTop + 1)
+  private _hasUpdatedFramebuffer = true
 
   constructor(private _sendData: SendDataCallback) {
     this._registers = new Uint8ClampedArray([0x0, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0])
@@ -95,13 +95,21 @@ export class Gpu implements BusInterface {
         (this._registers[GpuRegisters.AddressHigh] << 8) |
         this._registers[GpuRegisters.AddressLow]
 
-      // console.log(`Wrote ${value} to ${toHex(internalAddress, 4, true)}`)
+      // console.log(`GPU Wrote ${value} to ${toHex(internalAddress, 4, true)}`)
 
       this.handleIncrement()
 
       if (internalAddress <= this._internalMemory.length) {
         this._internalMemory[internalAddress] = value
+        this._hasUpdatedFramebuffer = true
       }
+    }
+
+    if (
+      register === GpuRegisters.XOffset ||
+      register === GpuRegisters.YOffset
+    ) {
+      this._hasUpdatedFramebuffer = true
     }
 
     this._registers[register] = value
@@ -133,6 +141,8 @@ export class Gpu implements BusInterface {
   }
 
   private buildAndSendFramebuffer() {
+    if (!this._hasUpdatedFramebuffer) return
+
     const rawScreenbuffer = new Uint8ClampedArray(
       DisplayWidth * DisplayHeight * 4
     )
@@ -181,5 +191,6 @@ export class Gpu implements BusInterface {
     }
 
     this._sendData('framebuffer-update', rawScreenbuffer)
+    this._hasUpdatedFramebuffer = false
   }
 }

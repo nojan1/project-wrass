@@ -110,3 +110,39 @@ advance_graphic_address:
     ply
     plx
     rts
+
+; Set GRAPHICS_ADDR to address for tilemap coordinate in X, Y
+goto_tilemap_x_y:
+    pha ; Preserve A
+    lda #GRAPHICS_ADDR_FRAMEBUFFER_HIGH
+    jmp goto_offsetA_x_y
+
+; Set GRAPHICS_ADDR to address for color attribute coordinate in X, Y
+goto_colorattribute_x_y:
+    pha ; Preserve A
+    lda #GRAPHICS_ADDR_COLORATTRIBUTES_HIGH
+
+goto_offsetA_x_y:
+    sta PARAM_16_1 + 1 ; Upper part of address
+    sty PARAM_16_1 ; Lower part of address
+    
+    ; Rotate row number into 64 byte boundry area
+    .repeat 6
+    clc
+    rol PARAM_16_1
+    rol PARAM_16_1 + 1
+    .endr
+
+    ; Add X offset to address
+    txa
+    clc
+    adc PARAM_16_1
+    sta GRAPHICS_ADDR_LOW
+
+    ; Store upper address
+    lda PARAM_16_1 + 1
+    sta GRAPHICS_ADDR_HIGH
+
+    pla
+    rts
+

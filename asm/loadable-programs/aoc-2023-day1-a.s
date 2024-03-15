@@ -101,10 +101,10 @@ _parta_message:
     .string "Part A: "
 
 _input:
-    .include "aoc-2023-day1-input.inc"
+    ; .include "aoc-2023-day1-input.inc"
 
-    ; .string "1abc2"
-    ; .string "pqr3stu8vwx"
-    ; .string "a1b2c3d4e5f"
-    ; .string "treb7uchet"
-    ; .db $FF
+    .string "1abc2"
+    .string "pqr3stu8vwx"
+    .string "a1b2c3d4e5f"
+    .string "treb7uchet"
+    .db $FF

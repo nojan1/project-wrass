@@ -36,6 +36,12 @@ sys_copy_sprite:
 sys_clear_screen:
     ifndef_nop NO_GPU, clear_screen
 
+sys_goto_tilemap_x_y:
+    ifndef_nop NO_GPU, goto_tilemap_x_y
+
+sys_goto_colorattribute_x_y:
+    ifndef_nop NO_GPU, goto_colorattribute_x_y
+
 ; SPI
 sys_spi_set_device:
     jmp spi_set_device

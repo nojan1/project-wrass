@@ -263,3 +263,7 @@ ${colorOutput}`
 console.log(`Tile memory: ${tile_memory.byteLength.toString(16)}`);
 console.log(`Attribute memory: ${attribute_memory.byteLength.toString(16)}`);
 console.log(`Color memory: ${color_memory.byteLength.toString(16)}`);
+
+module.exports = {
+  tileset,
+};

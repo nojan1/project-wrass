@@ -1,0 +1,23 @@
+;; Constants
+SCREEN_WIDTH_BYTES = 62
+SCREEN_HEIGHT_BYTES = 32
+SCREEN_WIDTH_CHARS = 40
+SCREEN_HEIGHT_CHARS = 30
+
+SNAKE_BODY_CHAR = $80
+
+BODY_X = $7F00
+BODY_Y = $7E00
+
+;; Variables
+HEAD_INDEX = ZP_USAGE_TOP + 1
+SNAKE_LENGTH = HEAD_INDEX + 1
+
+    .include "setup.s"
+
+    lda #$5
+    sta SNAKE_LENGTH
+
+    lda #$FF
+    sta HEAD_INDEX
+    
