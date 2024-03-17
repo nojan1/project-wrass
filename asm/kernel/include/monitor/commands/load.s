@@ -1,11 +1,19 @@
 load_instruction_string:
     .string "Reading HEX bytes, end with \n"
 
+checksum_error_string:
+    .string "ERR: Checksum did not match :("
+
 load_command_implementation:
     nop
     jsr newline
     putstr_addr load_instruction_string
     jsr newline
+
+    ; Used for checksum
+    lda #0
+    sta VAR_8BIT_2
+    sta ERROR
 
     ; Destination address in PARAM_16_2
     ldy PARAM_16_2 ; Y will be used for offset
@@ -44,6 +52,11 @@ load_command_implementation:
 
     ; Write byte to ram
     sta (PARAM_16_2), y
+
+    ; Update checksum
+    eor VAR_8BIT_2
+    sta VAR_8BIT_2
+
     iny
     bne .load_read_1
     inc PARAM_16_2 + 1 ; Y wrapped around, increment the address
@@ -51,4 +64,16 @@ load_command_implementation:
     jmp .load_read_1
     
 .load_done:
+    jsr check_and_print_error
+
+    lda PARAM_16_3
+    beq .checksum_check_done
+    
+    cmp VAR_8BIT_2
+    beq .checksum_check_done
+
+    jsr newline
+    putstr_addr checksum_error_string
+
+.checksum_check_done:
     jmp _command_execution_complete

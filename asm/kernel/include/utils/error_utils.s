@@ -22,6 +22,9 @@ NO_VALID_PARTITION_string:
 UNSUPPORTED_NUMBER_OF_FATS_string:
     .string "UNSUPPORTED_NUMBER_OF_FATS"
 
+UART_RECIEVE_BUFFER_OVERFLOW_string:
+    .string "UART_RECIEVE_BUFFER_OVERFLOW"
+
 error_messages:
     .db 0x0 ; Dummy
     .word SD_CARD_INIT_FAILED_string 
@@ -31,6 +34,7 @@ error_messages:
     .word INVALID_MBR_string
     .word NO_VALID_PARTITION_string
     .word UNSUPPORTED_NUMBER_OF_FATS_string
+    .word UART_RECIEVE_BUFFER_OVERFLOW_string
 
 ; Checks for error flag and prints the error
 ; Mutates: PARAM_16_1

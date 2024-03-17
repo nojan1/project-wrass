@@ -11,7 +11,10 @@ fi
 $COMPILER $ARGS -L a.list -o a.out $@ >&2
 [[ $? != 0 ]] && exit $?
 
-echo "load 0400"
-hexdump -ve '1/1 "%.2x"' a.out
+program=$(hexdump -ve '1/1 "%.2x"' a.out)
+checksum=$(echo -n $program | perl -e 'while(<>) { my $checksum = 0; $checksum ^= $_ for unpack("(h2)*"); printf "\U%x", $checksum; }')
+
+echo "load 0400 $checksum"
+echo -n $program
 echo ""
 echo -n "jump 0400"

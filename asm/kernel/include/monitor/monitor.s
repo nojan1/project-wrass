@@ -32,7 +32,7 @@ commands:
 
     ; load <addr>
     .word load_command_string ; command string
-    .byte 1 ; num parameters
+    .byte 2 ; num parameters
     .word load_command_implementation
 
     ; sd

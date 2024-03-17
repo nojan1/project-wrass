@@ -18,17 +18,17 @@ uart_newline:
    rts
 
 uart_ereasec:
-  rts
+   pha
+   lda #8
+   jsr uart_putc
+   pla
+   rts
  
 uart_getc:
    lda UART_STATUS
    and #UART_RECIEVE_BUFFER_NONEMPTY
    beq _uart_getc_no_byte
    lda UART_RECIEVE
-   ; cmp #13
-   ; bne _uart_got_valid_char
-   ; lda #10
-; _uart_got_valid_char:
    sec
    jmp _uart_getc_got_byte
 _uart_getc_no_byte:
