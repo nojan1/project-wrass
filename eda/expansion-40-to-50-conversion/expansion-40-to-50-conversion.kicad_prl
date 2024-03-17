@@ -1,6 +1,6 @@
 {
   "board": {
-    "active_layer": 40,
+    "active_layer": 31,
     "active_layer_preset": "All Layers",
     "auto_track_width": true,
     "hidden_netclasses": [],
@@ -74,7 +74,7 @@
     "ssh_key": ""
   },
   "meta": {
-    "filename": "lcd-interface.kicad_prl",
+    "filename": "expansion-40-to-50-conversion.kicad_prl",
     "version": 3
   },
   "project": {
