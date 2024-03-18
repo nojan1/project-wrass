@@ -47,6 +47,9 @@ export class Uart implements BusInterface {
         return this.readBuffer.dequeue()
       case 2:
         // eslint-disable-next-line no-case-declarations
+        const irqActive = 0
+
+        // eslint-disable-next-line no-case-declarations
         const status =
           ((this.readBuffer.count() > 0 ? 1 : 0) << 7) |
           ((this.writeBuffer.count() === 16 ? 0 : 1) << 6) |
@@ -54,8 +57,8 @@ export class Uart implements BusInterface {
           (0 << 4) |
           (0 << 3) |
           ((this.writeBuffer.count() > 0 ? 1 : 0) << 2) |
-          ((this.readBuffer.count() >= 16 ? 0 : 1) << 1) |
-          0
+          (irqActive << 1) |
+          ((this.readBuffer.count() >= 16 ? 0 : 1) << 0)
 
         // console.log(`Status is now: ${status.toString(2)}`)
         return status
