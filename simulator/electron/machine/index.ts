@@ -41,10 +41,15 @@ const setMemory = (
   }
 }
 
+export interface BoardRunStateStore {
+  simulatorRunning: boolean
+}
+
 export interface BoardInitContext {
   board: BoardInterface
   myDebugger: MyDebugger
   bus: SystemBus
+  runState: BoardRunStateStore
 }
 
 export const initBoard = (
@@ -54,6 +59,10 @@ export const initBoard = (
   entryAddress: number = 0x8000,
   sdImagePath: string
 ): BoardInitContext => {
+  const runState = {
+    simulatorRunning: false,
+  } as BoardRunStateStore
+
   const lcdVia1 = new VIA()
   lcdVia1.registerCallbackHandler(new LcdController(sendData))
 
@@ -73,7 +82,7 @@ export const initBoard = (
     0: new IoCard(via1, via2),
     1: new Gpu(sendData),
     2: lcdVia1,
-    3: new Uart(sendData),
+    3: new Uart(sendData, runState),
   })
 
   const memoryControlRegister = new MemoryControlRegister(sendData)
@@ -93,5 +102,6 @@ export const initBoard = (
     board,
     myDebugger,
     bus,
+    runState,
   }
 }

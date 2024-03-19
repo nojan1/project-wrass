@@ -1,27 +1,43 @@
 import BusInterface from '6502.ts/lib/machine/bus/BusInterface'
-import { SendDataCallback } from '.'
+import { BoardRunStateStore, SendDataCallback } from '.'
 import { ipcMain } from 'electron'
 
 import readline from 'readline'
+
+const BaudRate = 115200
 
 export class Uart implements BusInterface {
   private writeBuffer = new FIFO<number>(16)
   private readBuffer = new FIFO<number>()
 
+  private simulatorToSendBuffer = new FIFO<number>()
+
   private useStdInOut = false
 
-  constructor(private sendData: SendDataCallback) {
+  constructor(sendData: SendDataCallback, runState: BoardRunStateStore) {
+    // Interval time is the actual time it would take the uart to send a byte using the provided baudrate
+    const interval = 1000 / (BaudRate / 8)
+
     setInterval(() => {
-      while (this.writeBuffer.count() > 0) {
+      if (!runState.simulatorRunning) return
+
+      // Data written from the "computer" to be send to the simulator gui
+      if (this.writeBuffer.count() > 0) {
         const value = this.writeBuffer.dequeue()
         sendData('uart-recieve', { value })
 
         if (this.useStdInOut) console.log(String.fromCharCode(value))
       }
-    }, 50)
+
+      // Bytes from simulator to be send to the "computer"
+      if (this.simulatorToSendBuffer.count() > 0) {
+        const value = this.simulatorToSendBuffer.dequeue()
+        this.readBuffer.enqueue(value)
+      }
+    }, interval)
 
     ipcMain.on('uartTransmit', (_, value: number) => {
-      this.readBuffer.enqueue(value)
+      this.simulatorToSendBuffer.enqueue(value)
     })
 
     const rl = readline.createInterface({
