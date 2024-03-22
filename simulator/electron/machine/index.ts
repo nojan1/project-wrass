@@ -43,6 +43,7 @@ const setMemory = (
 
 export interface BoardRunStateStore {
   simulatorRunning: boolean
+  triggerInterupt: () => void
 }
 
 export interface BoardInitContext {
@@ -97,6 +98,8 @@ export const initBoard = (
   myDebugger.setBreakpointsEnabled(true)
 
   keyboardController.attachCpu(board.getCpu())
+  runState.triggerInterupt = () =>
+    myDebugger.getBoard().getCpu().setInterrupt(true)
 
   return {
     board,

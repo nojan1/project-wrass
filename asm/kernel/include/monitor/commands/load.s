@@ -2,7 +2,7 @@ load_instruction_string:
     .string "Reading HEX bytes, end with \n"
 
 checksum_error_string:
-    .string "Error: Checksum did not match :("
+    .string "Error: LOAD_CHECKSUM_MISMATCH"
 
 load_command_implementation:
     nop
