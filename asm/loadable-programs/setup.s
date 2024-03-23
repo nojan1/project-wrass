@@ -24,7 +24,7 @@ sys_sub_16 = $E02D
 sys_sub_32 = $E036
 sys_uart_sendbyte = $E00F
 
-putstr=sys_putstr
+putstr=sys_putstr ; Used in macro definition
     
     .include "../kernel/include/constants.s"
     .include "../kernel/include/macros.s"

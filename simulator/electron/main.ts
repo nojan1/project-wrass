@@ -139,7 +139,7 @@ const createDebugger = async (options: any) => {
 }
 
 async function registerListeners({
-  boardContext: { myDebugger, bus },
+  boardContext: { myDebugger, bus, runState },
   initialBreakpoints,
 }: {
   boardContext: BoardInitContext
@@ -182,6 +182,7 @@ async function registerListeners({
   })
 
   ipcMain.handle('step-debugger', event => {
+    runState.simulatorRunning = true
     event.sender.send('debugger-running', true)
     event.sender.send('last-trap-update', undefined)
 
@@ -189,6 +190,7 @@ async function registerListeners({
 
     sendUpdates(event.sender)
     event.sender.send('debugger-running', false)
+    runState.simulatorRunning = false
   })
 
   ipcMain.on('run', async event => {
@@ -196,12 +198,14 @@ async function registerListeners({
     event.sender.send('last-trap-update', undefined)
 
     while (1) {
+      runState.simulatorRunning = true
       await deferWork(() => myDebugger.step(100))
       const lastTrap = myDebugger.getLastTrap()
 
       if (lastTrap) {
         sendUpdates(event.sender)
         event.sender.send('debugger-running', false)
+        runState.simulatorRunning = false
         return lastTrap
       }
     }
@@ -215,6 +219,7 @@ async function registerListeners({
 
     sendUpdates(event.sender)
     event.sender.send('debugger-running', false)
+    runState.simulatorRunning = false
   })
 
   ipcMain.on('update-request', event => {

@@ -2,7 +2,7 @@ load_instruction_string:
     .string "Reading HEX bytes, end with \n"
 
 checksum_error_string:
-    .string "ERR: Checksum did not match :("
+    .string "Error: LOAD_CHECKSUM_MISMATCH"
 
 load_command_implementation:
     nop
@@ -68,7 +68,7 @@ load_command_implementation:
 
     lda PARAM_16_3
     beq .checksum_check_done
-    
+
     cmp VAR_8BIT_2
     beq .checksum_check_done
 

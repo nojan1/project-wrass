@@ -25,9 +25,19 @@ uart_ereasec:
    rts
  
 uart_getc:
-   lda UART_STATUS
-   and #UART_RECIEVE_BUFFER_NONEMPTY
-   beq _uart_getc_no_byte
+   lda #UART_RECIEVE_BUFFER_FULL
+   bit UART_STATUS
+
+   ; Read buffer has overflowed
+   beq _uart_getc_no_overlow
+   php
+   lda #UART_RECIEVE_BUFFER_OVERFLOW
+   sta ERROR
+   plp
+
+_uart_getc_no_overlow:
+   bpl _uart_getc_no_byte ; High bit not set
+
    lda UART_RECIEVE
    sec
    jmp _uart_getc_got_byte

@@ -1,27 +1,52 @@
 import BusInterface from '6502.ts/lib/machine/bus/BusInterface'
-import { SendDataCallback } from '.'
+import { BoardRunStateStore, SendDataCallback } from '.'
 import { ipcMain } from 'electron'
 
 import readline from 'readline'
+
+const BaudRate = 115200
 
 export class Uart implements BusInterface {
   private writeBuffer = new FIFO<number>(16)
   private readBuffer = new FIFO<number>()
 
+  private simulatorToSendBuffer = new FIFO<number>()
+
+  private waitingForFirstStatusAccess = true
   private useStdInOut = false
 
-  constructor(private sendData: SendDataCallback) {
+  private irqEnable = 0
+  private irqActive = 0
+
+  constructor(sendData: SendDataCallback, runState: BoardRunStateStore) {
+    // Interval time is the actual time it would take the uart to send a byte using the provided baudrate
+    const interval = 1000 / (BaudRate / 8)
+
     setInterval(() => {
-      while (this.writeBuffer.count() > 0) {
+      if (!runState.simulatorRunning || this.waitingForFirstStatusAccess) return
+
+      // Data written from the "computer" to be send to the simulator gui
+      if (this.writeBuffer.count() > 0) {
         const value = this.writeBuffer.dequeue()
         sendData('uart-recieve', { value })
 
         if (this.useStdInOut) console.log(String.fromCharCode(value))
       }
-    }, 50)
+
+      // Bytes from simulator to be send to the "computer"
+      if (this.simulatorToSendBuffer.count() > 0) {
+        const value = this.simulatorToSendBuffer.dequeue()
+        this.readBuffer.enqueue(value)
+
+        if (this.irqEnable === 1) {
+          this.irqActive = 1
+          runState.triggerInterupt()
+        }
+      }
+    }, interval)
 
     ipcMain.on('uartTransmit', (_, value: number) => {
-      this.readBuffer.enqueue(value)
+      this.simulatorToSendBuffer.enqueue(value)
     })
 
     const rl = readline.createInterface({
@@ -32,10 +57,10 @@ export class Uart implements BusInterface {
 
     rl.on('line', line => {
       for (let i = 0; i < line.length; i++) {
-        this.readBuffer.enqueue(line.charCodeAt(i))
+        this.simulatorToSendBuffer.enqueue(line.charCodeAt(i))
       }
 
-      this.readBuffer.enqueue(10)
+      this.simulatorToSendBuffer.enqueue(10)
     })
   }
 
@@ -44,8 +69,11 @@ export class Uart implements BusInterface {
 
     switch (address) {
       case 1:
+        this.irqActive = 0
         return this.readBuffer.dequeue()
       case 2:
+        this.waitingForFirstStatusAccess = false
+
         // eslint-disable-next-line no-case-declarations
         const status =
           ((this.readBuffer.count() > 0 ? 1 : 0) << 7) |
@@ -54,8 +82,8 @@ export class Uart implements BusInterface {
           (0 << 4) |
           (0 << 3) |
           ((this.writeBuffer.count() > 0 ? 1 : 0) << 2) |
-          ((this.readBuffer.count() >= 16 ? 0 : 1) << 1) |
-          0
+          (this.irqActive << 1) |
+          ((this.readBuffer.count() >= 16 ? 0 : 1) << 0)
 
         // console.log(`Status is now: ${status.toString(2)}`)
         return status
@@ -67,8 +95,15 @@ export class Uart implements BusInterface {
   write(address: number, value: number): void {
     address &= 0x3
 
-    if (address === 0) {
-      this.writeBuffer.enqueue(value)
+    switch (address) {
+      case 0:
+        this.writeBuffer.enqueue(value)
+        break
+      case 3:
+        this.irqEnable = value & 1
+        break
+      default:
+        break
     }
   }
 
