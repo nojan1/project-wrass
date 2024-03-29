@@ -59,6 +59,14 @@
         }
       ],
       "drc_exclusions": [
+        "lib_footprint_mismatch|164266077|101477200|d920f4db-93a9-4482-b514-7d20ab59bc79|00000000-0000-0000-0000-000000000000",
+        "lib_footprint_mismatch|164266077|104017200|f07d393c-3733-4992-be87-b44c0601702a|00000000-0000-0000-0000-000000000000",
+        "lib_footprint_mismatch|164266077|106557200|d181b36f-9078-4488-83f2-7e313239c6d2|00000000-0000-0000-0000-000000000000",
+        "lib_footprint_mismatch|164266077|109097200|4ea992de-4ddc-4a33-a14e-6de1c5bbc17b|00000000-0000-0000-0000-000000000000",
+        "lib_footprint_mismatch|164266077|91317200|2d28d544-d486-4b26-915f-be56dd6d856f|00000000-0000-0000-0000-000000000000",
+        "lib_footprint_mismatch|164266077|93857200|7fdca3ed-cdfd-4b31-ab75-86aa70142f72|00000000-0000-0000-0000-000000000000",
+        "lib_footprint_mismatch|164266077|96397200|910c8378-94da-46ca-bc6f-2d707d135436|00000000-0000-0000-0000-000000000000",
+        "lib_footprint_mismatch|164266077|98937200|18ed02cc-a9b7-44e1-bcba-dcb59a7d633e|00000000-0000-0000-0000-000000000000",
         "silk_edge_clearance|81976077|141609200|b85d6051-8635-4e3b-ad0e-0f6c1be0c329|d8d7d3ca-bb39-493a-b72b-66eb48c74a56",
         "silk_edge_clearance|82736077|141609200|b85d6051-8635-4e3b-ad0e-0f6c1be0c329|3688ce9d-b581-4434-b317-968a8ac81ffa",
         "silk_edge_clearance|84516077|141609200|b85d6051-8635-4e3b-ad0e-0f6c1be0c329|9fa0f6a4-904f-42cc-9684-7dc11f7d6707",
@@ -495,7 +503,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "C:/Users/nojan/Desktop/Gerbers/",
+      "plot": "C:/Users/nojan/Desktop/Gerbers/uart/",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "uart.step",
