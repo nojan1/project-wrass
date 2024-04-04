@@ -28,8 +28,8 @@ uart_getc:
    lda #UART_RECIEVE_BUFFER_FULL
    bit UART_STATUS
 
-   ; Read buffer has overflowed
-   beq _uart_getc_no_overlow
+   ; Check if read buffer has overflowed
+   bne _uart_getc_no_overlow
    php
    lda #UART_RECIEVE_BUFFER_OVERFLOW
    sta ERROR
