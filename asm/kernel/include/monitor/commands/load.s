@@ -4,6 +4,9 @@ load_instruction_string:
 checksum_error_string:
     .string "Error: LOAD_CHECKSUM_MISMATCH"
 
+checksum_error_second_line_string:
+    .string "Got: "
+
 load_command_implementation:
     nop
     jsr newline
@@ -74,6 +77,11 @@ load_command_implementation:
 
     jsr newline
     putstr_addr checksum_error_string
+
+    jsr newline
+    putstr_addr checksum_error_second_line_string
+    lda VAR_8BIT_2
+    jsr puthex
 
 .checksum_check_done:
     jmp _command_execution_complete

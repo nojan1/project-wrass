@@ -5975,12 +5975,6 @@
 		(uuid "26cffcb6-2fd7-450f-aea3-74f54a40a564")
 	)
 	(junction
-		(at 146.05 60.96)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "2ae963e8-97b5-4985-a5c3-5c66a2538dd2")
-	)
-	(junction
 		(at 255.27 118.11)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6363,16 +6357,6 @@
 	)
 	(wire
 		(pts
-			(xy 146.05 60.96) (xy 156.21 60.96)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "103983c4-f51e-4a48-8775-b8bd4e3c8afc")
-	)
-	(wire
-		(pts
 			(xy 190.5 55.88) (xy 215.9 55.88)
 		)
 		(stroke
@@ -6533,7 +6517,7 @@
 	)
 	(wire
 		(pts
-			(xy 146.05 34.29) (xy 146.05 60.96)
+			(xy 146.05 34.29) (xy 146.05 57.15)
 		)
 		(stroke
 			(width 0)
@@ -6993,7 +6977,7 @@
 	)
 	(wire
 		(pts
-			(xy 130.81 60.96) (xy 146.05 60.96)
+			(xy 130.81 57.15) (xy 146.05 57.15)
 		)
 		(stroke
 			(width 0)
@@ -8001,6 +7985,16 @@
 		)
 		(uuid "e54adcd7-9de8-4d2c-820f-4723487608d5")
 	)
+	(wire
+		(pts
+			(xy 130.81 59.69) (xy 156.21 59.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e57f26e2-36ac-4308-8004-a7536498ee7a")
+	)
 	(bus
 		(pts
 			(xy 262.89 45.72) (xy 262.89 48.26)
@@ -8170,6 +8164,16 @@
 			(type default)
 		)
 		(uuid "fcb5f2e1-d3b1-49a4-837c-18b9e57e92ef")
+	)
+	(wire
+		(pts
+			(xy 130.81 62.23) (xy 156.21 62.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fe20dd83-3615-4e00-9b1c-73c653a1606f")
 	)
 	(bus
 		(pts
@@ -12087,8 +12091,8 @@
 		)
 	)
 	(sheet
-		(at 114.3 58.42)
-		(size 16.51 5.08)
+		(at 111.76 54.61)
+		(size 19.05 9.906)
 		(fields_autoplaced yes)
 		(stroke
 			(width 0.1524)
@@ -12099,7 +12103,7 @@
 		)
 		(uuid "2c491a73-e75e-409f-b87e-2b908ecd3c3f")
 		(property "Sheetname" "clock"
-			(at 114.3 57.7084 0)
+			(at 111.76 53.8984 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12108,7 +12112,7 @@
 			)
 		)
 		(property "Sheetfile" "clock.kicad_sch"
-			(at 114.3 64.0846 0)
+			(at 111.76 65.1006 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12117,7 +12121,7 @@
 			)
 		)
 		(pin "UartClock" output
-			(at 130.81 60.96 0)
+			(at 130.81 57.15 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12125,6 +12129,26 @@
 				(justify right)
 			)
 			(uuid "93ede05e-d582-4c3c-9ddd-d95f11d55bbb")
+		)
+		(pin "~{InRecieveMode}" input
+			(at 130.81 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "25791b95-cb7e-4072-bae9-2aef26809418")
+		)
+		(pin "UartRecieveClock" output
+			(at 130.81 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "8d6f3095-7739-43f6-8766-ffea70370866")
 		)
 		(instances
 			(project "uart"
@@ -12440,16 +12464,6 @@
 			)
 			(uuid "6284341f-8699-4414-a88c-426a75a7f9a4")
 		)
-		(pin "UartClock" input
-			(at 156.21 60.96 180)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-			(uuid "275c75ec-402c-4f6c-a3be-fdb137b23582")
-		)
 		(pin "Reset" input
 			(at 156.21 68.58 180)
 			(effects
@@ -12479,6 +12493,26 @@
 				(justify right)
 			)
 			(uuid "bd965438-a5a4-49bf-b7bd-9b66b707bb02")
+		)
+		(pin "UartRecieveClock" output
+			(at 156.21 59.69 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "802e4d29-75d8-4209-a049-0713ec09be13")
+		)
+		(pin "~{InRecieveMode}" input
+			(at 156.21 62.23 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "c8aa675f-d6de-4139-87c6-59bfdf4ba0e4")
 		)
 		(instances
 			(project "uart"

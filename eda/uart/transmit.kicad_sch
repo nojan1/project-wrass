@@ -1513,22 +1513,16 @@
 		(uuid "42f97758-a7bd-4d27-96f5-1ddd294adbc4")
 	)
 	(junction
-		(at 212.09 25.4)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "44ebdf89-cc16-41bc-9aa2-9b40c128b70c")
-	)
-	(junction
 		(at 198.12 113.03)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "53ca21c9-1060-43ec-ad78-8089325beef0")
 	)
 	(junction
-		(at 212.09 73.66)
+		(at 212.09 25.4)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "58d557e9-0d19-42d3-b45c-46cd2f8d0cc5")
+		(uuid "54436588-680d-44e4-b89d-5f4d861d5d1d")
 	)
 	(junction
 		(at 35.56 185.42)
@@ -1547,6 +1541,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "715ecb51-687d-4067-b7cd-6bda909f0a16")
+	)
+	(junction
+		(at 212.09 73.66)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "7548cbad-38a8-473e-a67c-1de388861974")
 	)
 	(junction
 		(at 213.36 101.6)
@@ -1573,16 +1573,16 @@
 		(uuid "970cd4d4-7696-42e7-8c2b-939bf4fb49a8")
 	)
 	(junction
-		(at 110.49 87.63)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "af4d514f-f416-477c-a24d-d0f71ba96d71")
-	)
-	(junction
 		(at 74.93 127)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "c3add92a-9f5a-4ae1-8fda-c275a4b3902c")
+	)
+	(junction
+		(at 110.49 82.55)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "c4833cf7-87a8-4430-aa19-ef6e11418062")
 	)
 	(junction
 		(at 72.39 124.46)
@@ -1691,16 +1691,6 @@
 			(type default)
 		)
 		(uuid "d00ecada-e044-4819-b1cc-ffb0ca1302c9")
-	)
-	(wire
-		(pts
-			(xy 110.49 87.63) (xy 92.71 87.63)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0473ca80-3b40-49c2-9aa3-ea134933194c")
 	)
 	(wire
 		(pts
@@ -1944,7 +1934,7 @@
 	)
 	(wire
 		(pts
-			(xy 110.49 87.63) (xy 130.81 87.63)
+			(xy 92.71 87.63) (xy 130.81 87.63)
 		)
 		(stroke
 			(width 0)
@@ -2061,6 +2051,16 @@
 			(type default)
 		)
 		(uuid "57efe3ad-767f-421d-992f-f8bdc489280b")
+	)
+	(wire
+		(pts
+			(xy 110.49 82.55) (xy 115.57 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "60db3b49-0a14-4dec-a6fd-c5de092e39f0")
 	)
 	(wire
 		(pts
@@ -2341,6 +2341,16 @@
 			(type default)
 		)
 		(uuid "b338da43-b68a-45dc-ae94-9b570587c03c")
+	)
+	(wire
+		(pts
+			(xy 110.49 41.91) (xy 110.49 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b65d971d-9e4f-4e64-ac50-8b3a8f83ffb6")
 	)
 	(wire
 		(pts
@@ -2652,16 +2662,6 @@
 		)
 		(uuid "fc0715b9-f8bf-44c3-a06e-b9d11b2a2166")
 	)
-	(wire
-		(pts
-			(xy 110.49 41.91) (xy 110.49 87.63)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fc972dcc-99e7-4482-b386-51500a2e8a7f")
-	)
 	(bus
 		(pts
 			(xy 179.07 125.73) (xy 179.07 128.27)
@@ -2684,7 +2684,7 @@
 	)
 	(wire
 		(pts
-			(xy 92.71 82.55) (xy 115.57 82.55)
+			(xy 92.71 82.55) (xy 110.49 82.55)
 		)
 		(stroke
 			(width 0)
@@ -3951,6 +3951,118 @@
 		)
 	)
 	(symbol
+		(lib_id "74xx:74LS165")
+		(at 212.09 48.26 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d3fb94c4-04d1-448c-9681-c6c83b918963")
+		(property "Reference" "U5"
+			(at 214.2841 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "74HCT165"
+			(at 214.2841 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_DIP:DIP-16_W7.62mm"
+			(at 212.09 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/sn74ls165a.pdf"
+			(at 212.09 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 212.09 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "51a1dd85-37dc-4e54-bbf4-2b5585470216")
+		)
+		(pin "10"
+			(uuid "43be0c9d-0cb9-4958-a848-544e441dda64")
+		)
+		(pin "11"
+			(uuid "53201667-1d95-4a51-a1a4-63ba87c83f58")
+		)
+		(pin "12"
+			(uuid "dfd50bc5-c118-42cc-bec9-fa579c2fb765")
+		)
+		(pin "13"
+			(uuid "863f8afa-2688-4c4e-9409-a42cdf443c19")
+		)
+		(pin "14"
+			(uuid "b310ba25-a566-4ae2-8e52-fec2757375ff")
+		)
+		(pin "15"
+			(uuid "57652753-e125-455e-93ca-3e92ed4e6fe3")
+		)
+		(pin "16"
+			(uuid "168d01f4-b4b0-40a5-aff2-c16b90e35fea")
+		)
+		(pin "2"
+			(uuid "fbcfd15a-f395-4131-9fd7-c7c9b542c65a")
+		)
+		(pin "3"
+			(uuid "90c1054e-f42a-4b6e-89ff-d31c4b8826cd")
+		)
+		(pin "4"
+			(uuid "836dd3e7-c51d-432a-ba56-af828b165cf8")
+		)
+		(pin "5"
+			(uuid "ee4ecb87-ec19-4803-b1e7-53ad22697573")
+		)
+		(pin "6"
+			(uuid "0565d84c-d518-455d-bcc4-c8dcaa453989")
+		)
+		(pin "7"
+			(uuid "4cf74c57-eb08-44e0-8036-57a3c873170b")
+		)
+		(pin "8"
+			(uuid "b6607b27-9a23-41a8-9e85-fa58dddeed1e")
+		)
+		(pin "9"
+			(uuid "9d0e10f0-2592-4118-b708-344358e6be71")
+		)
+		(instances
+			(project "uart"
+				(path "/11545594-d6d6-4b37-a578-fa23933d5773/58e4c198-6a2b-4c28-a1a8-589b85574c34"
+					(reference "U5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:VCC")
 		(at 212.09 24.13 0)
 		(unit 1)
@@ -4147,118 +4259,6 @@
 			(project "uart"
 				(path "/11545594-d6d6-4b37-a578-fa23933d5773/58e4c198-6a2b-4c28-a1a8-589b85574c34"
 					(reference "C8")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "74xx:74LS165")
-		(at 212.09 48.26 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "f0113629-1231-45bb-8c79-11d0bc5d73fb")
-		(property "Reference" "U5"
-			(at 214.0459 26.67 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "74HCT165"
-			(at 214.0459 29.21 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Package_DIP:DIP-16_W7.62mm"
-			(at 212.09 48.26 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/sn74ls165a.pdf"
-			(at 212.09 48.26 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 212.09 48.26 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "36220ad6-c451-4d6a-8170-c91b459b89d2")
-		)
-		(pin "10"
-			(uuid "d2e86b8f-170f-43c6-b126-3ee7685af16f")
-		)
-		(pin "11"
-			(uuid "72319ac1-2f51-418f-8370-cf2de3d3005f")
-		)
-		(pin "12"
-			(uuid "6b02b1fa-40e0-48a6-b686-c54a54a57750")
-		)
-		(pin "13"
-			(uuid "19c58601-f437-4ae6-ab2d-bdc2fd02105c")
-		)
-		(pin "14"
-			(uuid "a2c430fe-761e-4bff-bc67-07899b0b1404")
-		)
-		(pin "15"
-			(uuid "72af7622-fa08-4b8f-90df-f60b74570a7f")
-		)
-		(pin "16"
-			(uuid "ee6fd6b7-b3f1-453d-b84b-90fa8c935c3b")
-		)
-		(pin "2"
-			(uuid "e3e7c9e0-0bc1-4ea5-8301-2e7b049d191b")
-		)
-		(pin "3"
-			(uuid "3c9cd3c4-7ba8-4ec4-b256-3b94b63ea204")
-		)
-		(pin "4"
-			(uuid "1397aafa-a414-425c-803b-397bf6b88d04")
-		)
-		(pin "5"
-			(uuid "632ecfaf-4fe9-47e6-96b4-828dc595db61")
-		)
-		(pin "6"
-			(uuid "07d29a26-f6c3-4a3f-9799-a6e62dbea6be")
-		)
-		(pin "7"
-			(uuid "ceb0f637-8c9a-4f3b-b75e-74310d10c017")
-		)
-		(pin "8"
-			(uuid "526e93d0-d2fe-4a51-b47a-a85e9df265d1")
-		)
-		(pin "9"
-			(uuid "7b8dc180-d986-4e7e-b4cb-2da739e64d67")
-		)
-		(instances
-			(project "uart"
-				(path "/11545594-d6d6-4b37-a578-fa23933d5773/58e4c198-6a2b-4c28-a1a8-589b85574c34"
-					(reference "U5")
 					(unit 1)
 				)
 			)
