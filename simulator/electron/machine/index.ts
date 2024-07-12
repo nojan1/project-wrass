@@ -67,20 +67,21 @@ export const initBoard = (
   const lcdVia1 = new VIA()
   lcdVia1.registerCallbackHandler(new LcdController(sendData))
 
-  const via1 = new VIA()
-  via1.registerCallbackHandler(
+  const systemVia = new VIA()
+  systemVia.registerCallbackHandler(
     new SpiViaCallbackHandler({
       1: new SdCard(sdImagePath),
       2: new SpiEchoDevice(),
     })
   )
 
-  const via2 = new VIA()
   const keyboardController = new KeyboardController()
-  via2.registerCallbackHandler(keyboardController)
+  systemVia.registerCallbackHandler(keyboardController)
+
+  const userVia = new VIA()
 
   const io = new IoMultiplexer({
-    0: new IoCard(via1, via2),
+    0: new IoCard(systemVia, userVia),
     1: new Gpu(sendData),
     2: lcdVia1,
     3: new Uart(sendData, runState),

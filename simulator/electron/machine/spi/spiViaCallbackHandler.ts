@@ -15,7 +15,8 @@ export class SpiViaCallbackHandler implements ViaCallbackHandler {
   portAWrite(value: number): void {
     this._value = value & 0xff
 
-    this._selectedDeviceNum = (this._value >> 4) & 0x7
+    this._selectedDeviceNum =
+      (this._value & 0x10) === 0 ? -1 : (this._value >> 5) & 0x7
     this.updateSelectedDevices()
 
     const clock = (this._value >> 2) & 0x1
@@ -49,7 +50,7 @@ export class SpiViaCallbackHandler implements ViaCallbackHandler {
 
   private updateSelectedDevices() {
     Object.entries(this._spiDevices).forEach(([lineNum, device]) => {
-      device.selected = +lineNum === this._selectedDeviceNum
+      device.selected = parseInt(lineNum) === this._selectedDeviceNum
     })
   }
 }

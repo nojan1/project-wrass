@@ -31,15 +31,15 @@ export class KeyboardController implements ViaCallbackHandler {
   }
 
   portARead(): number | null {
-    const data = this._pendingData.shift() ?? null
-    this._cpu?.setInterrupt(!!this._pendingData.length)
-
-    return data
+    return null
   }
 
   portAWrite(value: number): void {}
   portBWrite(value: number): void {}
   portBRead(): number | null {
-    return null
+    const data = this._pendingData.shift() ?? null
+    this._cpu?.setInterrupt(!!this._pendingData.length)
+
+    return data
   }
 }
