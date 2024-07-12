@@ -6,7 +6,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "vasm6502_oldstyle -DGRAPHIC_OUTPUT -wdc02 -dotdir -Fbin -L kernel/kernel.list -o kernel/kernel.bin kernel/kernel.s",
+            "command": "vasm6502_oldstyle -DNO_LCD -DNO_GPU -wdc02 -dotdir -Fbin -L kernel/kernel.list -o kernel/kernel.bin kernel/kernel.s",
             "problemMatcher": [],
             "group": {
                 "kind": "build",

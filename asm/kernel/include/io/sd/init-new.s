@@ -1,4 +1,4 @@
-SD_CARD_SPI_DEVICE = 1
+SD_CARD_SPI_DEVICE = 0
 
 ; Send the 72 dummy pulses required to boot an SD-card
 sd_dummy_boot_pulses:
@@ -22,9 +22,9 @@ sd_dummy_boot_pulses:
     rts
 
 ; Send CMD0 to SD-Card
+; Mutates: A
 sd_cmd0:
     sei
-    pha
 
     lda #0
     sta ERROR
@@ -48,18 +48,15 @@ sd_cmd0:
 
     ; Wait for the SD-card to start returning a response
     jsr sd_wait_for_response 
-    cmp #0
-    bne .no_response
-
-    ; Read the remaining 7 bits
-    ldx #$40
-    jsr spi_read
+    bcs .no_response
 
     cmp #1 ; Only the "In idle state" flag should be set
     beq .done
 
+    pha
     lda #SD_CARD_INIT_FAILED
     sta ERROR
+    pla
     jmp .done
 
 .no_response:
@@ -67,76 +64,82 @@ sd_cmd0:
     sta ERROR
 
 .done:
+    pha
+    lda #SPI_DEVICES_DISABLED
+    jsr spi_set_device
     pla
+
     cli
     rts
 
 ; Send CMD16 (block set) to SD-Card, this will set the block size to 512 bytes
-sd_cmd16:
-    sei
-    pha
+; sd_cmd16:
+;     sei
+;     pha
 
-    lda #0
-    sta ERROR
+;     lda #0
+;     sta ERROR
 
-    lda #(SPI_DEVICES_ENABLED | (SD_CARD_SPI_DEVICE << 1))
-    jsr spi_set_device
+;     lda #(SPI_DEVICES_ENABLED | (SD_CARD_SPI_DEVICE << 1))
+;     jsr spi_set_device
 
-    ; Send startbits and command index 16
-    lda #%01010000
-    jsr spi_transcieve
+;     ; Send startbits and command index 16
+;     lda #%01010000
+;     jsr spi_transcieve
 
-    ; Send parameters (32 bit), for blocksize of 512
-    .repeat 2
-    lda #0
-    jsr spi_transcieve   
-    .endrep
+;     ; Send parameters (32 bit), for blocksize of 512
+;     .repeat 2
+;     lda #0
+;     jsr spi_transcieve   
+;     .endrep
 
-    lda #2
-    jsr spi_transcieve   
+;     lda #2
+;     jsr spi_transcieve   
 
-    lda #0
-    jsr spi_transcieve   
+;     lda #0
+;     jsr spi_transcieve   
 
-    ; Send CRC (ignored) and stop bit
-    lda #$1
-    jsr spi_transcieve
+;     ; Send CRC (ignored) and stop bit
+;     lda #$1
+;     jsr spi_transcieve
 
-    ; Wait for the SD-card to start returning a response
-    jsr sd_wait_for_response 
-    cmp #0
-    bne .no_response
+;     ; Wait for the SD-card to start returning a response
+;     jsr sd_wait_for_response 
+;     bcs .no_response
 
-    ; Read the remaining 7 bits
-    ldx #$40
-    jsr spi_read
+;     cmp #0 ; Only the "In idle state" flag should be set
+;     beq .done
 
-    cmp #0 ; Only the "In idle state" flag should be set
-    beq .done
+; .no_response:
+;     lda #SD_CARD_BLOCKSET_FAILED
+;     sta ERROR
 
-.no_response:
-    lda #SD_CARD_BLOCKSET_FAILED
-    sta ERROR
-
-.done:
-    pla
-    cli
-    rts
+; .done:
+;     pla
+;     cli
+;     rts
 
 ; Toggles the SPI clock and waits for Miso to go low
 ; This expects the SD card to be the selected device
 ; If a response is recieved before timeout A will be zero
 ; Mutates: A, X
 sd_wait_for_response:
-    ldx #16
+    ldx #8
 
 .keep_waiting:
     dex
-    beq .return
+    beq .timeout
 
-    lda IO_SYSTEM_VIA_PORTA
-    jsr spi_clk
-    bne .keep_waiting
+    lda #$FF
+    jsr spi_transcieve
+
+    cmp #$FF
+    beq .keep_waiting
+    clc
+    jmp .return
+
+.timeout:
+    sec ; Set carry flag to signal timeout
 
 .return:
     rts

@@ -1,15 +1,19 @@
 SPI_BUFFER = VAR_8BIT_1
 SPI_BITMASK = VAR_8BIT_2
 
+SPI_DEVICES_ENABLED = 1 << 0
+SPI_DEVICES_DISABLED = 0 << 0
+
 ; Set the active SPI device to the line number in A
-; A value of zero means no device is active
+; bit 0 set to 0 disables all devies
+; bit 1-3 are address
 spi_set_device:
-    and #$07
+    and #$0F
     asl
     asl
     asl
     asl
-    sta IO_VIA1_PORTA
+    sta IO_SYSTEM_VIA_PORTA
     rts
 
 ; Sends the byte stored in A over spi, toggling the clock
@@ -28,15 +32,15 @@ spi_transcieve:
     pha
     and SPI_BITMASK
     beq .send_zero
-
+ 
     ; Send one
-    lda IO_VIA1_PORTA
+    lda IO_SYSTEM_VIA_PORTA
     ora #$1 ; Mosi is pin 0
 
     jmp .clock
 
 .send_zero:
-    lda IO_VIA1_PORTA
+    lda IO_SYSTEM_VIA_PORTA
     and #$FE
 
 .clock:
@@ -49,14 +53,7 @@ spi_transcieve:
     sta SPI_BUFFER
 
 .got_zero:
-    ; Invert the bitmask
-    ; lda SPI_BITMASK
-    ; eor #$FF
-    ; sta SPI_BITMASK
-
-    ; lda SPI_BUFFER
-    ; and #$FF
-    ; sta SPI_BUFFER
+    ; No need to set since SPI_BUFFER was initialized to 0 from the start
 
     ; Prepare to process next bit
     txa
@@ -80,7 +77,7 @@ spi_read:
 .bit_loop:
     stx SPI_BITMASK
 
-    lda IO_VIA1_PORTA
+    lda IO_SYSTEM_VIA_PORTA
     jsr spi_clk
     beq .got_zero
 
@@ -90,14 +87,7 @@ spi_read:
     sta SPI_BUFFER
 
 .got_zero:
-    ; Invert the bitmask
-    ; lda SPI_BITMASK
-    ; eor #$FF
-    ; sta SPI_BITMASK
-
-    ; lda SPI_BUFFER
-    ; and #$FF
-    ; sta SPI_BUFFER
+    ; No need to set since SPI_BUFFER was initialized to 0 from the start
 
     ; Prepare to process next bit
     txa
@@ -111,16 +101,16 @@ spi_read:
     rts
 
 ; Toogle the SPI clock and read the recieved Miso bit into A
-; Expects A to be the existing value of IO_VIA1_PORTA
+; Expects A to be the existing value of IO_SYSTEM_VIA_PORTA
 spi_clk:
     ; Toggle the SPI clock
     ora #$4 ; Set clock bit (pin 2)
-    sta IO_VIA1_PORTA
+    sta IO_SYSTEM_VIA_PORTA
     and #$FB ; Clear clock bit (pin 2)
-    sta IO_VIA1_PORTA
+    sta IO_SYSTEM_VIA_PORTA
 
     ; Recieve bit
-    lda IO_VIA1_PORTA ; Miso is pin 1
+    lda IO_SYSTEM_VIA_PORTA ; Miso is pin 1
     and #$2
     rts
 

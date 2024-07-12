@@ -6,7 +6,7 @@ sd_read_block:
     phx
     phy
 
-    lda #SD_CARD_SPI_DEVICE
+    lda #(SPI_DEVICES_ENABLED | (SD_CARD_SPI_DEVICE << 1))
     jsr spi_set_device
 
     lda #0

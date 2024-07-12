@@ -8,7 +8,7 @@ scan_keyboard:
     lda KEYBOARD_FLAGS
     eor #KEYBOARD_RELEASE   ; flip the releasing bit
     sta KEYBOARD_FLAGS
-    lda IO_VIA2_PORTA      ; read key value that's being released
+    lda IO_SYSTEM_VIA_PORTB      ; read key value that's being released
     cmp #$12       ; left shift
     beq shift_up
     cmp #$59       ; right shift
@@ -22,7 +22,7 @@ shift_up:
     jmp exit
 
 read_key:
-    lda IO_VIA2_PORTA
+    lda IO_SYSTEM_VIA_PORTB
     cmp #$f0        ; if releasing a key
     beq key_release ; set the releasing bit
     cmp #$12        ; left shift

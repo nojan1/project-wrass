@@ -31,11 +31,11 @@ reset:
 
     ; KEYBOARD INTERFACE SETUP
     lda #0
-    sta IO_VIA2_DDRA ; All pins are input
+    sta IO_SYSTEM_VIA_DDRB ; All pins are input
 
     ; SPI INTERFACE SETUP
-    lda #0b01110101
-    sta IO_VIA1_DDRA
+    lda #0b11110101
+    sta IO_SYSTEM_VIA_DDRA
 
     jsr sd_dummy_boot_pulses
     jsr monitor_loop_start
