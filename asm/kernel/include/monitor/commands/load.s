@@ -9,6 +9,8 @@ checksum_error_second_line_string:
 
 load_command_implementation:
     nop
+    sei
+
     jsr newline
     putstr_addr load_instruction_string
     jsr newline
@@ -84,4 +86,5 @@ load_command_implementation:
     jsr puthex
 
 .checksum_check_done:
+    cli
     jmp _command_execution_complete
