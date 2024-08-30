@@ -14,6 +14,7 @@ import { SpiViaCallbackHandler } from './spi/spiViaCallbackHandler'
 import { SystemBus } from './systemBus'
 import { VIA } from './via'
 import { Uart } from './uart'
+import { DS1306 } from './ds1306'
 
 export type SendDataCallback = (channel: string, data: any) => void
 
@@ -70,7 +71,8 @@ export const initBoard = (
   const systemVia = new VIA()
   systemVia.registerCallbackHandler(
     new SpiViaCallbackHandler({
-      1: new SdCard(sdImagePath),
+      0: new SdCard(sdImagePath),
+      1: new DS1306(),
       2: new SpiEchoDevice(),
     })
   )

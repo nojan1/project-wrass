@@ -23,6 +23,6 @@ puthex=sys_puthex
     .include "../kernel/include/errors.s"
     .include "../kernel/include/utils/error_utils.s"
     .include "../kernel/include/io/spi.s"
-    ; .include "../kernel/include/io/fs/partition.s"
+    ; .include "../kernel/include/io/fs/pmartition.s"
     .include "../kernel/include/io/sd/init-new.s"
     ; .include "../kernel/include/io/sd/ops.s"

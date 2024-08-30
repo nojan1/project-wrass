@@ -1,16 +1,26 @@
+PHASE_COUNTER = ZP_USAGE_TOP + 1
+DIRECTION = PHASE_COUNTER + 1
+
     .include "setup.s"
-    cli
+    sei
+
+    lda #0
+    sta PHASE_COUNTER
+    sta DIRECTION
+
+    lda #(GPU_OUTPUT | UART_OUTPUT | UART_INPUT_ENABLE)
+    sta IO_CONTROL
 
     ; Set up timers
-    lda #$FF 
-    sta #IO_USER_VIA_T1LL
-    sta #IO_USER_VIA_T1LH ; Set timer 1 latch to $FFFF
+    lda #$FF
+    sta IO_USER_VIA_T1CL
+    sta IO_USER_VIA_T1CH ; Set timer 1 to $FFFF
 
-    lda #b01000000 
-    sta #IO_USER_VIA_ACR ; timer 1 continues interupts
+    lda #%01000000 
+    sta IO_USER_VIA_ACR ; timer 1 continues interupts
 
-    lda #b11000000
-    sta #IO_USER_VIA_IER ; enable timer 1 interupts
+    lda #%11000000
+    sta IO_USER_VIA_IER ; enable timer 1 interupts
 
     ; PortB all outputs
     lda #$FF
@@ -19,29 +29,41 @@
     lda #$1
     sta IO_USER_VIA_PORTB
 
-    sei
-loop_left:
-    jsr delay
-    jsr delay
-    jsr delay
-    rol IO_USER_VIA_PORTB
-    bcc loop_left
+    lda #(<on_irq)
+    sta USER_IRQ
 
-loop_right:
-    jsr delay
-    jsr delay
-    jsr delay
-    ror IO_USER_VIA_PORTB
-    bcc loop_right
+    lda #(>on_irq)
+    sta USER_IRQ + 1
 
-    jmp loop_left
-
-delay:
-    ldx #$ff
-keep_waiting:
-    .repeat 100
-    nop
-    .endr
-    dex
-    bne keep_waiting
+    cli
     rts
+
+on_irq:
+    pha
+    lda IO_USER_VIA_T1CL ; Clear timer interupt    
+
+    lda DIRECTION
+    clc
+    beq go_right
+    ror IO_USER_VIA_PORTB
+    jmp count
+
+go_right:
+    rol IO_USER_VIA_PORTB
+
+count:
+    lda PHASE_COUNTER
+    clc
+    adc #1
+    cmp #7
+    bne end
+
+    lda DIRECTION
+    eor #1
+    sta DIRECTION
+
+    lda #0
+end:
+    sta PHASE_COUNTER
+    pla
+    rti

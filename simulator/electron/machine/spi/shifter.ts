@@ -26,6 +26,10 @@ export class Shifter {
     return this._currentWriteByte * 8 + this._currentWriteBit
   }
 
+  dataAvailable() {
+    return this.bitLength() - (this._currentReadByte * 8 + this._currentReadBit)
+  }
+
   shiftIn(dataIn: number) {
     dataIn = dataIn & 0x1
 
@@ -41,6 +45,8 @@ export class Shifter {
     if (++this._currentWriteBit === 8) {
       this._currentWriteBit = 0
       this._currentWriteByte++
+
+      if (this._currentWriteByte > this._data.length - 1) this._data.push(0x0)
     }
 
     // console.log(this._data.map(x => x.toString(2).padStart(8, '0')).join(' '))
@@ -68,6 +74,7 @@ export class Shifter {
       }
     }
 
+    console.log(`Shifting out ${dataOut}, bits left ${this.dataAvailable()}`)
     return dataOut
   }
 
@@ -79,5 +86,11 @@ export class Shifter {
     }
 
     return returnValue
+  }
+
+  write(data: number) {
+    for (let i = 0; i < 8; i++) {
+      this.shiftIn(data & (1 << (7 - i)) ? 1 : 0)
+    }
   }
 }

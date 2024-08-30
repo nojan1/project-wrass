@@ -1,8 +1,16 @@
 irq:
+    jmp (SYSTEM_IRQ)
+
+default_system_irg:
     jsr scan_keyboard
+    jmp (USER_IRQ)
+no_user_irq:
     rti
 
 nmi:
+    jmp (SYSTEM_NMI)
+
+default_system_nmi:
     nop
     rti
 
@@ -16,6 +24,21 @@ reset:
     sta KEYBOARD_FLAGS
     sta CURRENT_LINE
     sta CURRENT_COLUMN
+
+    lda #(<default_system_irg)
+    sta SYSTEM_IRQ
+    lda #(>default_system_irg)
+    sta SYSTEM_IRQ + 1
+
+    lda #(<no_user_irq)
+    sta USER_IRQ
+    lda #(>no_user_irq)
+    sta USER_IRQ + 1
+
+    lda #(<default_system_nmi)
+    sta SYSTEM_NMI
+    lda #(>default_system_nmi)
+    sta SYSTEM_NMI + 1
 
     .ifndef NO_GPU
     jsr gpu_display_init

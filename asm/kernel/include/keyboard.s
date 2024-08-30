@@ -1,6 +1,11 @@
 scan_keyboard:
     phx
     pha
+
+    lda IO_CONTROL
+    and #KEYBOARD_INPUT
+    beq exit
+
     lda KEYBOARD_FLAGS
     and #KEYBOARD_RELEASE   ; check if we're releasing a key
     beq read_key   ; otherwise, read the key
