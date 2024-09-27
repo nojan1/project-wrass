@@ -2,9 +2,11 @@
 
     jsr sys_newline    
 
-    ; Init VIA for SPI
-    lda #0b11110101
-    sta IO_SYSTEM_VIA_DDRA
+    jsr spi_init
+
+    lda #((0 << 4) | 2)
+    sta SPI_CONFIG
+    jsr spi_clock_inactive
 
     jsr sd_dummy_boot_pulses
     jsr sd_cmd0
@@ -24,5 +26,5 @@ puthex=sys_puthex
     .include "../kernel/include/utils/error_utils.s"
     .include "../kernel/include/io/spi.s"
     ; .include "../kernel/include/io/fs/pmartition.s"
-    .include "../kernel/include/io/sd/init-new.s"
+    .include "../kernel/include/io/sd/init.s"
     ; .include "../kernel/include/io/sd/ops.s"

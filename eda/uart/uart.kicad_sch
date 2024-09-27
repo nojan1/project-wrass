@@ -6065,6 +6065,12 @@
 		(uuid "a3a0b5b9-85cf-4f1e-987f-bdc9ab67a5c7")
 	)
 	(junction
+		(at 194.31 26.67)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a520c84a-59c4-46fa-aa8f-1a88bc911b0a")
+	)
+	(junction
 		(at 80.01 62.23)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6149,10 +6155,6 @@
 	(no_connect
 		(at 275.59 128.27)
 		(uuid "fb3c2da2-50ee-42d3-8440-59ca14d53fd7")
-	)
-	(no_connect
-		(at 196.85 35.56)
-		(uuid "fbeb9044-8ad9-469c-82fe-a5a50314f7cb")
 	)
 	(bus_entry
 		(at 95.25 23.368)
@@ -6564,6 +6566,16 @@
 			(type default)
 		)
 		(uuid "2a21ceb7-a4ee-40ee-b301-229d38e2e698")
+	)
+	(wire
+		(pts
+			(xy 194.31 26.67) (xy 218.44 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2bb6aae8-b854-4abe-ad69-ef889abd0c16")
 	)
 	(wire
 		(pts
@@ -7567,7 +7579,7 @@
 	)
 	(wire
 		(pts
-			(xy 190.5 26.67) (xy 218.44 26.67)
+			(xy 190.5 26.67) (xy 194.31 26.67)
 		)
 		(stroke
 			(width 0)
@@ -7817,6 +7829,16 @@
 	)
 	(wire
 		(pts
+			(xy 196.85 35.56) (xy 194.31 35.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d6aede15-07ac-40fb-89dd-633b82dde80a")
+	)
+	(wire
+		(pts
 			(xy 140.97 175.26) (xy 140.97 185.42)
 		)
 		(stroke
@@ -8057,6 +8079,16 @@
 	)
 	(wire
 		(pts
+			(xy 194.31 35.56) (xy 194.31 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f36314f3-43b0-4def-a71a-44fe88f93ca8")
+	)
+	(wire
+		(pts
 			(xy 224.79 78.74) (xy 233.68 78.74)
 		)
 		(stroke
@@ -8194,6 +8226,16 @@
 			(type default)
 		)
 		(uuid "ffddf377-603a-462f-90c1-5d0aa8bccb59")
+	)
+	(text "DIR goes momentarily low when loading data\nDelay the signal before allowing it into the 574"
+		(exclude_from_sim no)
+		(at 220.218 22.606 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "6f994197-8510-45cb-9992-64d535e97a5f")
 	)
 	(label "D5"
 		(at 251.46 50.8 0)

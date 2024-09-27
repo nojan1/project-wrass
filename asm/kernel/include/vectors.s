@@ -57,8 +57,9 @@ reset:
     sta IO_SYSTEM_VIA_DDRB ; All pins are input
 
     ; SPI INTERFACE SETUP
-    lda #0b11110101
-    sta IO_SYSTEM_VIA_DDRA
+    jsr spi_init
 
-    jsr sd_dummy_boot_pulses
+    lda #$FF
+    jsr spi_transcieve
+
     jsr monitor_loop_start

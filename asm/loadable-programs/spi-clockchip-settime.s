@@ -1,10 +1,10 @@
     .include "setup.s"
 
 YEAR = 24
-MONTH = 7
-DATE = 10
-HOUR = 10
-MINUTES = 12
+MONTH = 9
+DATE = 12
+HOUR = 17
+MINUTES = 56
 
     ; Init VIA for SPI
     lda #0b11110101
@@ -91,11 +91,12 @@ DS1306_HIGH_RAM = $7f
 ; X: Address
 ; A: Data
 ds1306_command:
+    pha
+    
     ; Enable device 1, clock chip
     lda #(SPI_DEVICES_ENABLED | (1 << 1))    
     jsr spi_set_device
 
-    pha
     txa
     ; Send address
     jsr spi_transcieve
@@ -103,10 +104,6 @@ ds1306_command:
     pla
     ; Send / read byte
     jsr spi_transcieve
-
-    .repeat 4  
-    nop
-    .endr
 
     pha
     ; Unset device

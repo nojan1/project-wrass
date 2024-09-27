@@ -49,12 +49,6 @@ sys_spi_set_device:
 sys_spi_transcieve:
     jmp spi_transcieve
 
-sys_spi_read:
-    jmp spi_read
-
-sys_spi_clk:
-    jmp spi_clk
-
 ; Math
 sys_add_16:
     jmp add_16

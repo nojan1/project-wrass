@@ -84,11 +84,12 @@ DS1306_HIGH_RAM = $7f
 ; X: Address
 ; A: Data
 ds1306_command:
+    pha
+    
     ; Enable device 1, clock chip
     lda #(SPI_DEVICES_ENABLED | (1 << 1))    
     jsr spi_set_device
 
-    pha
     txa
     ; Send address
     jsr spi_transcieve

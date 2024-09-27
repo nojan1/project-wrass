@@ -1,8 +1,26 @@
-SPI_BUFFER = VAR_8BIT_1
-SPI_BITMASK = VAR_8BIT_2
+SPI_OUT = VAR_8BIT_1
+SPI_IN = VAR_8BIT_2
 
 SPI_DEVICES_ENABLED = 1 << 0
 SPI_DEVICES_DISABLED = 0 << 0
+
+MOSI = 1
+MISO = 2
+SPI_CLOCK = 4
+
+spi_init:
+    lda #0b11110101
+    sta IO_SYSTEM_VIA_DDRA
+    
+    lda #MOSI
+    sta IO_SYSTEM_VIA_PORTA
+
+    lda #(CPOL_NORMAL | CPHASE_NORMAL | 1)
+    sta SPI_CONFIG
+
+    jsr spi_clock_inactive
+
+    rts
 
 ; Set the active SPI device to the line number in A
 ; bit 0 set to 0 disables all devies
@@ -13,104 +31,178 @@ spi_set_device:
     asl
     asl
     asl
+    sta VAR_8BIT_1
+    lda IO_SYSTEM_VIA_PORTA
+    and #6
+    ora VAR_8BIT_1
     sta IO_SYSTEM_VIA_PORTA
+    rts
+
+; Set clock to inactive state based on current CPOL, also sets MOSI high
+spi_clock_inactive:
+    pha
+    lda SPI_CONFIG
+    and #CPOL_INVERTED
+    bne .set_clock_inactive_inverted
+
+    lda IO_SYSTEM_VIA_PORTA
+    ora #SPI_CLOCK | MOSI
+    sta IO_SYSTEM_VIA_PORTA
+
+    jmp .spi_clock_inactive_done
+
+.set_clock_inactive_inverted:
+    lda IO_SYSTEM_VIA_PORTA
+    and #(~SPI_CLOCK)
+    ora #MOSI
+    sta IO_SYSTEM_VIA_PORTA
+
+.spi_clock_inactive_done:
+    pla
     rts
 
 ; Sends the byte stored in A over spi, toggling the clock
 ; Puts the return value into A
 spi_transcieve:
-; brk_spi_transcieve:
+; brk spi_transc
+    jsr spi_clock_inactive
+
     phx
-
-    ldx #$0
-    stx SPI_BUFFER
-
-    ldx #$80 ; Used for the bit number
-
-.bit_loop:
-    stx SPI_BITMASK
+    phy
+    ldx #8
+    
+    ; Put the SPI mode number into Y
     pha
-    and SPI_BITMASK
-    beq .send_zero
- 
-    ; Send one
-    lda IO_SYSTEM_VIA_PORTA
-    ora #$1 ; Mosi is pin 0
-
-    jmp .clock
-
-.send_zero:
-    lda IO_SYSTEM_VIA_PORTA
-    and #$FE
-
-.clock:
-    jsr spi_clk
-    beq .got_zero
-
-    ; Got a 1 
-    lda SPI_BUFFER
-    ora SPI_BITMASK
-    sta SPI_BUFFER
-
-.got_zero:
-    ; No need to set since SPI_BUFFER was initialized to 0 from the start
-
-    ; Prepare to process next bit
-    txa
-    lsr
-    tax
+    lda SPI_CONFIG
+    and #(CPOL_INVERTED | CPHASE_INVERTED)
+    ror
+    ror
+    ror
+    ror
+    tay
     pla
-    cpx #0
-    bne .bit_loop
 
-    lda SPI_BUFFER
+    ; Store value to send in SPI_OUT
+    sta SPI_OUT
+
+.spi_transcieve_next_byte:
+    dex
+    beq .spi_all_bytes_transcieved
+    jsr spi_delay
+
+    lda IO_SYSTEM_VIA_PORTA
+
+    cpy #0
+    bne .spi_transcieve_next_byte_check_mode_1
+    ; Mode 0
+    jsr spi_set_mosi
+
+    and #(~SPI_CLOCK)
+    sta IO_SYSTEM_VIA_PORTA
+    jsr spi_delay
+
+    ora #SPI_CLOCK
+    sta IO_SYSTEM_VIA_PORTA
+
+    jsr spi_sample_miso
+
+    jmp .spi_transcieve_next_byte
+
+.spi_transcieve_next_byte_check_mode_1:
+    cpy #1
+    bne .spi_transcieve_next_byte_check_mode_2
+    ; Mode 1
+    and #(~SPI_CLOCK)
+    sta IO_SYSTEM_VIA_PORTA
+    jsr spi_sample_miso
+    jsr spi_delay
+
+    jsr spi_set_mosi
+    ora #SPI_CLOCK
+    sta IO_SYSTEM_VIA_PORTA
+
+    jmp .spi_transcieve_next_byte
+
+.spi_transcieve_next_byte_check_mode_2:
+    cpy #2
+    bne .spi_transcieve_next_byte_mode_3
+    ; Mode 2
+    jsr spi_set_mosi
+
+    ora #SPI_CLOCK
+    sta IO_SYSTEM_VIA_PORTA
+    jsr spi_delay
+
+    and #(~SPI_CLOCK)
+    sta IO_SYSTEM_VIA_PORTA
+    jsr spi_sample_miso
+
+    jmp .spi_transcieve_next_byte
+
+.spi_transcieve_next_byte_mode_3:
+    ; Mode 3
+    ora #SPI_CLOCK
+    sta IO_SYSTEM_VIA_PORTA
+    jsr spi_sample_miso
+
+    jsr spi_delay
+    jsr spi_set_mosi
+
+    and #(~SPI_CLOCK)
+    sta IO_SYSTEM_VIA_PORTA
+
+    jmp .spi_transcieve_next_byte
+
+
+.spi_all_bytes_transcieved:
+    jsr spi_clock_inactive
+    lda SPI_OUT
+
+    ply
     plx
     rts
 
-; Read up to 8 bits from SPI and store in A. The clock will be toggled and Mosi will be 1
-; The offset in X will be used to determing bit position. 
-; To read a full byte set it to $80 before calling
-spi_read:
-    lda #$0
-    sta SPI_BUFFER
+;; Take the most significant bit from SPI_OUT and set it on the MOSI line
+spi_set_mosi:
+    asl SPI_OUT
+    bcs .spi_set_mosi_1
+    ; lda IO_SYSTEM_VIA_PORTA
+    and #(~MOSI)
+    sta IO_SYSTEM_VIA_PORTA
+    jmp .spi_set_mosi_done
+.spi_set_mosi_1:
+    ; lda IO_SYSTEM_VIA_PORTA
+    ora #MOSI
+    sta IO_SYSTEM_VIA_PORTA
 
-.bit_loop:
-    stx SPI_BITMASK
+.spi_set_mosi_done:
+    rts
 
+;; Sample MISO line and shift bit in towards the most significant bit in SPI_IN
+spi_sample_miso:
     lda IO_SYSTEM_VIA_PORTA
-    jsr spi_clk
-    beq .got_zero
+    and #MISO
+    bne .spi_sample_miso_high
+    clc
+    jmp .spi_sample_miso_done
+.spi_sample_miso_high:
+    sec
+.spi_sample_miso_done:
+    lsr SPI_IN
+    lda IO_SYSTEM_VIA_PORTA
+    rts
 
-    ; Got a 1 
-    lda SPI_BUFFER
-    ora SPI_BITMASK
-    sta SPI_BUFFER
 
-.got_zero:
-    ; No need to set since SPI_BUFFER was initialized to 0 from the start
-
-    ; Prepare to process next bit
-    txa
-    lsr
+spi_delay:
+    phx
+    pha
+    lda SPI_CONFIG
+    and #0b00001111
     tax
+.spi_delay_cont:
+    dex
+    bne .spi_delay_cont
 
-    cpx #0
-    bne .bit_loop
-
-    lda SPI_BUFFER
+    pla
+    plx
     rts
-
-; Toogle the SPI clock and read the recieved Miso bit into A
-; Expects A to be the existing value of IO_SYSTEM_VIA_PORTA
-spi_clk:
-    ; Toggle the SPI clock
-    ora #$4 ; Set clock bit (pin 2)
-    sta IO_SYSTEM_VIA_PORTA
-    and #$FB ; Clear clock bit (pin 2)
-    sta IO_SYSTEM_VIA_PORTA
-
-    ; Recieve bit
-    lda IO_SYSTEM_VIA_PORTA ; Miso is pin 1
-    and #$2
-    rts
-
