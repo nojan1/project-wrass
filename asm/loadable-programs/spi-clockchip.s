@@ -2,9 +2,13 @@
 
     jsr sys_newline
 
-    ; Init VIA for SPI
-    lda #0b11110101
-    sta IO_SYSTEM_VIA_DDRA
+    ; SET UP SPI
+    jsr spi_init
+
+    lda #((0 << 4) | 2)
+    sta SPI_CONFIG
+    jsr spi_clock_inactive
+    ; .....
 
     ldx #(DS1306_WRITE_MODIFIER | DS1306_CONTROL_REGISTER)
     lda #(DS1306_CTRL_BIT_1HZ)

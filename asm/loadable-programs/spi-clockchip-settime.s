@@ -1,10 +1,10 @@
     .include "setup.s"
 
 YEAR = 24
-MONTH = 9
-DATE = 12
+MONTH = 11
+DATE = 7
 HOUR = 17
-MINUTES = 56
+MINUTES = 21
 
     ; Init VIA for SPI
     lda #0b11110101

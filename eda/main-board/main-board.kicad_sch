@@ -2425,6 +2425,10 @@
 		(at 115.57 99.06)
 		(uuid "a0f0315c-cf5e-4fcf-8c46-ffe0dd9c61a5")
 	)
+	(no_connect
+		(at 177.8 71.12)
+		(uuid "b7ad26bf-9f30-4a8b-9749-3e07505c87f9")
+	)
 	(bus_entry
 		(at 153.67 78.74)
 		(size -2.54 2.54)
@@ -6499,7 +6503,7 @@
 			(uuid "21cffb90-901b-4d67-b397-1822310fd81c")
 		)
 		(pin "~{Io2Cs}" output
-			(at 193.04 77.47 270)
+			(at 177.8 71.12 180)
 			(effects
 				(font
 					(size 1.27 1.27)

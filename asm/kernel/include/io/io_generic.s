@@ -98,6 +98,7 @@ _no_lcd_output:
 
 ; Put newline onto configured outputs
 newline:
+   pha
    phx
    tax
 
@@ -129,10 +130,12 @@ _newline_no_uart_output:
 
 _newline_no_lcd_output:
    plx
+   pla
    rts
 
 ; Erease last character from configured outputs
 ereasec:
+   pha
    phx
    tax
 
@@ -164,4 +167,5 @@ _ereasec_no_uart_output:
 
 _ereasec_no_lcd_output:
    plx
+   pla
    rts

@@ -25,6 +25,9 @@ UNSUPPORTED_NUMBER_OF_FATS_string:
 UART_RECIEVE_BUFFER_OVERFLOW_string:
     .string "UART_RECIEVE_BUFFER_OVERFLOW"
 
+SD_ILLEGAL_COMMAND_string:
+    .string "SD_ILLEGAL_COMMAND"
+
 error_messages:
     .db 0x0 ; Dummy
     .word SD_CARD_INIT_FAILED_string 
@@ -35,6 +38,7 @@ error_messages:
     .word NO_VALID_PARTITION_string
     .word UNSUPPORTED_NUMBER_OF_FATS_string
     .word UART_RECIEVE_BUFFER_OVERFLOW_string
+    .word SD_ILLEGAL_COMMAND_string
 
 ; Checks for error flag and prints the error
 ; Mutates: PARAM_16_1
