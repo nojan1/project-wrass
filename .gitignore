@@ -4,3 +4,4 @@ a.out
 *.list
 *.html
 *.bin
+._*

@@ -61,7 +61,7 @@ const MemoryExplorer: React.FunctionComponent<MemoryExplorerProps> = ({
 
         <MemoryContentsContainer>
           <AutoSizer>
-            {({ width, height }) => (
+            {({ width, height } : {width: number, height: number}) => (
               <Grid
                 ref={gridRef}
                 columnCount={numColumns}

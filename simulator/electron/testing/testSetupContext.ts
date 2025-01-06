@@ -6,6 +6,7 @@ import {
 } from './types'
 import { SymbolListing } from '../utils/listingParser'
 import { toHex } from '../utils/output'
+import assert from "assert"
 
 class TestSetupContext {
   private arrangeCallbacks: TestMethodCallback[] = []
@@ -42,8 +43,11 @@ class TestSetupContext {
   public runSubroutine(symbolName: string) {
     this.ensureCleanActStep()
 
-    this.workingActStepDefinition.enterAt = this.symbols?.[symbolName]
-    this.workingActStepDefinition.stopKind = ActStopKind.ExitFromRoutine
+    const symbol = this.symbols?.symbols.find(x => x[1] === symbolName);
+    if(!symbol) throw new Error(`No such symbol ${symbolName}`);
+
+    this.workingActStepDefinition!.enterAt = symbol[0]
+    this.workingActStepDefinition!.stopKind = ActStopKind.ExitFromRoutine
 
     return this
   }
@@ -51,8 +55,8 @@ class TestSetupContext {
   public runSubroutineAt(address: number) {
     this.ensureCleanActStep()
 
-    this.workingActStepDefinition.enterAt = address
-    this.workingActStepDefinition.stopKind = ActStopKind.ExitFromRoutine
+    this.workingActStepDefinition!.enterAt = address
+    this.workingActStepDefinition!.stopKind = ActStopKind.ExitFromRoutine
 
     return this
   }
@@ -68,7 +72,7 @@ class TestSetupContext {
       for (let i = 0; i < data.length; i++) {
         const memData = bus.peek(address + i)
 
-        assert.areEqual(
+        assert.strictEqual(
           memData,
           data[i],
           `Expected data at ${toHex(address + i)} to be ${toHex(

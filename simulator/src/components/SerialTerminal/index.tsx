@@ -57,7 +57,7 @@ const SerialTerminal: React.FunctionComponent = () => {
     outputAreaRef.current?.scrollTo(0, outputAreaRef.current.scrollHeight)
   }, [serialBuffer])
 
-  const onKeyPress = (e: KeyboardEvent) => {
+  const onKeyPress = (e: React.KeyboardEvent<Element>) => {
     if (e.code === 'Enter') {
       e.preventDefault()
       e.stopPropagation()
