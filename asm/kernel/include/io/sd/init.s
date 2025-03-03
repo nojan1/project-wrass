@@ -67,6 +67,7 @@ sd_init:
     pla
     jsr sd_acmd41
     pha
+    jsr newline
 
 .sd_init_done:
     pla

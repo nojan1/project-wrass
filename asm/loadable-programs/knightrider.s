@@ -29,10 +29,10 @@ DIRECTION = PHASE_COUNTER + 1
     lda #$1
     sta IO_USER_VIA_PORTB
 
-    lda #(<on_irq)
+    lda #<on_irq
     sta USER_IRQ
 
-    lda #(>on_irq)
+    lda #>on_irq
     sta USER_IRQ + 1
 
     cli

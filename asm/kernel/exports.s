@@ -8,8 +8,6 @@
     .endif
     .endmacro
 
-
-
 ; IO Generic
 sys_getc:
     jmp getc
