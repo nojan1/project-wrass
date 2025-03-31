@@ -6,7 +6,7 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func DrawRegisterStatusPanel(x int32, y int32, proc *sim6502.Processor) {
+func DrawRegisterStatusPanel(x int32, y int32, proc *sim6502.Processor, memControl *MemControl) {
 	fontSize := 20
 	
 	lineHeight := 25
@@ -34,7 +34,9 @@ func DrawRegisterStatusPanel(x int32, y int32, proc *sim6502.Processor) {
 	DrawStatusBox(registers.SR.IsSet(sim6502.SRFlagZ), "Z", x + int32(boxSpacing) * 7, y + int32(lineHeight) * 2, boxSize)
 
 	nextLine := 3 + DrawStack(proc, x, y + int32(lineHeight) * 3, lineHeight, fontSize)
-	DrawDissambly(proc, x, y + int32(lineHeight) * (4 + nextLine), lineHeight, fontSize)
+	nextLine += 1 + DrawDissambly(proc, x, y + int32(lineHeight) * nextLine, lineHeight, fontSize)
+
+	DrawMemControl(memControl, x, y + int32(lineHeight) * nextLine, lineHeight, fontSize)
 }
 
 func DrawStatusBox(isSet bool, name string, x int32, y int32, boxSize int32) {
@@ -72,7 +74,7 @@ func DrawStack(proc *sim6502.Processor, x int32, y int32, lineHeight int, fontSi
 	return 1 + int32(numStackEntries)
 }
 
-func DrawDissambly(proc *sim6502.Processor, x int32, y int32, lineHeight int, fontSize int) {
+func DrawDissambly(proc *sim6502.Processor, x int32, y int32, lineHeight int, fontSize int) int32 {
 	currentAddress := proc.Registers().PC.Current()
 	startAddress := currentAddress - 8
 
@@ -89,6 +91,18 @@ func DrawDissambly(proc *sim6502.Processor, x int32, y int32, lineHeight int, fo
 			rl.DrawText(text, x, textY, int32(fontSize), rl.Gray)
 		}
 	}
+
+	return 1 + 15
+}
+
+func DrawMemControl(memControl *MemControl, x int32, y int32, lineHeight int, fontSize int) {
+	rl.DrawText("- MEMCTRL -", x + 80, y, int32(fontSize), rl.White)
+
+	DrawStatusBox(!memControl.Io2Enabled(), "4", x, y + (int32(lineHeight) * 1), int32(lineHeight))
+	DrawStatusBox(!memControl.Rom1Enabled(), "5", x + ((int32(lineHeight) + 10) * 1), y + (int32(lineHeight) * 1), int32(lineHeight))
+	DrawStatusBox(!memControl.Rom2Enabled(), "6", x + ((int32(lineHeight) + 10) * 2), y + (int32(lineHeight) * 1), int32(lineHeight))
+
+	rl.DrawText(fmt.Sprintf("BANK: $%02X", memControl.GetMemoryBank()), x + ((int32(lineHeight) + 10) * 3), y + (int32(lineHeight) * 1) + 2, int32(fontSize), rl.White)
 }
 
 func (s *GPU) DrawTileMap(xBase int32, yBase int32) {

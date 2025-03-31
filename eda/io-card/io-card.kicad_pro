@@ -661,10 +661,6 @@
       "PS2 keyboard interface"
     ],
     [
-      "e602bfdf-6dcf-44c8-b05d-54cf8222268b",
-      "Scanning keyboard interface"
-    ],
-    [
       "030e4e6a-01e5-4b70-92c0-d14c943a2f96",
       "Hardware SPI"
     ]

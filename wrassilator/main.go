@@ -13,7 +13,7 @@ type SimulatorState struct {
 	isRunning bool
 }
 
-func Draw(gpu *GPU, proc *sim6502.Processor) {
+func Draw(gpu *GPU, proc *sim6502.Processor, memControl *MemControl) {
 	rl.BeginDrawing()
 
 	rl.ClearBackground(rl.DarkBlue)
@@ -25,7 +25,7 @@ func Draw(gpu *GPU, proc *sim6502.Processor) {
 	
 	gpu.DrawFrameBuffer(20 + (8 * TotalCharCols), 10)
 	
-	DrawRegisterStatusPanel(20 + (8 * TotalCharCols) + 650, 10, proc)
+	DrawRegisterStatusPanel(20 + (8 * TotalCharCols) + 650, 10, proc, memControl)
 	
 	rl.EndDrawing()
 }
@@ -82,7 +82,7 @@ func main() {
 	uart.Start(&simulatorState, done)
 
 	for !rl.WindowShouldClose() {
-		Draw(gpu, proc);
+		Draw(gpu, proc, &bus.memControl);
 
 		keyPressed := rl.GetKeyPressed()
 		switch keyPressed {
