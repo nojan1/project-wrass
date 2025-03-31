@@ -10,21 +10,21 @@ Architecture
 | RAM (3)           | $A000 | $BBFF | 7K        |
 | IO (1)            | $BC00 | $BDFF | 512 bytes |
 | IO (2) / RAM (4)  | $BE00 | $BFFF | 512 bytes |
-| ROM (1) / RAM (5) | $C000 | $CFFF | 8k        |
+| ROM (1) / RAM (5) | $C000 | $DFFF | 8k        |
 | ROM (2) / RAM (6) | $E000 | $FFFF | 8k        |
 
-The different areas marked RAM 3-5 can be switched off by modifing the hardware register located at memory address $0000. It has the following composition:
+The different areas marked RAM 3-5 can be switched off by modifying the hardware register located at memory address $0000. It has the following composition:
 
-| Bit | Description      |
-| --- | ---------------- |
-| 0   | Enable RAM (4)   |
-| 1   | Enable RAM (5)   |
-| 2   | Enable RAM (6)   |
-| 3   |                  |
-| 4   | Blinkenlight (0) |
-| 5   | Blinkenlight (1) |
-| 6   | Blinkenlight (2) |
-| 7   | Blinkenlight (3) |
+| Bit | Description          |
+| --- | -------------------- |
+| 0   | Enable RAM (4)       |
+| 1   | Enable RAM (5)       |
+| 2   | Enable RAM (6)       |
+| 3   | RAM (2) bank (bit 0) |
+| 4   | RAM (2) bank (bit 1) |
+| 5   | RAM (2) bank (bit 2) |
+| 6   | RAM (2) bank (bit 3) |
+| 7   | RAM (2) bank (bit 4) |
 
 # IO
 
