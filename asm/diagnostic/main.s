@@ -1,4 +1,5 @@
 
+    .include "../kernel/include/constants.s"
     .include "constants.s"
     .include "macro.s"
 
@@ -117,17 +118,17 @@ reset:
     sta MEM_CONTROL
 
     ldy #0
-    sty $1
+    sty MEM_LOW
     
     lda #$80
 .write_next_block 
-    sta $2
+    sta MEM_HIGH
     pha
 
     txa
     ldy #$FF
 .write_next_byte
-    sta ($1), y
+    sta (MEM_LOW), y
     dey
     bne .write_next_byte
 
@@ -152,19 +153,19 @@ reset:
     sta MEM_CONTROL
 
     ldy #0
-    sty $1
+    sty MEM_LOW
     
     lda #$80
 .read_next_block 
-    sta $2
+    sta MEM_HIGH
     pha
 
     ldy #$FF
 .read_next_byte    
 ; break check
-    lda ($01), y
-    sta $10
-    cpx $10
+    lda (MEM_LOW), y
+    sta SCRATCH
+    cpx SCRATCH
     bne .ram2_error
 
     dey
