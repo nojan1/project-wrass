@@ -17,6 +17,8 @@ const (
 	AddressLow
 	AddressHigh
 	ReadWrite
+	ScanlineHigh
+	ScanlineLow
 )
 
 type GpuControlWord = uint8
@@ -39,9 +41,10 @@ const (
 )
 
 type GPU struct {
-	irqMultiplexer *IRQMultiplexer
-	vram           [MemoryTop + 1]uint8
-	registerValues [8]uint8
+	irqMultiplexer  *IRQMultiplexer
+	vram            [MemoryTop + 1]uint8
+	registerValues  [8]uint8
+	currentScanline uint16
 }
 
 var TILEDATA = []uint8{
@@ -208,6 +211,8 @@ func (s *GPU) Write(addr uint16, val uint8) {
 		if internalAddress < uint16(len(s.vram)) {
 			s.vram[internalAddress] = val
 		}
+	} else if subAddr == ScanlineHigh || subAddr == ScanlineLow {
+		// Writing to scanline registers is a no-op
 	} else {
 		s.registerValues[subAddr] = val
 	}
@@ -229,6 +234,10 @@ func (s *GPU) Read(addr uint16, internal bool) uint8 {
 		} else {
 			return 0
 		}
+	} else if subAddr == ScanlineHigh {
+		return uint8(s.currentScanline >> 8)
+	} else if subAddr == ScanlineLow {
+		return uint8(s.currentScanline)
 	} else {
 		if subAddr == GpuControl {
 			s.irqMultiplexer.ClearInterupt(GpuFrameIRQSource)
@@ -251,20 +260,19 @@ func (s *GPU) handleIncrement() {
 }
 
 func (s *GPU) DrawFrameBuffer(x int32, y int32) {
-	if s.registerValues[GpuControl] & BlankScreenControlWord != 0 {
+	if s.registerValues[GpuControl]&BlankScreenControlWord != 0 {
 		return
 	}
 
 	scrollX := uint16(s.registerValues[XOffset])
 	scrollY := uint16(s.registerValues[YOffset])
 
-	var scanline uint16
 	var cycle uint16
 
-	for scanline = 0; scanline < DisplayHeight; scanline++ {
+	for s.currentScanline = 0; s.currentScanline < DisplayHeight; s.currentScanline++ {
 		for cycle = 0; cycle < DisplayWidth; cycle++ {
 			offsetCycle := ((cycle >> 1) + (512 - scrollX)) & 0x1ff
-			offsetScanline := ((scanline >> 1) + (256 - scrollY)) & 0x0ff
+			offsetScanline := ((s.currentScanline >> 1) + (256 - scrollY)) & 0x0ff
 
 			charColumn := offsetCycle >> 3
 			charRow := offsetScanline >> 3
@@ -288,11 +296,11 @@ func (s *GPU) DrawFrameBuffer(x int32, y int32) {
 				colorIndex = (colorAttribute >> 4) & 0xf
 			}
 
-			s.drawColoredPixel(x+int32(cycle), y+int32(scanline), colorIndex)
+			s.drawColoredPixel(x+int32(cycle), y+int32(s.currentScanline), colorIndex)
 		}
 	}
 
-	if s.registerValues[GpuControl] & IRQControlWord != 0 {
+	if s.registerValues[GpuControl]&IRQControlWord != 0 {
 		s.irqMultiplexer.SetInterupt(GpuFrameIRQSource)
 	}
 }
