@@ -3,7 +3,7 @@ welcome_message_string:
 
 print_banner:
     .ifndef NO_GPU
-    ldx #GRAPHICS_ADDR_FRAMEBUFFER_HIGH
+    ldx #GRAPHICS_ADDR_TILEMAP_HIGH
     stx GRAPHICS_ADDR_HIGH
 
     ldx #0
@@ -33,7 +33,7 @@ print_banner:
     .ifndef NO_GPU
     ldx #39
     ldy #1
-    jsr gpu_goto_position
+    jsr goto_tilemap_x_y
 
     lda #101
     jsr gpu_putsc
@@ -53,7 +53,7 @@ print_banner:
 
     ldx #0
     ldy #3
-    jsr gpu_goto_position
+    jsr goto_tilemap_x_y
     .endif
     
     jsr newline

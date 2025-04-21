@@ -11,9 +11,9 @@ gpu_display_init:
     jsr clear_screen
 
     ; Set address to top of framebuffer
-    lda #GRAPHICS_ADDR_FRAMEBUFFER_HIGH
+    lda #GRAPHICS_ADDR_TILEMAP_HIGH
     sta GRAPHICS_ADDR_HIGH
-    lda #GRAPHICS_ADDR_FRAMEBUFFER_LOW
+    lda #GRAPHICS_ADDR_TILEMAP_LOW
     sta GRAPHICS_ADDR_LOW
 
     rts
@@ -23,9 +23,9 @@ clear_screen:
     phy
 
     ; Start by setting the characters
-    ldy #GRAPHICS_ADDR_FRAMEBUFFER_HIGH
+    ldy #GRAPHICS_ADDR_TILEMAP_HIGH
     sty GRAPHICS_ADDR_HIGH
-    ldy #GRAPHICS_ADDR_FRAMEBUFFER_LOW
+    ldy #GRAPHICS_ADDR_TILEMAP_LOW
     sty GRAPHICS_ADDR_LOW
 
     ldy #8
@@ -62,13 +62,25 @@ copy_sprite:
     pha
     phy
 
-    lda #GRAPHICS_ADDR_TILEMAP_LOW
-    sta GRAPHICS_ADDR_LOW
-    lda #GRAPHICS_ADDR_TILEMAP_HIGH
-    sta GRAPHICS_ADDR_HIGH
+    txa
+    .repeat 6
+    lsr
+    .endr
+    sta GRAPHICS_ADDR_TILEDATA_HIGH
 
-    ldy #8
-    jsr advance_graphic_address
+    txa
+    .repeat 3
+    lsr
+    .endr
+    sta GRAPHICS_ADDR_TILEDATA_LOW
+
+    ; lda #GRAPHICS_ADDR_TILEDATA_LOW
+    ; sta GRAPHICS_ADDR_LOW
+    ; lda #GRAPHICS_ADDR_TILEDATA_HIGH
+    ; sta GRAPHICS_ADDR_HIGH
+
+    ; ldy #8
+    ; jsr advance_graphic_address
 
     lda #1
     sta GRAPHICS_INCREMENT
@@ -89,60 +101,42 @@ copy_sprite:
     pla
     rts
 
-; Advance graphic address registers by y, x times
-advance_graphic_address:
-    phx
-    phy
-    pha
-    ; Currently can't read from GPU registers
-    ; lda GRAPHICS_INCREMENT 
-
-    sty GRAPHICS_INCREMENT ; We wil use the auto increment register
-.keep_incrementing:
-    ldy GRAPHICS_DATA
-
-    dex
-    bne .keep_incrementing
-
-    lda #1
-    sta GRAPHICS_INCREMENT ; Set graphics increment to 1 for now
-    pla
-    ply
-    plx
-    rts
-
-; Set GRAPHICS_ADDR to address for tilemap coordinate in X, Y
-goto_tilemap_x_y:
-    pha ; Preserve A
-    lda #GRAPHICS_ADDR_FRAMEBUFFER_HIGH
-    jmp goto_offsetA_x_y
 
 ; Set GRAPHICS_ADDR to address for color attribute coordinate in X, Y
 goto_colorattribute_x_y:
-    pha ; Preserve A
-    lda #GRAPHICS_ADDR_COLORATTRIBUTES_HIGH
-
-goto_offsetA_x_y:
-    sta PARAM_16_1 + 1 ; Upper part of address
-    sty PARAM_16_1 ; Lower part of address
+    pha
     
-    ; Rotate row number into 64 byte boundry area
-    .repeat 6
-    clc
-    rol PARAM_16_1
-    rol PARAM_16_1 + 1
-    .endr
-
-    ; Add X offset to address
-    txa
-    clc
-    adc PARAM_16_1
-    sta GRAPHICS_ADDR_LOW
-
-    ; Store upper address
-    lda PARAM_16_1 + 1
+    ; Calculate HIGH
+    ; HIGH = GRAPHICS_ADDR_COLORATTRIBUTES_HIGH + (ROW >> 2)
+    tya
+    lsr
+    lsr
+    ora #GRAPHICS_ADDR_COLORATTRIBUTES_HIGH
     sta GRAPHICS_ADDR_HIGH
+
+    bra _set_xy_low
+
+; ; Set GRAPHICS_ADDR to address for tilemap coordinate in X, Y
+goto_tilemap_x_y:
+    pha
+    
+    ; Calculate HIGH
+    ; HIGH = ROW >> 2
+    tya
+    lsr
+    lsr
+    sta GRAPHICS_ADDR_HIGH
+
+_set_xy_low:
+    ; Calculate LOW
+    ; LOW = (ROW << 6) | COL
+    stx VAR_8BIT_1
+    tya
+    .repeat 6
+    asl
+    .endr
+    ora VAR_8BIT_1
+    sta GRAPHICS_ADDR_LOW
 
     pla
     rts
-

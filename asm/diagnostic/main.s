@@ -50,7 +50,6 @@ reset:
     sta WRITE_POINTER
     sta READ_POINTER
     sta CURRENT_LINE
-    sta CURRENT_COLUMN
 
 ; Zero page
     putstr_addr testing_zp_text

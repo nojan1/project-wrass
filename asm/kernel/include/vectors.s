@@ -18,12 +18,10 @@ reset:
     ldx #$FF ;Set stackpointer to top of zero page
     txs
 
-    lda #0
-    sta WRITE_POINTER
-    sta READ_POINTER
-    sta KEYBOARD_FLAGS
-    sta CURRENT_LINE
-    sta CURRENT_COLUMN
+    stz WRITE_POINTER
+    stz READ_POINTER
+    stz KEYBOARD_FLAGS
+    stz CURRENT_LINE
 
     lda #<default_system_irg
     sta SYSTEM_IRQ

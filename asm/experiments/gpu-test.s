@@ -17,16 +17,14 @@ reset:
 
     jsr display_init
 
-    lda #0
-    sta WRITE_POINTER
-    sta READ_POINTER
-    sta CURRENT_LINE
-    sta CURRENT_COLUMN
+    stz WRITE_POINTER
+    stz READ_POINTER
+    stz CURRENT_LINE
 
 .screen_top:
-    ldx #GRAPHICS_ADDR_FRAMEBUFFER_HIGH
+    ldx #GRAPHICS_ADDR_TILEMAP_HIGH
     stx GRAPHICS_ADDR_HIGH
-    ldx #GRAPHICS_ADDR_FRAMEBUFFER_LOW
+    ldx #GRAPHICS_ADDR_TILEMAP_LOW
     stx GRAPHICS_ADDR_LOW
     ldx #0
 

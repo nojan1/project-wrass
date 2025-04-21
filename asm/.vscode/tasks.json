@@ -35,7 +35,8 @@
         {
             "label": "Run ",
             "type": "shell",
-            "command": "../simulator/out/6502\\ project\\ simulator-darwin-arm64/6502\\ project\\ simulator.app/Contents/MacOS/6502-project-simulator -f kernel/kernel.bin -l kernel/kernel.list --loadAddress 0xC000 --display graphic --sdImage ../simulator/testfiles/sd-card.img",
+            // "command": "../simulator/out/6502\\ project\\ simulator-darwin-arm64/6502\\ project\\ simulator.app/Contents/MacOS/6502-project-simulator -f kernel/kernel.bin -l kernel/kernel.list --loadAddress 0xC000 --display graphic --sdImage ../simulator/testfiles/sd-card.img",
+            "command": "../wrassilator/wrassilator --file kernel/kernel.bin ", //--list kernel/kernel.list",
             "dependsOn": "Build",
             "problemMatcher": []
         },

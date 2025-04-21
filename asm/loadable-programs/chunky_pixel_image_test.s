@@ -72,7 +72,7 @@
     cpy #16
     bne .copy_next_pallete
 
-    copy_40_30_block image_chars, GRAPHICS_ADDR_FRAMEBUFFER_HIGH, GRAPHICS_ADDR_FRAMEBUFFER_LOW
+    copy_40_30_block image_chars, GRAPHICS_ADDR_TILEMAP_HIGH, GRAPHICS_ADDR_TILEMAP_LOW
     copy_40_30_block image_colorattributes, GRAPHICS_ADDR_COLORATTRIBUTES_HIGH, GRAPHICS_ADDR_COLORATTRIBUTES_LOW
 
     rts
