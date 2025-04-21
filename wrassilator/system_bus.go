@@ -17,15 +17,17 @@ type SystemBus struct {
 }
 
 func (m *SystemBus) InitBus (proc *sim6502.Processor) (gpu *GPU, io *IoCard, uart *UART) {
+	irqMultiplexer := &IRQMultiplexer{ proc: proc }
+
 	m.memControl = MemControl(0)
 	m.memControlRegister = &MemControlRegister{ memControl: &m.memControl }
 	
 	m.bankedRam = &BankedRam{ memControl: &m.memControl }
 
-	m.gpu = &GPU{}
+	m.gpu = &GPU{ irqMultiplexer: irqMultiplexer }
 	m.gpu.Init()
 
-	m.io = NewIoCard(proc)
+	m.io = NewIoCard(irqMultiplexer)
 
 	m.uart = &UART{}
 

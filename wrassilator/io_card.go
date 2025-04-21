@@ -1,25 +1,28 @@
 package main
 
-import (
-	sim6502 "github.com/nojan1/sim6502/pkg"
-)
-
 type IoCard struct {
 	keyboard *Keyboard
 	userVia *W65C22
 	systemVia *W65C22
 }
 
-func NewIoCard(proc *sim6502.Processor) *IoCard {
+func NewIoCard(irqMultiplexer *IRQMultiplexer) *IoCard {
 	keyboard := &Keyboard{}
+
+	spi := &SPI{}
+	spi.devices[1] = NewDS1306()
 
 	return &IoCard{
 		keyboard: keyboard,
 		userVia: &W65C22{
-			proc: proc,
+			irqMultiplexer: irqMultiplexer,
+			irqSource: UserViaIRQSource,
 		},
 		systemVia: &W65C22{
-			proc: proc,
+			irqMultiplexer: irqMultiplexer,
+			irqSource: SystemViaIRQSource,
+			portAReadHandler: spi,
+			portAWriteHandler: spi,
 			portBReadHandler: keyboard,
 		},
 	}
@@ -55,7 +58,9 @@ type W65C22PortWriteHandler interface {
 }
 
 type W65C22 struct {
-	proc *sim6502.Processor
+	irqMultiplexer *IRQMultiplexer
+	irqSource IRQSource
+
 	ddrA uint8
 	ddrB uint8
 	portAReadHandler W65C22PortReadHandler
@@ -74,7 +79,7 @@ const (
 )
 
 func (s *W65C22) Write(addr uint8, val uint8) {
-	register := W65C22Register(addr)
+	register := W65C22Register(addr & 0xF)
 	switch register {
 	case PORTB:
 		if s.portBWriteHandler != nil {
@@ -100,13 +105,25 @@ func (s *W65C22) Read(addr uint8) uint8{
 	case PORTB:
 		if s.portBReadHandler != nil {
 			data, holdIRQ := s.portBReadHandler.readPort()
-			s.proc.IRQ(holdIRQ)
+			
+			if holdIRQ {
+				s.irqMultiplexer.SetInterupt(s.irqSource)
+			}else{
+				s.irqMultiplexer.ClearInterupt(s.irqSource)
+			}
+
 			return data
 		}
 	case PORTA:
 		if s.portAReadHandler != nil {
 			data, holdIRQ := s.portAReadHandler.readPort()
-			s.proc.IRQ(holdIRQ)
+
+			if holdIRQ {
+				s.irqMultiplexer.SetInterupt(s.irqSource)
+			}else{
+				s.irqMultiplexer.ClearInterupt(s.irqSource)
+			}
+
 			return data
 		}
 	case DDRB:

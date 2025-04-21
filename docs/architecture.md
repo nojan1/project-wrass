@@ -64,5 +64,3 @@ IO lines for user expansion
 During the reset sequence the latch chip controlling the $0000 register is reset to 0. Resulting in all extra RAM banks being switched off. 
 
 Once the 6502 goes to its reset vector and control is handed over to the kernel it will modify it to enable RAM (5). If the user wants to use the external IO it is up to that user to switch off RAM (5) and handle anything that was stored there.
-
-The kernel will also use the blinkenlights to indicate the startup sequence. 

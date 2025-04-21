@@ -35,6 +35,8 @@ read_key:
     cmp #$59        ; right shift
     beq shift_down
 
+    sta KEYCODE_RAW
+
     tax
     lda KEYBOARD_FLAGS
     and #KEYBOARD_SHIFT

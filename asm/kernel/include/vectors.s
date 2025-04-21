@@ -25,19 +25,19 @@ reset:
     sta CURRENT_LINE
     sta CURRENT_COLUMN
 
-    lda #(<default_system_irg)
+    lda #<default_system_irg
     sta SYSTEM_IRQ
-    lda #(>default_system_irg)
+    lda #>default_system_irg
     sta SYSTEM_IRQ + 1
 
-    lda #(<no_user_irq)
+    lda #<no_user_irq
     sta USER_IRQ
-    lda #(>no_user_irq)
+    lda #>no_user_irq
     sta USER_IRQ + 1
 
-    lda #(<default_system_nmi)
+    lda #<default_system_nmi
     sta SYSTEM_NMI
-    lda #(>default_system_nmi)
+    lda #>default_system_nmi
     sta SYSTEM_NMI + 1
 
     .ifndef NO_GPU

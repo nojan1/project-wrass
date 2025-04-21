@@ -13,8 +13,8 @@ type UartRegister uint8
 const (
 	Transmit UartRegister = iota
 	Recieve
-	Status
-	Config
+	UartStatus
+	UartConfig
 )
 
 const (
@@ -118,7 +118,7 @@ func (s *UART) Read(addr uint16, internal bool) uint8 {
 			s.recieveReadIndex++
 		}
 		return s.recieveBuffer[s.recieveReadIndex % RECIEVE_BUFFER_REAL_SIZE]
-	} else if subAddr == Status {
+	} else if subAddr == UartStatus {
 		var status uint8 = 0
 
 		if s.recieveWriteIndex - s.recieveReadIndex > 0 {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"math/rand"
+
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -9,13 +10,20 @@ type GpuRegister uint8
 type ColorIndex = uint8
 
 const (
-	Control GpuRegister = iota
+	GpuControl GpuRegister = iota
 	YOffset
 	XOffset
 	Increment
 	AddressLow
 	AddressHigh
 	ReadWrite
+)
+
+type GpuControlWord = uint8
+
+const (
+	IRQControlWord         GpuControlWord = 1 << 0
+	BlankScreenControlWord GpuControlWord = 1 << 1
 )
 
 const (
@@ -31,6 +39,7 @@ const (
 )
 
 type GPU struct {
+	irqMultiplexer *IRQMultiplexer
 	vram           [MemoryTop + 1]uint8
 	registerValues [8]uint8
 }
@@ -196,8 +205,6 @@ func (s *GPU) Write(addr uint16, val uint8) {
 		internalAddress := uint16(s.registerValues[AddressHigh])<<8 | uint16(s.registerValues[AddressLow])
 		s.handleIncrement()
 
-		// fmt.Printf("Writing to %x\n", internalAddress)
-
 		if internalAddress < uint16(len(s.vram)) {
 			s.vram[internalAddress] = val
 		}
@@ -223,6 +230,10 @@ func (s *GPU) Read(addr uint16, internal bool) uint8 {
 			return 0
 		}
 	} else {
+		if subAddr == GpuControl {
+			s.irqMultiplexer.ClearInterupt(GpuFrameIRQSource)
+		}
+
 		return s.registerValues[subAddr]
 	}
 }
@@ -240,6 +251,10 @@ func (s *GPU) handleIncrement() {
 }
 
 func (s *GPU) DrawFrameBuffer(x int32, y int32) {
+	if s.registerValues[GpuControl] & BlankScreenControlWord != 0 {
+		return
+	}
+
 	scrollX := uint16(s.registerValues[XOffset])
 	scrollY := uint16(s.registerValues[YOffset])
 
@@ -276,6 +291,10 @@ func (s *GPU) DrawFrameBuffer(x int32, y int32) {
 			s.drawColoredPixel(x+int32(cycle), y+int32(scanline), colorIndex)
 		}
 	}
+
+	if s.registerValues[GpuControl] & IRQControlWord != 0 {
+		s.irqMultiplexer.SetInterupt(GpuFrameIRQSource)
+	}
 }
 
 func (s *GPU) drawTileWithAttribute(xBase int32, yBase int32, tileNumber uint8, colorAttribute uint8, scale int32) {
@@ -292,10 +311,10 @@ func (s *GPU) drawTileWithAttribute(xBase int32, yBase int32, tileNumber uint8, 
 
 			if scale > 1 {
 				rlColor := s.rlColorFromIndex(colorIndex)
-				
+
 				rl.DrawRectangle(
-					xBase + (x * scale),
-					yBase + (y * scale),
+					xBase+(x*scale),
+					yBase+(y*scale),
 					scale,
 					scale,
 					rlColor,

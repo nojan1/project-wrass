@@ -11,6 +11,7 @@ import (
 
 type SimulatorState struct {
 	isRunning bool
+	inBreakpoint bool
 }
 
 func Draw(gpu *GPU, proc *sim6502.Processor, memControl *MemControl) {
@@ -35,6 +36,7 @@ func main() {
 	// listingFile := flag.String("listing", "", "The path to a listing file for the binary, it will be used to decorate disassembly and set breakpoints")
 	loadAddress := flag.Uint("load-address", 0xC000, "The start address to where the binary should be stored in memory")
 	trace := flag.Bool("trace", false, "Enable tracing of CPU instructions")
+	breakpoints := flag.String("breakpoint", "", "List of address to break at, separated by ,")
 
 	flag.Parse()
 
@@ -73,10 +75,10 @@ func main() {
 
 	userBreakpointHandler := UserBreakpointHandler {
 		simulatorState: &simulatorState,
+		proc: proc,
 	}
 
-	// Kind of disabled
-	proc.SetBreakpoint(0xFFFF, &userBreakpointHandler)
+	userBreakpointHandler.Prepare(*breakpoints)
 
 	done := make(chan bool)
 	uart.Start(&simulatorState, done)
@@ -91,6 +93,7 @@ func main() {
 				proc.Stop()
 				simulatorState.isRunning = false
 			} else {
+				userBreakpointHandler.StepOutOfBreakStateIfNeeded()
 				go proc.RunFrom(proc.Registers().PC.Current())
 				simulatorState.isRunning = true
 			}
@@ -99,10 +102,12 @@ func main() {
 				proc.Stop()
 				simulatorState.isRunning = false
 			} else {
-				err, _ := proc.Step()
-	
-				if err != nil {
-					panic(err)
+				if !userBreakpointHandler.StepOutOfBreakStateIfNeeded() {
+					err, _ := proc.Step()
+		
+					if err != nil {
+						panic(err)
+					}
 				}
 			}
 		case 0:
