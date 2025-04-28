@@ -127,7 +127,7 @@ func (s *PowerUpSdCardStateHandler) OnClock(card *SdCard, selected bool) {
 	s.numCyclesRecieved += 8
 
 	if s.numCyclesRecieved >= 74 {
-		fmt.Println("SD Card is now in Cold boot state")
+		// fmt.Println("SD Card is now in Cold boot state")
 		card.state = SDCARD_STATE_COLDBOOT
 	}
 }

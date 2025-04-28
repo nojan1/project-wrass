@@ -26,8 +26,7 @@
     .include "include/io/spi.s"
 
     .include "include/io/sd/init.s"
-    ; .include "include/io/sd/ops.s"
-
+    .include "include/io/sd/ops.s"
     .include "include/io/fs/partition.s"
 
     .ifndef NO_GPU
