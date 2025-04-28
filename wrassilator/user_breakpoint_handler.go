@@ -8,18 +8,23 @@ import (
 	sim6502 "github.com/nojan1/sim6502/pkg"
 )
 
+type Breakpoint struct {
+	address uint16
+	enabled bool
+}
+
 type UserBreakpointHandler struct {
 	simulatorState *SimulatorState
 	proc *sim6502.Processor
-	breakpoints []uint16
+	breakpoints []Breakpoint
 }
 
 func (s *UserBreakpointHandler) Prepare(breakpointString string) {
-	s.breakpoints = make([]uint16, 0)
+	s.breakpoints = make([]Breakpoint, 0)
 
 	for _, breakpoint := range strings.Split(breakpointString, ",") {
 		if addr, ok := strconv.ParseUint(breakpoint, 16, 16); ok == nil {
-			s.breakpoints = append(s.breakpoints, uint16(addr))
+			s.breakpoints = append(s.breakpoints, Breakpoint { address: uint16(addr), enabled: true })
 
 			fmt.Printf("Breakpoint will be set at $%04X \n", addr)
 		} 
@@ -54,6 +59,8 @@ func (b *UserBreakpointHandler) setAllBreakpoints() {
 	b.proc.ClearBreakpoints()
 
 	for _, breakpoint := range b.breakpoints {
-		b.proc.SetBreakpoint(breakpoint, b)
+		if breakpoint.enabled {
+			b.proc.SetBreakpoint(breakpoint.address, b)
+		}
 	}
 }

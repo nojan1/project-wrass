@@ -1,5 +1,3 @@
-SD_CARD_SPI_DEVICE = 0
-
 ; Send the 72 dummy pulses required to boot an SD-card
 sd_dummy_boot_pulses:
     phx
@@ -27,7 +25,7 @@ sd_dummy_boot_pulses:
 ; Mutates: A, X, Y
 sd_init:
     ; Setup SPI mode 0, with 2 wait cycles
-    lda #((0 << 4) | 2)
+    lda #(SPI_MODE_0 | 2)
     sta SPI_CONFIG
     jsr spi_clock_inactive
 
@@ -92,7 +90,7 @@ sd_cmd:
     lda #$FF
     jsr spi_transcieve
 
-    lda #(SPI_DEVICES_ENABLED | (SD_CARD_SPI_DEVICE << 1))
+    lda #SD_CARD_SPI_DEVICE
     jsr spi_set_device
 
     jsr sd_delay
@@ -101,7 +99,6 @@ sd_cmd:
     lda #$FF
     jsr spi_transcieve
     pla
-    ; pha
 
     ; SD command field is start bit 01 follow by 6 bit command 
     and #$3F
@@ -123,18 +120,9 @@ sd_cmd:
     ora #1
     jsr spi_transcieve
 
-    ; pla
-    ; cmp #41 ; Command 41 is expected to return busy.. we do not want to wait
-    ; beq .sd_cmd_skip_waiting_for_response
-
     ; Wait for the SD-card to start returning a response
     jsr sd_wait_for_response 
     bcs .sd_cmd_no_response
-;     bra .sd_cmd_first_byte_read
-
-; .sd_cmd_skip_waiting_for_response:
-;     lda #$FF
-;     jsr spi_transcieve
 
 .sd_cmd_first_byte_read:
     ldy #0
@@ -144,16 +132,6 @@ sd_cmd:
     and #$FE
     bne .sd_cmd_illegal_command
     
-    ; It was, read the rest of the bytes... if any
-    ; Number of bytes read (start at 1)
-    ; dex
-    ; beq .sd_cmd_done
-    ; iny
-
-    ; lda #$FF
-    ; jsr spi_transcieve
-    ; sta SD_BUFFER, y
-
 .sd_cmd_next_response_byte:
     iny
     dex
@@ -202,11 +180,10 @@ sd_cmd0:
     phx
     phy
 
-    lda #0
-    sta TERM_32_1_1
-    sta TERM_32_1_2
-    sta TERM_32_1_3
-    sta TERM_32_1_4
+    stz TERM_32_1_1
+    stz TERM_32_1_2
+    stz TERM_32_1_3
+    stz TERM_32_1_4
 
     lda #0 ; Command index
     ldx #1 ; Number of response bytes, including R1
@@ -286,7 +263,7 @@ sd_acmd41:
     dey
     beq .done_waiting_acmd41
 
-    phy
+    ; phy
     ; First we need to send a CMD55
     lda #0
     sta TERM_32_1_1
@@ -309,11 +286,10 @@ sd_acmd41:
     ldy #0 ; CRC (ignored)
 
     jsr sd_cmd
-    ply
-    
-    ; jsr sys_newline
-    ; jsr sys_puthex
-    ; jsr sys_newline
+
+    ; BUG!!! A should have the last value.. but doesn't for some reason???
+    ldy #0
+    lda SD_BUFFER, y
 
     cmp #0
     beq .acmd41_complete
@@ -341,7 +317,7 @@ sd_acmd41:
 ;     lda #0
 ;     sta ERROR
 
-;     lda #(SPI_DEVICES_ENABLED | (SD_CARD_SPI_DEVICE << 1))
+;     lda #SD_CARD_SPI_DEVICE
 ;     jsr spi_set_device
 
 ;     ; Send startbits and command index 16
@@ -394,16 +370,16 @@ sd_wait_for_response:
     lda #$FF
     jsr spi_transcieve
 
-    pha
-    jsr sys_puthex
-    lda #" "
-    jsr sys_putc
-    pla
+    ; pha
+    ; jsr sys_puthex
+    ; lda #" "
+    ; jsr sys_putc
+    ; pla
 
     cmp #$FF
     beq .keep_waiting
     clc
-    jmp .return
+    bra .return
 
 .timeout:
     sec ; Set carry flag to signal timeout
@@ -421,46 +397,7 @@ sd_delay:
 .delay_done:
     rts
 
-sd_dump_mbr:
-    rts
-
-; sd_dump_mbr:
-;     jsr sd_init
-;     jsr check_and_print_error
-
-;     ; jsr sd_cmd16
-;     ; jsr check_and_print_error
-
-;     ; Set the block address
-;     lda #0
-;     sta LBA_ADDRESS + 0
-;     sta LBA_ADDRESS + 1
-;     sta LBA_ADDRESS + 2
-;     sta LBA_ADDRESS + 3
-
-;     jsr sd_read_block
-;     jsr check_and_print_error
-
-;     jsr parse_mbr
-;     jsr check_and_print_error
-
-;     lda PARTITION_LBA + 0
-;     sta LBA_ADDRESS + 3
-;     lda PARTITION_LBA + 1
-;     sta LBA_ADDRESS + 2
-;     lda PARTITION_LBA + 2
-;     sta LBA_ADDRESS + 1
-;     lda PARTITION_LBA + 3
-;     sta LBA_ADDRESS + 0
-
-;     jsr sd_read_block
-;     jsr check_and_print_error
-
-;     jsr parse_fat_header
-;     jsr check_and_print_error
-
-;     rts
-
+; Some waiting time after SD card init
 sd_init_wait:
     phy
     phx

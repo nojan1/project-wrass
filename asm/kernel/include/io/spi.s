@@ -1,9 +1,6 @@
 SPI_OUT = VAR_8BIT_1
 SPI_IN = VAR_8BIT_2
 
-SPI_DEVICES_ENABLED = 1 << 0
-SPI_DEVICES_DISABLED = 0 << 0
-
 MOSI = 1
 MISO = 2
 SPI_CLOCK = 4
@@ -15,7 +12,7 @@ spi_init:
     lda #MOSI
     sta IO_SYSTEM_VIA_PORTA
 
-    lda #(CPOL_NORMAL | CPHASE_NORMAL | 1)
+    lda #(SPI_MODE_0 | SPI_FASTERCLOCK)
     sta SPI_CONFIG
 
     jsr spi_clock_inactive
@@ -164,6 +161,13 @@ spi_transcieve:
 
     ply
     plx
+
+    ; pha
+    ; jsr sys_puthex
+    ; lda #" "
+    ; jsr sys_putc
+    ; pla
+
     rts
 
 ;; Take the most significant bit from SPI_OUT and set it on the MOSI line

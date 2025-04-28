@@ -16,7 +16,7 @@ type SystemBus struct {
 	io *IoCard
 }
 
-func (m *SystemBus) InitBus (proc *sim6502.Processor) (gpu *GPU, io *IoCard, uart *UART) {
+func (m *SystemBus) InitBus (proc *sim6502.Processor) {
 	irqMultiplexer := &IRQMultiplexer{ proc: proc }
 
 	m.memControl = MemControl(0)
@@ -30,8 +30,6 @@ func (m *SystemBus) InitBus (proc *sim6502.Processor) (gpu *GPU, io *IoCard, uar
 	m.io = NewIoCard(irqMultiplexer)
 
 	m.uart = &UART{}
-
-	return m.gpu, m.io, m.uart
 }
 
 func (m *SystemBus) Clear() {

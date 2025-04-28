@@ -1,4 +1,4 @@
-; This program runs test against a SPI device that essentially connects MOSI to MISO
+; This program runs test against a SPI device that buffers the data sent and returns it on the next byte
 
     .include "setup.s"
 
@@ -12,7 +12,7 @@
     jsr spi_clock_inactive
     
     ; Talk to dummy device...
-    lda #SPI_DEVICE_2    
+    lda #SPI_DEVICE_2 
     jsr spi_set_device
 
     ldx #4
@@ -26,6 +26,9 @@
     jsr sys_puthex
     jsr sys_newline
 
+    jsr spi_transcieve
+
+    lda #$FF
     jsr spi_transcieve
 
     cmp data, x

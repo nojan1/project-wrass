@@ -10,7 +10,13 @@ func NewIoCard(irqMultiplexer *IRQMultiplexer) *IoCard {
 	keyboard := &Keyboard{}
 
 	spi := &SPI{}
+	spi.devices[0] = NewSdCard("/Users/nojan/Dev/6502-project/simulator/testfiles/sd-card.img") //TODO: Pass path from main
 	spi.devices[1] = NewDS1306()
+
+	// Temp
+	spi.devices[2] = &SpiEchoDevice{
+		shifter: &SPIShifter{ mode: 1 },
+	}
 
 	return &IoCard{
 		keyboard: keyboard,

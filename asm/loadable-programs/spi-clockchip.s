@@ -5,7 +5,7 @@
     ; SET UP SPI
     jsr spi_init
 
-    lda #((0 << 4) | 2)
+    lda #(SPI_MODE_0 | SPI_SLOWCLOCK)
     sta SPI_CONFIG
     jsr spi_clock_inactive
     ; .....
@@ -91,7 +91,7 @@ ds1306_command:
     pha
     
     ; Enable device 1, clock chip
-    lda #(SPI_DEVICES_ENABLED | (1 << 1))    
+    lda #SPI_DEVICE_1    
     jsr spi_set_device
 
     txa
