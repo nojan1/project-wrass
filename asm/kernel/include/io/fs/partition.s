@@ -2,7 +2,7 @@ partition_type_string:
     .string "Partition type: "
 
 partition_start_string:
-    .string "Start: "
+    .string "Partition 1 start (LBA): "
 
 ; Scan the sector stored in SD_BUFFER assuming it is an MBR block
 ; Check that the partition type of the first partition is supported
