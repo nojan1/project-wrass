@@ -234,6 +234,8 @@ func (s *ReadySdCardStateHandler) OnCommand(card *SdCard, command SdCommand, arg
 			buffer := make([]byte, s.blockSize)
 			_, err := card.file.ReadAt(buffer, fileOffset)
 
+			// fmt.Printf("SD card was read at LBA $%04X\n", argument)
+
 			if err == nil {
 				dataOut <- R1Sucess
 				dataOut <- 0b11111110

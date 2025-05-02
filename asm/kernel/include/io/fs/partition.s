@@ -333,3 +333,151 @@ parse_fat_header:
     pla
     ply
     rts
+
+ATTR_READ_ONLY = 0x01
+ATTR_HIDDEN = 0x02
+ATTR_SYSTEM = 0x04
+ATTR_VOLUME_ID = 0x08
+ATTR_DIRECTORY = 0x10
+ATTR_ARCHIVE = 0x20
+ATTR_LONG_NAME = ATTR_READ_ONLY | ATTR_HIDDEN | ATTR_SYSTEM | ATTR_VOLUME_ID
+
+; Lists the root directory of the FAT32 filesystem
+; This assumes that parse_fat_headers have run and setup the required variables
+list_root_directory: 
+    lda ROOT_CLUSTER
+    sta TERM_32_1_1
+    stz TERM_32_1_2
+    stz TERM_32_1_3
+    stz TERM_32_1_4
+
+; Lists the directory located at cluster specified by TERM_32_1_X in the FAT32 filesystem
+; This assumes that parse_fat_headers have run and setup the required variables
+list_directory:
+    stz ERROR
+    jsr read_cluster 
+
+    ; Check that the cluster was read correctly
+    lda ERROR
+    beq _list_directory_cluster_read
+    rts
+_list_directory_cluster_read:
+
+    ; Each entry is 32 bit, create a pointer pointing at the start.
+    ; We will then keep adding 32 until it overflow or we find the end of directory marker?
+    lda #<SD_BUFFER
+    sta TERM_16_1_LOW
+    lda #>SD_BUFFER
+    sta TERM_16_1_HIGH
+
+    ldx #512/32
+_list_directory_next_entry:
+    ; Load the first character of the name to check for deleted or free
+    ldy #0
+    lda (TERM_16_1_LOW), y
+    beq _list_directory_setup_next_entry ; It was 0 == Free
+
+    cmp #$E5
+    beq _list_directory_setup_next_entry ; It 0xE5 == Deleted
+
+    ; First lets load the attribute byte
+    ldy #$0B
+
+    lda (TERM_16_1_LOW), y
+
+    and #ATTR_SYSTEM | ATTR_HIDDEN | ATTR_VOLUME_ID
+    bne _list_directory_setup_next_entry
+
+    ; It was good.. jump back to start and print the name
+    ldy #0
+_list_directory_print_next_character:
+    lda (TERM_16_1_LOW), y
+    jsr putc
+
+    iny
+    cpy #8
+    bne _list_directory_print_next_character
+
+    lda #"."
+    jsr putc
+
+    ldy #8
+_list_directory_print_next_character_ext:
+    lda (TERM_16_1_LOW), y
+    jsr putc
+
+    iny
+    cpy #11
+    bne _list_directory_print_next_character_ext
+
+    jsr newline
+
+_list_directory_setup_next_entry:
+    lda #32
+    clc
+    adc TERM_16_1_LOW
+    sta TERM_16_1_LOW
+    lda #0
+    adc TERM_16_1_HIGH
+    sta TERM_16_1_HIGH
+
+    dex
+    bne _list_directory_next_entry
+
+    rts
+
+; Reads cluster from SD card
+; Expected cluster number (32 bit) in TERM_32_1_X
+; Mutates A and X
+read_cluster:
+    ; We need to perform (CLUSTER_NUM - 2) * SECTORS_PER_CLUSTER
+
+    sec
+    lda #2
+    sbc TERM_32_1_1
+    sta TERM_32_1_1
+
+    lda #0
+    sbc TERM_32_1_2
+    sta TERM_32_1_2
+
+    lda #0
+    sbc TERM_32_1_3
+    sta TERM_32_1_3
+
+    lda #0
+    sbc TERM_32_1_4
+    sta TERM_32_1_4
+
+    ; That did the -2 part.. now for the multiplication
+    ldx SECTORS_PER_CLUSTER
+_read_cluster_keep_shifting:
+    clc
+    rol TERM_32_1_1
+    rol TERM_32_1_2
+    rol TERM_32_1_3
+    rol TERM_32_1_4
+
+    txa
+    lsr
+    tax
+
+    bne _read_cluster_keep_shifting
+
+    ; Add the start of the cluster and setup LBA_ADDRESS
+    clc
+    lda CLUSTER_BEGIN_LBA + 0
+    adc TERM_32_1_1
+    sta LBA_ADDRESS + 3
+    lda CLUSTER_BEGIN_LBA + 1
+    adc TERM_32_1_2
+    sta LBA_ADDRESS + 2
+    lda CLUSTER_BEGIN_LBA + 2
+    adc TERM_32_1_3
+    sta LBA_ADDRESS + 1
+    lda CLUSTER_BEGIN_LBA + 3
+    adc TERM_32_1_4
+    sta LBA_ADDRESS + 0
+
+    ; Hand over execution to sd_read_block
+    jmp sd_read_block
