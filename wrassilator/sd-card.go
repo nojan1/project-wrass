@@ -68,7 +68,12 @@ const (
 )
 
 func NewSdCard(sdImageFilePath string) *SdCardInterface {
-	f, _ := os.Open(sdImageFilePath)
+	f, error := os.Open(sdImageFilePath)
+
+	if error != nil {
+		os.Stderr.WriteString(fmt.Sprintf("Failed to open SD card image, got error %v\n", error))
+	}
+
 	dataOut := make(chan uint8, 700)
 
 	return &SdCardInterface{
@@ -168,7 +173,7 @@ func (s *UninitializedSdCardStateHandler) OnCommand(card *SdCard, command SdComm
 
 type IdleSdCardStateHandler struct {
 	applicationSpecificCommand bool
-	idleStateTimer int
+	idleStateTimer             int
 }
 
 func (s *IdleSdCardStateHandler) OnClock(card *SdCard, selected bool) {}
@@ -285,10 +290,10 @@ func (s *CommandBuffer) GetCommand() SdCommand {
 }
 
 func (s *CommandBuffer) GetArgument() uint32 {
-	return uint32(s.dataAtOffset(4)) << 24 |
-		uint32(s.dataAtOffset(3)) << 16 |
-		uint32(s.dataAtOffset(2)) << 8 |
-		uint32(s.dataAtOffset(1)) << 0
+	return uint32(s.dataAtOffset(4))<<24 |
+		uint32(s.dataAtOffset(3))<<16 |
+		uint32(s.dataAtOffset(2))<<8 |
+		uint32(s.dataAtOffset(1))<<0
 }
 
 func (s *CommandBuffer) GetCrc() uint8 {

@@ -9,8 +9,8 @@ ATTR_ARCHIVE = 0x20
 ATTR_LONG_NAME = ATTR_READ_ONLY | ATTR_HIDDEN | ATTR_SYSTEM | ATTR_VOLUME_ID
 
 fat_begin_lba = 0x2020
-cluster_begin_lba = 15844
-BPB_BytsPerSec = 512
+cluster_begin_lba = 0x3de4 #15844
+BPB_BytsPerSec = 0x200 #512
 BPB_SecPerClus = 0x40
 
 f = open("/Users/nojan/Dev/6502-project/simulator/testfiles/sd-card.img", "rb")

@@ -31,7 +31,10 @@ func createSimulatorState(binaryFile string, loadAddress uint16, trace bool, bre
 		SetModel65C02().
 		SetClock(4000000) //4MHz
 
-	bus.InitBus(proc)
+	// sdCardPath := "/Users/nojan/Dev/6502-project/simulator/testfiles/sd-card.img"
+	// sdCardPath := "~/Dev/6502-project/simulator/testfiles/sd-card.img"
+	sdCardPath := "../simulator/testfiles/sd-card.img"
+	bus.InitBus(proc, sdCardPath)
 
 	proc.Load(bufio.NewReader(f), loadAddress)
 	proc.Registers().PC.Init(proc)
@@ -168,7 +171,7 @@ func main() {
 		}
 
 		simulatorState.terminate()
-	}else {
+	} else {
 		// Just run the simulator when in headless mode.. it will run on the mainthread till the user kills the application?
 		simulatorState.run(false)
 	}
