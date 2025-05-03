@@ -346,12 +346,12 @@ ATTR_LONG_NAME = ATTR_READ_ONLY | ATTR_HIDDEN | ATTR_SYSTEM | ATTR_VOLUME_ID
 ; This assumes that parse_fat_headers have run and setup the required variables
 list_root_directory: 
     lda ROOT_CLUSTER
-    sta TERM_32_1_1
-    stz TERM_32_1_2
-    stz TERM_32_1_3
-    stz TERM_32_1_4
+    sta CURRENT_CLUSTER + 0
+    stz CURRENT_CLUSTER + 1 
+    stz CURRENT_CLUSTER + 2
+    stz CURRENT_CLUSTER + 3
 
-; Lists the directory located at cluster specified by TERM_32_1_X in the FAT32 filesystem
+; Lists the directory located at cluster specified by CURRENT_CLUSTER in the FAT32 filesystem
 ; This assumes that parse_fat_headers have run and setup the required variables
 list_directory:
     stz ERROR
@@ -427,26 +427,26 @@ _list_directory_setup_next_entry:
     rts
 
 ; Reads cluster from SD card
-; Expected cluster number (32 bit) in TERM_32_1_X
+; Expected cluster number (32 bit) in CURRENT_CLUSTER
 ; Mutates A and X
 read_cluster:
     ; We need to perform (CLUSTER_NUM - 2) * SECTORS_PER_CLUSTER
 
     sec
     lda #2
-    sbc TERM_32_1_1
+    sbc CURRENT_CLUSTER + 0
     sta TERM_32_1_1
 
     lda #0
-    sbc TERM_32_1_2
+    sbc CURRENT_CLUSTER + 1
     sta TERM_32_1_2
 
     lda #0
-    sbc TERM_32_1_3
+    sbc CURRENT_CLUSTER + 2
     sta TERM_32_1_3
 
     lda #0
-    sbc TERM_32_1_4
+    sbc CURRENT_CLUSTER + 3
     sta TERM_32_1_4
 
     ; That did the -2 part.. now for the multiplication
@@ -481,3 +481,73 @@ _read_cluster_keep_shifting:
 
     ; Hand over execution to sd_read_block
     jmp sd_read_block
+
+; Lookup the current CURRENT_CLUSTER in the FAT and advance to the next one
+; Will set carry flag if already on end of chain
+try_advance_to_next_cluster:
+    pha
+
+    ; First we need to find the correct FAT and load it, this is the 512 block within the fat which contains the index for this cluster
+    ; each index takes up 4 bytes (32 bit), giving the expression FAT_BEGIN_LBA + int(CURRENT_CLUSTER / 128)
+    ; We start by putting CURRENT_CLUSTER into the working area
+    lda CLUSTER_NUM + 0
+    sta TERM_32_1_1
+    lda CLUSTER_NUM + 1
+    sta TERM_32_1_2
+    lda CLUSTER_NUM + 2
+    sta TERM_32_1_3
+    lda CLUSTER_NUM + 3
+    sta TERM_32_1_4
+
+    ; now divide by 128 == shift left 7 times
+    .repeat 7
+    clc
+    rol TERM_32_1_1
+    rol TERM_32_1_2
+    rol TERM_32_1_3
+    rol TERM_32_1_4
+    .endrepeat
+
+    ; Now we need to add FAT_BEGIN_LBA
+    clc
+    lda TERM_32_1_1
+    adc FAT_BEGIN_LBA + 0
+    sta LBA_ADDRESS + 3
+    lda TERM_32_1_2
+    adc FAT_BEGIN_LBA + 1
+    sta LBA_ADDRESS + 2
+    lda TERM_32_1_3
+    adc FAT_BEGIN_LBA + 2
+    sta LBA_ADDRESS + 1
+    lda TERM_32_1_4
+    adc FAT_BEGIN_LBA + 3
+    sta LBA_ADDRESS + 0
+
+    ; Now we can load the sector
+    jsr sd_read_block
+    lda ERROR
+    bne _try_advance_to_next_cluster_done
+
+    ; To continue we need to calculate the offset into the sector currently stored in SD_BUFFER
+    ; expression is: (CURRENT_CLUSTER & 0x7F*) * 4
+    lda CLUSTER_NUM + 0
+    and #$7F ; blank out everything but the bottom 128
+    sta TERM_32_1_1
+    stz TERM_32_1_2
+    stz TERM_32_1_3
+    stz TERM_32_1_4
+
+    ; Shift left 2 times
+    .repeat 2
+    clc
+    rol TERM_32_1_1
+    rol TERM_32_1_2
+    rol TERM_32_1_3
+    rol TERM_32_1_4
+    .endrepeat
+
+    
+
+_try_advance_to_next_cluster_done:
+    pla
+    rts

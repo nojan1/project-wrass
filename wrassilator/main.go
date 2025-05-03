@@ -18,7 +18,7 @@ type SimulatorState struct {
 	done                  chan bool
 }
 
-func createSimulatorState(binaryFile string, loadAddress uint16, trace bool, breakpoints string, interactive bool) *SimulatorState {
+func createSimulatorState(binaryFile string, loadAddress uint16, trace bool, breakpoints string, interactive bool, sdCardPath string) *SimulatorState {
 	f, err := os.Open(binaryFile)
 	if err != nil {
 		panic(err)
@@ -31,9 +31,12 @@ func createSimulatorState(binaryFile string, loadAddress uint16, trace bool, bre
 		SetModel65C02().
 		SetClock(4000000) //4MHz
 
-	// sdCardPath := "/Users/nojan/Dev/6502-project/simulator/testfiles/sd-card.img"
-	// sdCardPath := "~/Dev/6502-project/simulator/testfiles/sd-card.img"
-	sdCardPath := "../simulator/testfiles/sd-card.img"
+	if sdCardPath == "" {
+		// sdCardPath = "/Users/nojan/Dev/6502-project/simulator/testfiles/sd-card.img"
+		// sdCardPath = "~/Dev/6502-project/simulator/testfiles/sd-card.img"
+		sdCardPath = "../simulator/testfiles/sd-card.img"
+	}
+
 	bus.InitBus(proc, sdCardPath)
 
 	proc.Load(bufio.NewReader(f), loadAddress)
@@ -130,6 +133,7 @@ func main() {
 	interactive := flag.Bool("interactive", false, "The uart will bind to stdin / stdout, implied in headless mode")
 	headless := flag.Bool("headless", false, "Run the simulator in headless mode (no graphics output)")
 	start := flag.Bool("start", false, "Start simulation right away, implied in headless mode")
+	sdCardPath := flag.String("sdcard", "", "The path to a SD-Card image")
 
 	flag.Parse()
 
@@ -138,7 +142,7 @@ func main() {
 		return
 	}
 
-	simulatorState := createSimulatorState(*binaryFile, uint16(*loadAddress), *trace, *breakpoints, *interactive || *headless)
+	simulatorState := createSimulatorState(*binaryFile, uint16(*loadAddress), *trace, *breakpoints, *interactive || *headless, *sdCardPath)
 
 	if !*headless {
 		rl.InitWindow(1500, 820, "Wrassilator - Your WRASS 1 compatible simulator")
