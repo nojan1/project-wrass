@@ -35,6 +35,7 @@ sd_command_implementation:
     jsr parse_fat_header
     jsr check_and_print_error
 
+    jsr newline
     jsr list_root_directory
     ; jsr print_sd_buffer
 

@@ -342,6 +342,12 @@ ATTR_DIRECTORY = 0x10
 ATTR_ARCHIVE = 0x20
 ATTR_LONG_NAME = ATTR_READ_ONLY | ATTR_HIDDEN | ATTR_SYSTEM | ATTR_VOLUME_ID
 
+list_directory_header:
+    .string "EXT  NAME      SIZE       CLUSTER"
+
+directory_text:
+    .string "DIR"
+
 ; Lists the root directory of the FAT32 filesystem
 ; This assumes that parse_fat_headers have run and setup the required variables
 list_root_directory: 
@@ -354,6 +360,13 @@ list_root_directory:
 ; Lists the directory located at cluster specified by CURRENT_CLUSTER in the FAT32 filesystem
 ; This assumes that parse_fat_headers have run and setup the required variables
 list_directory:
+    putstr_addr list_directory_header
+    jsr newline
+
+    ldx #0
+_list_directory_read_next_sector:
+    phx
+
     stz ERROR
     jsr read_cluster 
 
@@ -388,29 +401,8 @@ _list_directory_next_entry:
     and #ATTR_SYSTEM | ATTR_HIDDEN | ATTR_VOLUME_ID
     bne _list_directory_setup_next_entry
 
-    ; It was good.. jump back to start and print the name
-    ldy #0
-_list_directory_print_next_character:
-    lda (TERM_16_1_LOW), y
-    jsr putc
-
-    iny
-    cpy #8
-    bne _list_directory_print_next_character
-
-    lda #"."
-    jsr putc
-
-    ldy #8
-_list_directory_print_next_character_ext:
-    lda (TERM_16_1_LOW), y
-    jsr putc
-
-    iny
-    cpy #11
-    bne _list_directory_print_next_character_ext
-
-    jsr newline
+    ; This file should be displayed.. start displaying the info
+    jsr print_entry
 
 _list_directory_setup_next_entry:
     lda #32
@@ -424,13 +416,96 @@ _list_directory_setup_next_entry:
     dex
     bne _list_directory_next_entry
 
+    plx
+    inx
+    cpx SECTORS_PER_CLUSTER
+    bne _list_directory_read_next_sector
+
+    rts
+
+; Print the current directory entry pointed to by TERM_16_1_LOW
+print_entry:
+    lda (TERM_16_1_LOW), y
+    and #ATTR_DIRECTORY
+    beq _print_entry_print_ext
+    putstr_addr directory_text
+    bra _print_entry_print_name
+
+_print_entry_print_ext:
+    ldy #8
+_print_entry_print_next_character_ext:
+    lda (TERM_16_1_LOW), y
+    jsr putc
+
+    iny
+    cpy #11
+    bne _print_entry_print_next_character_ext
+
+_print_entry_print_name:
+    lda #" "
+    jsr putc
+    jsr putc
+
+    ldy #0
+_print_entry_print_next_character:
+    lda (TERM_16_1_LOW), y
+    jsr putc
+
+    iny
+    cpy #8
+    bne _print_entry_print_next_character
+
+    lda #" "
+    jsr putc
+    jsr putc
+
+    ; Print the file size
+    ldy #$1C + 3
+    lda (TERM_16_1_LOW), y
+    jsr puthex
+    ldy #$1C + 2
+    lda (TERM_16_1_LOW), y
+    jsr puthex
+    ldy #$1C + 1
+    lda (TERM_16_1_LOW), y
+    jsr puthex    
+    ldy #$1C + 0
+    lda (TERM_16_1_LOW), y
+    jsr puthex
+
+
+    lda #" "
+    jsr putc
+    jsr putc
+
+    ; Print cluster address
+    ; Upper
+    ldy #$14 + 1
+    lda (TERM_16_1_LOW), y
+    jsr puthex
+    ldy #$14 + 0
+    lda (TERM_16_1_LOW), y
+    jsr puthex
+
+    ; Lower
+    ldy #$1A + 1
+    lda (TERM_16_1_LOW), y
+    jsr puthex
+    ldy #$1A + 0
+    lda (TERM_16_1_LOW), y
+    jsr puthex
+
+    jsr newline
+
     rts
 
 ; Reads cluster from SD card
 ; Expected cluster number (32 bit) in CURRENT_CLUSTER
+; The value in X will be used as an offset to read a different sector within the cluster
 ; Mutates A and X
 read_cluster:
     ; We need to perform (CLUSTER_NUM - 2) * SECTORS_PER_CLUSTER
+    phx
 
     sec
     lda #2
@@ -464,6 +539,21 @@ _read_cluster_keep_shifting:
 
     bne _read_cluster_keep_shifting
 
+    ; Add the offset in X (currently on stack) to the lower byte... and make sure the carry ripples through
+    clc
+    pla
+    adc TERM_32_1_1
+    sta TERM_32_1_1
+    lda #0
+    adc TERM_32_1_2
+    sta TERM_32_1_2
+    lda #0
+    adc TERM_32_1_3
+    sta TERM_32_1_3
+    lda #0
+    adc TERM_32_1_4
+    sta TERM_32_1_4
+
     ; Add the start of the cluster and setup LBA_ADDRESS
     clc
     lda CLUSTER_BEGIN_LBA + 0
@@ -490,13 +580,13 @@ try_advance_to_next_cluster:
     ; First we need to find the correct FAT and load it, this is the 512 block within the fat which contains the index for this cluster
     ; each index takes up 4 bytes (32 bit), giving the expression FAT_BEGIN_LBA + int(CURRENT_CLUSTER / 128)
     ; We start by putting CURRENT_CLUSTER into the working area
-    lda CLUSTER_NUM + 0
+    lda CURRENT_CLUSTER + 0
     sta TERM_32_1_1
-    lda CLUSTER_NUM + 1
+    lda CURRENT_CLUSTER + 1
     sta TERM_32_1_2
-    lda CLUSTER_NUM + 2
+    lda CURRENT_CLUSTER + 2
     sta TERM_32_1_3
-    lda CLUSTER_NUM + 3
+    lda CURRENT_CLUSTER + 3
     sta TERM_32_1_4
 
     ; now divide by 128 == shift left 7 times
@@ -530,20 +620,18 @@ try_advance_to_next_cluster:
 
     ; To continue we need to calculate the offset into the sector currently stored in SD_BUFFER
     ; expression is: (CURRENT_CLUSTER & 0x7F*) * 4
-    lda CLUSTER_NUM + 0
+    lda CURRENT_CLUSTER + 0
     and #$7F ; blank out everything but the bottom 128
     sta TERM_32_1_1
     stz TERM_32_1_2
     stz TERM_32_1_3
     stz TERM_32_1_4
 
-    ; Shift left 2 times
+    ; Shift left 2 times (we can drop to 16 bit here)
     .repeat 2
     clc
     rol TERM_32_1_1
     rol TERM_32_1_2
-    rol TERM_32_1_3
-    rol TERM_32_1_4
     .endrepeat
 
     
