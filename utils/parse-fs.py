@@ -73,7 +73,7 @@ def readClusterChain(clusterNum):
 
     bufferOffset = (clusterNum & 0x7F) << 2
     # print(f"Buffer offset {bufferOffset:02X}")
-
+ 
     (data,) = unpack("<I", readData[bufferOffset:bufferOffset + 4])
 
     # print(f"FAT returned {data:08X}")
@@ -96,10 +96,11 @@ def getSectorDataForCluster(clusterNum):
 
     return data
 
-def getFileAtCluster(clusterNum):
+def getFileAtCluster(clusterNum, size):
     data = bytes()
     for cluster in readClusterChain(clusterNum):
-        data += getSectorDataForCluster(cluster)
+        for d in getSectorDataForCluster(cluster):
+            data += d
 
     return data
 

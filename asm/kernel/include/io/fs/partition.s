@@ -363,6 +363,7 @@ list_directory:
     putstr_addr list_directory_header
     jsr newline
 
+_list_directory_read_cluster:
     ldx #0
 _list_directory_read_next_sector:
     phx
@@ -420,6 +421,9 @@ _list_directory_setup_next_entry:
     inx
     cpx SECTORS_PER_CLUSTER
     bne _list_directory_read_next_sector
+
+    jsr try_advance_to_next_cluster
+    bcs _list_directory_read_cluster
 
     rts
 
@@ -576,6 +580,7 @@ _read_cluster_keep_shifting:
 ; Will set carry flag if already on end of chain
 try_advance_to_next_cluster:
     pha
+    phy
 
     ; First we need to find the correct FAT and load it, this is the 512 block within the fat which contains the index for this cluster
     ; each index takes up 4 bytes (32 bit), giving the expression FAT_BEGIN_LBA + int(CURRENT_CLUSTER / 128)
@@ -634,8 +639,65 @@ try_advance_to_next_cluster:
     rol TERM_32_1_2
     .endrepeat
 
-    
+    ; Now add the offset of SD_BUFFER since that is where the data is in memory
+    ; Use byte 3 and 4 to handle endianess swap
+    clc
+    lda #>SD_BUFFER
+    adc TERM_32_1_1
+    sta TERM_32_1_4
+    lda #<SD_BUFFER
+    adc TERM_32_1_2
+    sta TERM_32_1_3
+
+    ; Start reading the entry for the cluster and check for end of chain marker
+    ; 0xFFFFFFF8 - 0xFFFFFFFF
+    ldy #0
+    lda (TERM_32_1_3), y
+    cmp #$FF
+    bne _not_end_of_chain
+    ; top bit is $FF
+
+    iny
+    lda (TERM_32_1_3), y
+    cmp #$FF
+    bne _not_end_of_chain
+    ; next bit is also $FF
+
+    iny
+    lda (TERM_32_1_3), y
+    cmp #$FF
+    bne _not_end_of_chain
+    ; next bit is also $FF
+
+    iny
+    lda (TERM_32_1_3), y
+    and #$F
+    cmp #$F
+    bne _not_end_of_chain
+
+    ; Oops this is an end of chain
+    sec
+    bra _try_advance_to_next_cluster_done
+
+_not_end_of_chain:
+    ; Set CURRENT_CLUSTER and return
+    ldy #0
+    lda (TERM_32_1_3), y
+    sta CURRENT_CLUSTER + 0
+    iny
+    lda (TERM_32_1_3), y
+    sta CURRENT_CLUSTER + 1
+    iny
+    lda (TERM_32_1_3), y
+    sta CURRENT_CLUSTER + 2
+    iny
+    lda (TERM_32_1_3), y
+    and #$F
+    sta CURRENT_CLUSTER + 3
+
+    clc
 
 _try_advance_to_next_cluster_done:
+    ply
     pla
     rts
