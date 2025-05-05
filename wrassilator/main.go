@@ -145,6 +145,8 @@ func main() {
 	simulatorState := createSimulatorState(*binaryFile, uint16(*loadAddress), *trace, *breakpoints, *interactive || *headless, *sdCardPath)
 
 	if !*headless {
+		rl.SetTraceLogLevel(rl.LogError)
+
 		rl.InitWindow(1500, 820, "Wrassilator - Your WRASS 1 compatible simulator")
 		defer rl.CloseWindow()
 
@@ -156,7 +158,7 @@ func main() {
 
 		for !rl.WindowShouldClose() {
 			Draw(simulatorState)
-
+		
 			keyPressed := rl.GetKeyPressed()
 			switch keyPressed {
 			case rl.KeyF5:
@@ -168,7 +170,7 @@ func main() {
 					simulatorState.step()
 				}
 			case 0:
-				// Ignore
+				// Ignore... I guess it returns 0 for "no key"?
 			default:
 				simulatorState.bus.io.keyboard.StoreKey(keyPressed, simulatorState.proc)
 			}
