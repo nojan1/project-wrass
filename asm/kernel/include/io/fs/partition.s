@@ -279,6 +279,13 @@ parse_fat_header:
     jsr puthex
     lda SD_BUFFER + 0x2c
     sta ROOT_CLUSTER ; We cheat a bit and assume that is always less then 256 (probably 2 in 99% of the cases)
+
+    ; Also save it as the current directory
+    sta CURRENT_DIRECTORY_CLUSTER + 0
+    stz CURRENT_DIRECTORY_CLUSTER + 1
+    stz CURRENT_DIRECTORY_CLUSTER + 2
+    stz CURRENT_DIRECTORY_CLUSTER + 3
+
     jsr puthex
 
     jsr newline
@@ -342,11 +349,96 @@ ATTR_DIRECTORY = 0x10
 ATTR_ARCHIVE = 0x20
 ATTR_LONG_NAME = ATTR_READ_ONLY | ATTR_HIDDEN | ATTR_SYSTEM | ATTR_VOLUME_ID
 
+; Will traverse through a directory and call the provided callback on CALLBACK_PTR for each entry
+; The function will have TERM_16_1_HIGH:TERM_16_1_LOW and pointing to the entry in the directory
+; the function must perform "jmp _enumerate_directory_callback_complete" at the end
+; it can set the carry flag to signal that it wants to stop enumerating
+enumerate_directory:
+_enumerate_directory_read_cluster:
+    ldx #0
+_enumerate_directory_read_next_sector:
+    phx
+
+    stz ERROR
+    jsr read_cluster 
+
+    ; Check that the cluster was read correctly
+    lda ERROR
+    beq _enumerate_directory_cluster_read
+    rts
+_enumerate_directory_cluster_read:
+
+    ; Each entry is 32 bit, create a pointer pointing at the start.
+    ; We will then keep adding 32 until it overflow or we find the end of directory marker?
+    lda #<SD_BUFFER
+    sta TERM_16_1_LOW
+    lda #>SD_BUFFER
+    sta TERM_16_1_HIGH
+
+    ldx #512/32
+_enumerate_directory_next_entry:
+    ; Load the first character of the name to check for deleted or free
+    ldy #0
+    lda (TERM_16_1_LOW), y
+    beq _enumerate_directory_setup_next_entry ; It was 0 == Free
+
+    cmp #$E5
+    beq _enumerate_directory_setup_next_entry ; It 0xE5 == Deleted
+
+    ; First lets load the attribute byte
+    ldy #$0B
+
+    lda (TERM_16_1_LOW), y
+
+    and #ATTR_SYSTEM | ATTR_HIDDEN | ATTR_VOLUME_ID
+    bne _enumerate_directory_setup_next_entry
+
+    ; This is a real file entry, jump to the callback
+    jmp (CALLBACK_PTR)
+
+_enumerate_directory_callback_complete: ; we assume the callback will jump back < here
+    bcs _enumerate_directory_done
+
+_enumerate_directory_setup_next_entry: 
+    lda #32
+    clc
+    adc TERM_16_1_LOW
+    sta TERM_16_1_LOW
+    lda #0
+    adc TERM_16_1_HIGH
+    sta TERM_16_1_HIGH
+
+    dex
+    bne _enumerate_directory_next_entry
+
+    plx
+    inx
+    cpx SECTORS_PER_CLUSTER
+    bne _enumerate_directory_read_next_sector
+
+    jsr try_advance_to_next_cluster
+    bcs _enumerate_directory_read_cluster
+
+_enumerate_directory_done:
+    rts
+
 list_directory_header:
     .string "EXT  NAME      SIZE       CLUSTER"
 
 directory_text:
     .string "DIR"
+
+; Lists the current selected directory
+list_current_directory:
+    lda CURRENT_DIRECTORY_CLUSTER + 0
+    sta CURRENT_CLUSTER + 0
+    lda CURRENT_DIRECTORY_CLUSTER + 1
+    sta CURRENT_CLUSTER + 1
+    lda CURRENT_DIRECTORY_CLUSTER + 2
+    sta CURRENT_CLUSTER + 2
+    lda CURRENT_DIRECTORY_CLUSTER + 2
+    sta CURRENT_CLUSTER + 2
+    bra list_directory
 
 ; Lists the root directory of the FAT32 filesystem
 ; This assumes that parse_fat_headers have run and setup the required variables
@@ -363,72 +455,17 @@ list_directory:
     putstr_addr list_directory_header
     jsr newline
 
-_list_directory_read_cluster:
-    ldx #0
-_list_directory_read_next_sector:
-    phx
+    lda #<print_entry_enumerate_callback
+    sta CALLBACK_PTR + 0
+    lda #>print_entry_enumerate_callback
+    sta CALLBACK_PTR + 1
 
-    stz ERROR
-    jsr read_cluster 
-
-    ; Check that the cluster was read correctly
-    lda ERROR
-    beq _list_directory_cluster_read
-    rts
-_list_directory_cluster_read:
-
-    ; Each entry is 32 bit, create a pointer pointing at the start.
-    ; We will then keep adding 32 until it overflow or we find the end of directory marker?
-    lda #<SD_BUFFER
-    sta TERM_16_1_LOW
-    lda #>SD_BUFFER
-    sta TERM_16_1_HIGH
-
-    ldx #512/32
-_list_directory_next_entry:
-    ; Load the first character of the name to check for deleted or free
-    ldy #0
-    lda (TERM_16_1_LOW), y
-    beq _list_directory_setup_next_entry ; It was 0 == Free
-
-    cmp #$E5
-    beq _list_directory_setup_next_entry ; It 0xE5 == Deleted
-
-    ; First lets load the attribute byte
-    ldy #$0B
-
-    lda (TERM_16_1_LOW), y
-
-    and #ATTR_SYSTEM | ATTR_HIDDEN | ATTR_VOLUME_ID
-    bne _list_directory_setup_next_entry
-
-    ; This file should be displayed.. start displaying the info
-    jsr print_entry
-
-_list_directory_setup_next_entry:
-    lda #32
-    clc
-    adc TERM_16_1_LOW
-    sta TERM_16_1_LOW
-    lda #0
-    adc TERM_16_1_HIGH
-    sta TERM_16_1_HIGH
-
-    dex
-    bne _list_directory_next_entry
-
-    plx
-    inx
-    cpx SECTORS_PER_CLUSTER
-    bne _list_directory_read_next_sector
-
-    jsr try_advance_to_next_cluster
-    bcs _list_directory_read_cluster
-
+    jsr enumerate_directory
     rts
 
 ; Print the current directory entry pointed to by TERM_16_1_LOW
-print_entry:
+; Will work as callback for enumerate_directory
+print_entry_enumerate_callback:
     lda (TERM_16_1_LOW), y
     and #ATTR_DIRECTORY
     beq _print_entry_print_ext
@@ -501,7 +538,8 @@ _print_entry_print_next_character:
 
     jsr newline
 
-    rts
+    clc ; Clear the carry flag to signal we want to keep enumerating
+    jmp _enumerate_directory_callback_complete
 
 ; Reads cluster from SD card
 ; Expected cluster number (32 bit) in CURRENT_CLUSTER
