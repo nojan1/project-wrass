@@ -30,7 +30,7 @@ func createSimulatorState(binaryFile string, loadAddress uint16, trace bool, bre
 	proc := sim6502.NewProcessor(bus).
 		SetModel65C02().
 		SetClock(4000000) //4MHz
-
+ 
 	if sdCardPath == "" {
 		// sdCardPath = "/Users/nojan/Dev/6502-project/simulator/testfiles/sd-card.img"
 		// sdCardPath = "~/Dev/6502-project/simulator/testfiles/sd-card.img"

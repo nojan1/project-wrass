@@ -225,7 +225,10 @@ func (s *ReadySdCardStateHandler) OnCommand(card *SdCard, command SdCommand, arg
 		s.blockSize = 512
 	}
 
-	if command == SD_CMD17 {
+	switch command {
+	case SD_CMD16:
+		dataOut <- R1Sucess
+	case SD_CMD17:
 		fileOffset := int64(argument) * s.blockSize
 
 		if card.file == nil {

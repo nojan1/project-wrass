@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -203,7 +204,7 @@ func (s *GPU) Init() {
 }
 
 func (s *GPU) Write(addr uint16, val uint8) {
-	subAddr := GpuRegister(addr & 0x7)
+	subAddr := GpuRegister(addr & 0x1F)
 	if subAddr == ReadWrite {
 		internalAddress := uint16(s.registerValues[AddressHigh])<<8 | uint16(s.registerValues[AddressLow])
 		s.handleIncrement()
@@ -223,7 +224,7 @@ func (s *GPU) Read(addr uint16, internal bool) uint8 {
 		return 0
 	}
 
-	subAddr := GpuRegister(addr & 0x7)
+	subAddr := GpuRegister(addr & 0x1F)
 
 	if subAddr == ReadWrite {
 		internalAddress := uint16(s.registerValues[AddressHigh])<<8 | uint16(s.registerValues[AddressLow])
@@ -268,7 +269,7 @@ func (s *GPU) DrawFrameBuffer(x int32, y int32) {
 	scrollY := uint16(s.registerValues[YOffset])
 
 	var cycle uint16
-
+	fmt.Printf("Using scrollX %v\n", scrollX)
 	for s.currentScanline = 0; s.currentScanline < DisplayHeight; s.currentScanline++ {
 		for cycle = 0; cycle < DisplayWidth; cycle++ {
 			offsetCycle := ((cycle >> 1) + (512 - scrollX)) & 0x1ff
