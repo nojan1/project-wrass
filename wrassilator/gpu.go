@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -269,7 +268,7 @@ func (s *GPU) DrawFrameBuffer(x int32, y int32) {
 	scrollY := uint16(s.registerValues[YOffset])
 
 	var cycle uint16
-	fmt.Printf("Using scrollX %v\n", scrollX)
+	// fmt.Printf("Using scrollX %v\n", scrollX)
 	for s.currentScanline = 0; s.currentScanline < DisplayHeight; s.currentScanline++ {
 		for cycle = 0; cycle < DisplayWidth; cycle++ {
 			offsetCycle := ((cycle >> 1) + (512 - scrollX)) & 0x1ff

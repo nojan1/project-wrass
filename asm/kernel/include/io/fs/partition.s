@@ -553,21 +553,24 @@ read_cluster:
     phx
 
     sec
-    lda #2
-    sbc CURRENT_CLUSTER + 0
+    lda CURRENT_CLUSTER + 0
+    sbc #2
     sta TERM_32_1_1
 
-    lda #0
-    sbc CURRENT_CLUSTER + 1
+    lda CURRENT_CLUSTER + 1
+    sbc #0
     sta TERM_32_1_2
 
-    lda #0
-    sbc CURRENT_CLUSTER + 2
+
+    lda CURRENT_CLUSTER + 2
+    sbc #0
     sta TERM_32_1_3
 
-    lda #0
-    sbc CURRENT_CLUSTER + 3
+
+    lda CURRENT_CLUSTER + 3
+    sbc #0
     sta TERM_32_1_4
+
 
     ; That did the -2 part.. now for the multiplication
     ldx SECTORS_PER_CLUSTER
@@ -582,11 +585,13 @@ _read_cluster_keep_shifting:
     lsr
     tax
 
+    cpx #1
     bne _read_cluster_keep_shifting
 
     ; Add the offset in X (currently on stack) to the lower byte... and make sure the carry ripples through
     clc
     pla
+
     adc TERM_32_1_1
     sta TERM_32_1_1
     lda #0
@@ -835,7 +840,7 @@ _match_entry_name_entry_not_found:
     jmp _enumerate_directory_callback_complete
 
 ; Populate current cluster variable from the current entry currently pointed to by TERM_16_1_LOW
-; Also stores filesize in TERM_32_1_X
+; Also stores filesize in TERM_32_2_X
 ; Mutates: A, Y
 set_current_cluster_from_entry:
     ; Cluster address
@@ -854,15 +859,15 @@ set_current_cluster_from_entry:
     ; Filesize
     ldy #$1C + 3
     lda (TERM_16_1_LOW), y
-    sta TERM_32_1_4
+    sta TERM_32_2_4
     ldy #$1C + 2
     lda (TERM_16_1_LOW), y
-    sta TERM_32_1_3
+    sta TERM_32_2_3
     ldy #$1C + 1
     lda (TERM_16_1_LOW), y
-    sta TERM_32_1_2  
+    sta TERM_32_2_2  
     ldy #$1C + 0
     lda (TERM_16_1_LOW), y
-    sta TERM_32_1_1
+    sta TERM_32_2_1
 
     rts

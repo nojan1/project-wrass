@@ -58,28 +58,35 @@ _cat_command_implementation_read_next_sector:
 
 _cat_command_implementation_inner_loop:
     lda (PARAM_16_1), y
+    cmp #10
+    beq _cat_command_implementation_newline
     jsr putc
+    bra _cat_command_next_byte
 
+_cat_command_implementation_newline:
+    jsr newline
+
+_cat_command_next_byte:
     ; Subtract 1 byte from the size... very compact not
-    lda #1
+
     sec
-    sbc TERM_32_1_1
-    sta TERM_32_1_1
-    lda #0
-    sbc TERM_32_1_2
-    sta TERM_32_1_2
-    lda #0
-    sbc TERM_32_1_3
-    sta TERM_32_1_3
-    lda #0
-    sbc TERM_32_1_4
-    sta TERM_32_1_4
+    sbc #1
+    sta TERM_32_2_1
+    lda TERM_32_2_2
+    sbc #0
+    sta TERM_32_2_2
+    lda TERM_32_2_3
+    sbc #0
+    sta TERM_32_2_3
+    lda TERM_32_2_4
+    sbc #0
+    sta TERM_32_2_4
     
     ; Check if the size reached 0
-    lda TERM_32_1_1
-    ora TERM_32_1_2
-    ora TERM_32_1_3
-    ora TERM_32_1_4
+    lda TERM_32_2_1
+    ora TERM_32_2_2
+    ora TERM_32_2_3
+    ora TERM_32_2_4
     beq _cat_command_implementation_done
 
     iny
