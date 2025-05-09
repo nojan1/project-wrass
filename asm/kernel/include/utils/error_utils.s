@@ -28,6 +28,9 @@ UART_RECIEVE_BUFFER_OVERFLOW_string:
 SD_ILLEGAL_COMMAND_string:
     .string "SD_ILLEGAL_COMMAND"
 
+FILE_NOT_FOUND_string:
+    .string "FILE_NOT_FOUND"
+
 error_messages:
     .db 0x0 ; Dummy
     .word SD_CARD_INIT_FAILED_string 
@@ -39,10 +42,14 @@ error_messages:
     .word UNSUPPORTED_NUMBER_OF_FATS_string
     .word UART_RECIEVE_BUFFER_OVERFLOW_string
     .word SD_ILLEGAL_COMMAND_string
+    .word FILE_NOT_FOUND_string
 
 ; Checks for error flag and prints the error
+; Sets the carry flag if there was an error
 ; Mutates: PARAM_16_1
 check_and_print_error:
+    clc
+
     pha
     phy
     ldy ERROR
@@ -57,6 +64,8 @@ check_and_print_error:
     sta PARAM_16_1+1
     jsr putstr
     jsr newline
+
+    sec
 
 .no_error:
     ply

@@ -10,9 +10,17 @@ jump_command_string:
 load_command_string:
     .string "load"
 
-sd_command_string:
-    .string "sd"
+initsd_command_string:
+    .string "initsd"
 
+ls_command_string:
+    .string "ls"
+
+cd_command_string:
+    .string "cd"
+
+cat_command_string:
+    .string "cat"
 
 commands:
     ; read <addr> [count]
@@ -35,10 +43,25 @@ commands:
     .byte 2 ; num parameters
     .word load_command_implementation
 
-    ; sd
-    .word sd_command_string ; command string
+    ; initsd
+    .word initsd_command_string ; command string
     .byte 0 ; num parameters
-    .word sd_command_implementation
+    .word initsd_command_implementation
+
+    ; ls
+    .word ls_command_string ; command string
+    .byte 0 ; num parameters
+    .word ls_command_implementation
+
+    ; cd <name>
+    .word cd_command_string ; command string
+    .byte 0 ; num parameters, technically there is a string after but that is not a 16 bit number so the monitor won't care
+    .word cd_command_implementation
+
+    ; cat <name>
+    .word cat_command_string ; command string
+    .byte 0 ; num parameters, technically there is a string after but that is not a 16 bit number so the monitor won't care
+    .word cat_command_implementation
 commands_end:
 
 monitor_loop_start:
@@ -162,8 +185,17 @@ monitor_loop:
     beq .parameters_parsed
     
 .parameters_parsed
+    ; Add Y to PARAM_16_1 so that handlers can just use the end of the last parsed parameter as "input string"
+    iny ; This might be a problem...
+    tya
+    clc
+    adc PARAM_16_1
+    sta PARAM_16_1
+    lda #0
+    adc PARAM_16_1 + 2
+    sta PARAM_16_1 + 2
+
     plx
-     
     inx
     inx ; second address byte to handler
     lda commands, x
@@ -191,4 +223,5 @@ _monitor_loop_command_error:
     .include "include/monitor/commands/write.s"
     .include "include/monitor/commands/jump.s"
     .include "include/monitor/commands/load.s"
-    .include "include/monitor/commands/sd.s"
+    .include "include/monitor/commands/initsd.s"
+    .include "include/monitor/commands/fs.s"

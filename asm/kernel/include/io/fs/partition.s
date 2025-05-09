@@ -322,8 +322,6 @@ parse_fat_header:
     cmp #"2"
     bne .bad_partion
 
-
-
     jmp .done
 
 .bad_number_of_fats:
@@ -397,7 +395,11 @@ _enumerate_directory_next_entry:
     jmp (CALLBACK_PTR)
 
 _enumerate_directory_callback_complete: ; we assume the callback will jump back < here
-    bcs _enumerate_directory_done
+    bcc _enumerate_directory_setup_next_entry
+    plx
+    sec ; Re-set the carry flag that callback set previously
+    bra _enumerate_directory_done
+
 
 _enumerate_directory_setup_next_entry: 
     lda #32
@@ -466,6 +468,7 @@ list_directory:
 ; Print the current directory entry pointed to by TERM_16_1_LOW
 ; Will work as callback for enumerate_directory
 print_entry_enumerate_callback:
+    ldy #$0B
     lda (TERM_16_1_LOW), y
     and #ATTR_DIRECTORY
     beq _print_entry_print_ext
@@ -738,4 +741,128 @@ _not_end_of_chain:
 _try_advance_to_next_cluster_done:
     ply
     pla
+    rts
+
+; Enumerates the current directory and looks for a directory entry that has the same name as the string provided in PARAM_16_1
+find_directory_entry_in_current_directory:
+    lda CURRENT_DIRECTORY_CLUSTER + 0
+    sta CURRENT_CLUSTER + 0
+    lda CURRENT_DIRECTORY_CLUSTER + 1
+    sta CURRENT_CLUSTER + 1
+    lda CURRENT_DIRECTORY_CLUSTER + 2
+    sta CURRENT_CLUSTER + 2
+    lda CURRENT_DIRECTORY_CLUSTER + 2
+    sta CURRENT_CLUSTER + 2
+
+    lda #<match_directory_entry_name_enumerate_callback
+    sta CALLBACK_PTR + 0
+    lda #>match_directory_entry_name_enumerate_callback
+    sta CALLBACK_PTR + 1
+
+    jsr enumerate_directory
+    bcs _find_directory_entry_found
+
+    lda #FILE_NOT_FOUND
+    sta ERROR
+
+_find_directory_entry_found:
+    rts
+
+; Enumerates the current directory and looks for a file entry that has the same name as the string provided in PARAM_16_1
+find_file_entry_in_current_directory:
+    lda CURRENT_DIRECTORY_CLUSTER + 0
+    sta CURRENT_CLUSTER + 0
+    lda CURRENT_DIRECTORY_CLUSTER + 1
+    sta CURRENT_CLUSTER + 1
+    lda CURRENT_DIRECTORY_CLUSTER + 2
+    sta CURRENT_CLUSTER + 2
+    lda CURRENT_DIRECTORY_CLUSTER + 2
+    sta CURRENT_CLUSTER + 2
+
+    lda #<match_file_entry_name_enumerate_callback
+    sta CALLBACK_PTR + 0
+    lda #>match_file_entry_name_enumerate_callback
+    sta CALLBACK_PTR + 1
+
+    jsr enumerate_directory
+    bcs _find_file_entry_found
+
+    lda #FILE_NOT_FOUND
+    sta ERROR
+
+_find_file_entry_found:
+    rts
+
+match_directory_entry_name_enumerate_callback:
+    ldy #$0B
+    lda (TERM_16_1_LOW), y
+    and #ATTR_DIRECTORY
+    beq _match_entry_name_entry_not_found
+    bra match_entry_name_enumerate_callback
+
+match_file_entry_name_enumerate_callback:
+    ldy #$0B
+    lda (TERM_16_1_LOW), y
+    and #ATTR_DIRECTORY
+    bne _match_entry_name_entry_not_found
+
+match_entry_name_enumerate_callback:
+    ldx #0 ; X starts out as 0 but as soon the input string hits a null we will use it to store a space instead
+    ldy #0 
+_match_entry_name_next_character:
+    cpx #0
+    bne _match_entry_name_in_pad_mode
+    lda (PARAM_16_1), y
+    and #$DF ; Blank out bit to make user input upper case
+    bne _match_entry_name_no_pad ; If get 0
+    ldx #" "
+_match_entry_name_in_pad_mode:
+    txa
+_match_entry_name_no_pad:
+    cmp (TERM_16_1_LOW), y 
+    bne _match_entry_name_entry_not_found
+    iny
+    cpy #8 ; We will match the first 8 characters, yes we ignore extensions because YOLO
+    beq _match_entry_name_entry_found
+    bne _match_entry_name_next_character
+
+_match_entry_name_entry_found:
+    sec ; We found the entry, stop enumerating
+    jmp _enumerate_directory_callback_complete
+
+_match_entry_name_entry_not_found:
+    clc ; Clear the carry flag to signal we want to keep enumerating
+    jmp _enumerate_directory_callback_complete
+
+; Populate current cluster variable from the current entry currently pointed to by TERM_16_1_LOW
+; Also stores filesize in TERM_32_1_X
+; Mutates: A, Y
+set_current_cluster_from_entry:
+    ; Cluster address
+    ldy #$14 + 1
+    lda (TERM_16_1_LOW), y
+    sta CURRENT_CLUSTER + 3
+    ldy #$14 + 0
+    sta CURRENT_CLUSTER + 2
+    ldy #$1A + 1
+    lda (TERM_16_1_LOW), y
+    sta CURRENT_CLUSTER + 1
+    ldy #$1A + 0
+    lda (TERM_16_1_LOW), y
+    sta CURRENT_CLUSTER + 0
+
+    ; Filesize
+    ldy #$1C + 3
+    lda (TERM_16_1_LOW), y
+    sta TERM_32_1_4
+    ldy #$1C + 2
+    lda (TERM_16_1_LOW), y
+    sta TERM_32_1_3
+    ldy #$1C + 1
+    lda (TERM_16_1_LOW), y
+    sta TERM_32_1_2  
+    ldy #$1C + 0
+    lda (TERM_16_1_LOW), y
+    sta TERM_32_1_1
+
     rts

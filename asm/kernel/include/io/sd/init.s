@@ -68,6 +68,10 @@ sd_init:
     jsr newline
 
 .sd_init_done:
+    ; Once initialized we can speed up, setup SPI mode 0, with 1 wait cycles
+    lda #(SPI_MODE_0 | 1)
+    sta SPI_CONFIG
+
     pla
     rts
 
