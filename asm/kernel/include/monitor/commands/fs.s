@@ -32,67 +32,92 @@ cd_command_implementation:
 _cd_command_implementation_done:
     jmp _command_execution_complete
 
-; Implementation for the cat command, not finished and will barely work for small (<256) text files
+; Implementation for the cat command
 cat_command_implementation:
     nop
 
     jsr newline
-
-    stz ERROR
-    jsr find_file_entry_in_current_directory
+    jsr open_file
     jsr check_and_print_error
-    bcs _cat_command_implementation_done
+    bcs .done
 
-    jsr set_current_cluster_from_entry
-
+.read_next_block:
+    jsr read_file
+    cpx #0
+    beq .done
 
     ldy #0
-    ldx #0
-_cat_command_implementation_read_next_sector:
-    lda #<SD_BUFFER
-    sta PARAM_16_1
-    lda #>SD_BUFFER
-    sta PARAM_16_1 + 1
-
-    jsr read_cluster
-
-_cat_command_implementation_inner_loop:
+.print_next:
     lda (PARAM_16_1), y
     cmp #10
-    beq _cat_command_implementation_newline
+    beq .print_newline
     jsr putc
-    bra _cat_command_next_byte
-
-_cat_command_implementation_newline:
+    bra .char_print_done
+.print_newline:
     jsr newline
-
-_cat_command_next_byte:
-    ; Subtract 1 byte from the size... very compact not
-
-    sec
-    sbc #1
-    sta TERM_32_2_1
-    lda TERM_32_2_2
-    sbc #0
-    sta TERM_32_2_2
-    lda TERM_32_2_3
-    sbc #0
-    sta TERM_32_2_3
-    lda TERM_32_2_4
-    sbc #0
-    sta TERM_32_2_4
-    
-    ; Check if the size reached 0
-    lda TERM_32_2_1
-    ora TERM_32_2_2
-    ora TERM_32_2_3
-    ora TERM_32_2_4
-    beq _cat_command_implementation_done
-
+.char_print_done:
     iny
-    bne _cat_command_implementation_inner_loop
+    dex
+    bne .print_next
+    bra .read_next_block
 
-    ; Will only read 256 bytes for now... we need to something cool here later
-
-_cat_command_implementation_done:
+.done:
     jmp _command_execution_complete
+;     stz ERROR
+;     jsr find_file_entry_in_current_directory
+;     jsr check_and_print_error
+;     bcs _cat_command_implementation_done
+
+;     jsr set_current_cluster_from_entry
+
+
+;     ldy #0
+;     ldx #0
+; _cat_command_implementation_read_next_sector:
+;     lda #<SD_BUFFER
+;     sta PARAM_16_1
+;     lda #>SD_BUFFER
+;     sta PARAM_16_1 + 1
+
+;     jsr read_cluster
+
+; _cat_command_implementation_inner_loop:
+;     lda (PARAM_16_1), y
+;     cmp #10
+;     beq _cat_command_implementation_newline
+;     jsr putc
+;     bra _cat_command_next_byte
+
+; _cat_command_implementation_newline:
+;     jsr newline
+
+; _cat_command_next_byte:
+;     ; Subtract 1 byte from the size... very compact not
+
+;     sec
+;     sbc #1
+;     sta TERM_32_2_1
+;     lda TERM_32_2_2
+;     sbc #0
+;     sta TERM_32_2_2
+;     lda TERM_32_2_3
+;     sbc #0
+;     sta TERM_32_2_3
+;     lda TERM_32_2_4
+;     sbc #0
+;     sta TERM_32_2_4
+    
+;     ; Check if the size reached 0
+;     lda TERM_32_2_1
+;     ora TERM_32_2_2
+;     ora TERM_32_2_3
+;     ora TERM_32_2_4
+;     beq _cat_command_implementation_done
+
+;     iny
+;     bne _cat_command_implementation_inner_loop
+
+;     ; Will only read 256 bytes for now... we need to something cool here later
+
+; _cat_command_implementation_done:
+;     jmp _command_execution_complete

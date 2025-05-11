@@ -1,4 +1,5 @@
     .include "include/macros.s"
+    .include "include/variables.s"
     .include "include/constants.s"
     .include "include/errors.s"
 
@@ -28,6 +29,7 @@
     .include "include/io/sd/init.s"
     .include "include/io/sd/ops.s"
     .include "include/io/fs/partition.s"
+    .include "include/io/fs/userland.s"
 
     .ifndef NO_GPU
     .include "include/io/graphic/graphic.s"

@@ -1,0 +1,73 @@
+    .dsect
+
+    ; Zero Page
+    .org $0000
+MEM_CONTROL: .byte
+READ_POINTER: .byte
+WRITE_POINTER: .byte
+KEYBOARD_FLAGS: .byte
+
+PARAM_16_1: .word
+PARAM_16_2: .word
+PARAM_16_3: .word
+
+CURRENT_LINE: .byte
+VAR_8BIT_1: .byte
+VAR_8BIT_2: .byte
+ERROR: .byte
+
+LBA_ADDRESS: .blk 4
+PARTITION_LBA: .blk 4
+SECTORS_PER_CLUSTER: .byte
+FAT_BEGIN_LBA: .blk 4
+CLUSTER_BEGIN_LBA: .blk 4
+ROOT_CLUSTER: .blk 4
+CURRENT_CLUSTER: .blk 4
+CURRENT_DIRECTORY_CLUSTER: .blk 4
+CALLBACK_PTR: .word
+
+    ; .struct FILE_HANDLE
+FILE_HANDLE_STATUS: .byte
+FILE_HANDLE_BYTES_REMAINING: .blk 4
+FILE_HANDLE_CURRENT_CLUSTER: .blk 4
+FILE_HANDLE_CURRENT_SECTOR_OFFSET: .byte
+FILE_HANDLE_CURRENT_CHUNK_OFFSET: .byte
+    ; .endstruct
+
+TERM_16_1:
+TERM_32_1:
+TERM_32_1_1:
+TERM_16_1_LOW: .byte
+TERM_32_1_2:
+TERM_16_1_HIGH: .byte
+TERM_32_1_3: .byte
+TERM_32_1_4: .byte
+
+TERM_16_2:
+TERM_32_2:
+TERM_32_2_1:
+TERM_16_2_LOW: .byte 
+TERM_32_2_2:
+TERM_16_2_HIGH: .byte
+TERM_32_2_3: .byte
+TERM_32_2_4: .byte
+
+ZP_USAGE_TOP: .byte
+
+    ; Lower mem
+    .org $0200
+INPUT_BUFFER: .blk 256
+COMMAND_BUFFER: .blk 256
+
+    ; Kernel high mem
+    .org $A000
+SD_BUFFER: .blk 512
+IO_CONTROL: .byte
+SYSTEM_IRQ: .word
+USER_IRQ: .word
+SYSTEM_NMI: .word
+SPI_CONFIG: .byte
+KEYCODE_RAW: .byte
+
+
+    .dend

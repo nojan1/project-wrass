@@ -24,6 +24,7 @@ sys_uart_sendbyte = $E00F
 
 putstr=sys_putstr ; Used in macro definition
     
+    .include "../kernel/include/variables.s"
     .include "../kernel/include/constants.s"
     .include "../kernel/include/macros.s"
     .org $0400

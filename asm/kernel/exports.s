@@ -82,3 +82,10 @@ sys_str_readhex:
 
 sys_str_readhexchar:
     jmp str_readhexchar
+
+; File system
+sys_open_file:
+    jmp open_file
+
+sys_read_file:
+    jmp read_file
