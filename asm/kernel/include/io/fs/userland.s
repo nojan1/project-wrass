@@ -27,20 +27,20 @@ open_file:
     ; Filesize
     ldy #$1C + 3
     lda (TERM_16_1_LOW), y
-    sta FILE_HANDLE_BYTES_REMAINING + 0
+    sta FILE_HANDLE_BYTES_REMAINING + 3
     ldy #$1C + 2
     lda (TERM_16_1_LOW), y
-    sta FILE_HANDLE_BYTES_REMAINING + 1
+    sta FILE_HANDLE_BYTES_REMAINING + 2
     ldy #$1C + 1
     lda (TERM_16_1_LOW), y
-    sta FILE_HANDLE_BYTES_REMAINING + 2  
+    sta FILE_HANDLE_BYTES_REMAINING + 1  
     ldy #$1C + 0
     lda (TERM_16_1_LOW), y
-    sta FILE_HANDLE_BYTES_REMAINING + 3
+    sta FILE_HANDLE_BYTES_REMAINING + 0
 
     stz FILE_HANDLE_CURRENT_SECTOR_OFFSET
     stz FILE_HANDLE_CURRENT_CHUNK_OFFSET
-
+    
     clc
     bra .on_success
 
@@ -60,6 +60,7 @@ read_file:
     cmp #FILE_HANDLE_STATUS_EOF
     bne .not_end_of_file
     ldx #0
+    clc
     bra .done
 
 .not_end_of_file:
@@ -133,22 +134,22 @@ read_file:
     pha ; Save in case the size decrement underflows(?)
 
     sec
-    lda #>512
-    sbc FILE_HANDLE_BYTES_REMAINING + 0
+    lda FILE_HANDLE_BYTES_REMAINING + 0
+    sbc #256
     sta FILE_HANDLE_BYTES_REMAINING + 0
-    lda #<512
-    sbc FILE_HANDLE_BYTES_REMAINING + 1
+    lda FILE_HANDLE_BYTES_REMAINING + 1
+    sbc #0
     sta FILE_HANDLE_BYTES_REMAINING + 1
-    lda #0
-    sbc FILE_HANDLE_BYTES_REMAINING + 2
+    lda FILE_HANDLE_BYTES_REMAINING + 2
+    sbc #0
     sta FILE_HANDLE_BYTES_REMAINING + 2
-    lda #0
-    sbc FILE_HANDLE_BYTES_REMAINING + 3
+    lda FILE_HANDLE_BYTES_REMAINING + 3
+    sbc #0 
     sta FILE_HANDLE_BYTES_REMAINING + 3
 
-    bcc .out_of_bytes
+    bcs .out_of_bytes
 
-    phx ; Throw away value
+    plx ; Throw away value
     ldx FILE_HANDLE_BYTES_REMAINING + 0
 
     clc
@@ -158,7 +159,7 @@ read_file:
     lda #FILE_HANDLE_STATUS_EOF
     sta FILE_HANDLE_STATUS
 
-    phx ; Put the original value of the lower byte into X
+    plx ; Put the original value of the lower byte into X
 
     clc
     bra .done

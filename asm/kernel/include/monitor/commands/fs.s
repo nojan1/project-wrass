@@ -43,6 +43,8 @@ cat_command_implementation:
 
 .read_next_block:
     jsr read_file
+    bcs .done
+
     cpx #0
     beq .done
 
@@ -61,7 +63,7 @@ cat_command_implementation:
     bne .print_next
     bra .read_next_block
 
-.done:
+.done:    
     jmp _command_execution_complete
 ;     stz ERROR
 ;     jsr find_file_entry_in_current_directory

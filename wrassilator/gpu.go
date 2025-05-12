@@ -264,13 +264,14 @@ func (s *GPU) DrawFrameBuffer(x int32, y int32) {
 		return
 	}
 
-	scrollX := uint16(s.registerValues[XOffset])
-	scrollY := uint16(s.registerValues[YOffset])
-
 	var cycle uint16
 	// fmt.Printf("Using scrollX %v\n", scrollX)
 	for s.currentScanline = 0; s.currentScanline < DisplayHeight; s.currentScanline++ {
+		scrollY := uint16(s.registerValues[YOffset])
+
 		for cycle = 0; cycle < DisplayWidth; cycle++ {
+			scrollX := uint16(s.registerValues[XOffset])
+
 			offsetCycle := ((cycle >> 1) + (512 - scrollX)) & 0x1ff
 			offsetScanline := ((s.currentScanline >> 1) + (256 - scrollY)) & 0x0ff
 
