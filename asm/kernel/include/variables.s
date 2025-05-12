@@ -16,6 +16,7 @@ VAR_8BIT_1: .byte
 VAR_8BIT_2: .byte
 ERROR: .byte
 
+SD_CARD_STATUS: .byte
 LBA_ADDRESS: .blk 4
 PARTITION_LBA: .blk 4
 SECTORS_PER_CLUSTER: .byte

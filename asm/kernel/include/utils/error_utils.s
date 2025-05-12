@@ -31,6 +31,9 @@ SD_ILLEGAL_COMMAND_string:
 FILE_NOT_FOUND_string:
     .string "FILE_NOT_FOUND"
 
+SD_CARD_NOT_INITIALIZED_string:
+    .string "SD CARD NOT INITIALIZED"
+
 error_messages:
     .db 0x0 ; Dummy
     .word SD_CARD_INIT_FAILED_string 
@@ -43,6 +46,7 @@ error_messages:
     .word UART_RECIEVE_BUFFER_OVERFLOW_string
     .word SD_ILLEGAL_COMMAND_string
     .word FILE_NOT_FOUND_string
+    .word SD_CARD_NOT_INITIALIZED_string
 
 ; Checks for error flag and prints the error
 ; Sets the carry flag if there was an error

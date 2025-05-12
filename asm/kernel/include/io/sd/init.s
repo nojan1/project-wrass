@@ -72,6 +72,9 @@ sd_init:
     lda #(SPI_MODE_0 | 1)
     sta SPI_CONFIG
 
+    lda #SD_CARD_INITIALIZED
+    sta SD_CARD_STATUS
+
     pla
     rts
 

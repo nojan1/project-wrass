@@ -3,6 +3,17 @@
 ; Will set ERROR and return with Carry flag high on error
 open_file:
     stz ERROR
+
+    ; Make sure the SD card is initialized
+    lda SD_CARD_STATUS
+    cmp #SD_CARD_INITIALIZED
+    beq .sd_card_ready
+
+    lda #ERROR_SD_CARD_NOT_INITIALIZED
+    sta ERROR ; If not error out
+    jmp .on_error
+
+.sd_card_ready:
     jsr find_file_entry_in_current_directory
     lda ERROR
     bne .on_error
@@ -55,6 +66,16 @@ open_file:
 read_file:
     stz ERROR
 
+    ; Make sure the SD card is initialized
+    lda SD_CARD_STATUS
+    cmp #SD_CARD_INITIALIZED
+    beq .sd_card_ready
+
+    lda #ERROR_SD_CARD_NOT_INITIALIZED
+    sta ERROR ; If not error out
+    jmp .on_error
+
+.sd_card_ready:
     ; Check the status of the file handle, if we are at EOF set X to 0 and return
     lda FILE_HANDLE_STATUS
     cmp #FILE_HANDLE_STATUS_EOF
@@ -135,10 +156,10 @@ read_file:
 
     sec
     lda FILE_HANDLE_BYTES_REMAINING + 0
-    sbc #256
+    sbc #>256
     sta FILE_HANDLE_BYTES_REMAINING + 0
     lda FILE_HANDLE_BYTES_REMAINING + 1
-    sbc #0
+    sbc #<256
     sta FILE_HANDLE_BYTES_REMAINING + 1
     lda FILE_HANDLE_BYTES_REMAINING + 2
     sbc #0
