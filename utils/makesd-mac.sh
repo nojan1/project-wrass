@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COPY_DIR="$2"
+COPY_DIR="$1"
 [ -z "$COPY_DIR" ] && echo "usage: $0 <dir>" && exit 1
 
 # Create the empty disk image file,
@@ -14,8 +14,8 @@ devEntry="$(echo $devEntry)"
 # Create a MBR partition table and mount the newly created FAT32 volume.
 diskutil erasedisk fat32 MYSD mbr "$devEntry"
 # Copy files from the folder to FAT32 volume.
-cp -R "$COPY_DIR" /Volumes/MYSD
+cp -R "$COPY_DIR/" /Volumes/MYSD
 # Remove all ._* files.
 dot_clean /Volumes/MYSD
 # Eject the disk image.
-hdiutil detach "$devEntry
+hdiutil detach "$devEntry"

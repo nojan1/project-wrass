@@ -152,7 +152,7 @@ monitor_loop:
     cpx #(commands_end - commands) ; Have we checked the last available command?
     bcc .next_command
 
-    jmp _monitor_loop_command_error
+    jmp _monitor_loop_command_not_found
      
 .command_recieved:
     ; We have a valid command
@@ -211,6 +211,69 @@ _command_execution_complete:
 
 bad_command_string:
     .string "Bad command"
+
+_monitor_loop_command_not_found:
+    ; No command was found.. if the SD card is initialized we should check for a binary with that name and execute it
+    lda SD_CARD_STATUS
+    cmp #SD_CARD_INITIALIZED
+    bne _monitor_loop_command_error
+
+    ; Okey the SD card is setup.. now to find a binary.. we should be able to just pass the command buffer (in PARAM_16_1) directly
+    stz ERROR
+    jsr find_file_entry_in_current_directory
+    bne _monitor_loop_command_error
+
+    ; We have a file.. check that the file extension is correct
+    ldy #8
+    lda #"P"
+    cmp (TERM_16_1_LOW), y
+    bne _monitor_loop_command_error
+    iny
+    lda #"R"
+    cmp (TERM_16_1_LOW), y
+    bne _monitor_loop_command_error
+    iny
+    lda #"G"
+    cmp (TERM_16_1_LOW), y
+    bne _monitor_loop_command_error
+
+    ; It is a valid program.. at least by extension.
+    jsr open_file
+    bcs _monitor_loop_command_error
+
+    lda #<PROGRAM_LOAD_ADDRESS
+    sta PARAM_16_2
+    lda #>PROGRAM_LOAD_ADDRESS
+    sta PARAM_16_2 + 1
+
+_monitor_loop_next_chunk:
+    jsr read_file
+    bcs _monitor_loop_command_error
+    cpx #0
+    beq _monitor_loop_program_loaded
+    ldy #0
+_monitor_loop_next_byte:
+    ; Read one byte from chunk buffer and put into program memory
+    lda (PARAM_16_1), y
+    sta (PARAM_16_2), y
+    iny
+    dex
+    bne _monitor_loop_next_byte
+    inc PARAM_16_2 ; Increment to use the next 256 byte block in memory
+    bra _monitor_loop_next_chunk
+
+_monitor_loop_program_loaded:
+    jsr newline ; So that programs don't have to worry about it
+
+    ; Time to execute the loaded program.. first setup the return address
+    lda #>(_command_execution_complete - 1)
+    pha
+    lda #<(_command_execution_complete - 1)
+    pha
+
+    ; Then jump to the program
+    jmp PROGRAM_LOAD_ADDRESS
+    ; ---will never get here
 
 _monitor_loop_command_error:
     jsr newline

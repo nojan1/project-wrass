@@ -2,7 +2,20 @@
 ls_command_implementation:
     nop
     jsr newline
+
+    ; Make sure the SD card is initialized
+    lda SD_CARD_STATUS
+    cmp #SD_CARD_INITIALIZED
+    beq .no_error
+
+    lda #ERROR_SD_CARD_NOT_INITIALIZED
+    sta ERROR 
+    jsr check_and_print_error
+    bra .on_error
+
+.no_error:
     jsr list_current_directory
+.on_error:
     jmp _command_execution_complete
 
 ; Implementation for the cd command

@@ -264,13 +264,17 @@ func (s *GPU) DrawFrameBuffer(x int32, y int32) {
 		return
 	}
 
-	var cycle uint16
-	// fmt.Printf("Using scrollX %v\n", scrollX)
+	var cycle, scrollX, scrollY uint16
+
 	for s.currentScanline = 0; s.currentScanline < DisplayHeight; s.currentScanline++ {
-		scrollY := uint16(s.registerValues[YOffset])
+		if s.currentScanline % 8 == 0 {
+			scrollY = uint16(s.registerValues[YOffset])
+		}
 
 		for cycle = 0; cycle < DisplayWidth; cycle++ {
-			scrollX := uint16(s.registerValues[XOffset])
+			if cycle % 8 == 0 {
+				scrollX = uint16(s.registerValues[XOffset])
+			}
 
 			offsetCycle := ((cycle >> 1) + (512 - scrollX)) & 0x1ff
 			offsetScanline := ((s.currentScanline >> 1) + (256 - scrollY)) & 0x0ff
@@ -305,6 +309,10 @@ func (s *GPU) DrawFrameBuffer(x int32, y int32) {
 		s.irqMultiplexer.SetInterupt(GpuFrameIRQSource)
 	}
 }
+
+// Bitmap mode has a viewable area of 160x120 scaled pixels, stored in the framebuffer ass 256x128 allowing for scrolling
+// Pixels are stored at 4bp, with 2 pixels packed into each byte
+// The data usage works out to (256/2) * 128 =  
 
 func (s *GPU) drawTileWithAttribute(xBase int32, yBase int32, tileNumber uint8, colorAttribute uint8, scale int32) {
 	var y, x int32

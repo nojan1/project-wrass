@@ -574,6 +574,8 @@ read_cluster:
 
     ; That did the -2 part.. now for the multiplication
     ldx SECTORS_PER_CLUSTER
+    cpx #1 ; Special for reallllllyyyy packed file systems
+    beq _done_multiplying
 _read_cluster_keep_shifting:
     clc
     rol TERM_32_1_1
@@ -588,6 +590,7 @@ _read_cluster_keep_shifting:
     cpx #1
     bne _read_cluster_keep_shifting
 
+_done_multiplying:
     ; Add the offset in X (currently on stack) to the lower byte... and make sure the carry ripples through
     clc
     pla
