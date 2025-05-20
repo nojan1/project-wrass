@@ -3592,12 +3592,6 @@
 		(uuid "6d5fc4f2-dfcc-462e-89cb-17a11c7abea5")
 	)
 	(junction
-		(at 181.61 76.2)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "75e4ba14-9860-4bc9-b7a6-b3b81b7a7970")
-	)
-	(junction
 		(at 191.77 77.47)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4582,6 +4576,16 @@
 	)
 	(wire
 		(pts
+			(xy 124.46 93.98) (xy 133.35 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4857a0d9-7a5d-4878-846f-55d12e978565")
+	)
+	(wire
+		(pts
 			(xy 101.6 60.96) (xy 133.35 60.96)
 		)
 		(stroke
@@ -4699,16 +4703,6 @@
 			(type default)
 		)
 		(uuid "58ff354c-23b9-4a7d-bc56-52453fedc017")
-	)
-	(wire
-		(pts
-			(xy 166.37 68.58) (xy 166.37 76.2)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5977c26e-c8fc-4fea-9a54-8b6ee320f4bd")
 	)
 	(wire
 		(pts
@@ -5262,7 +5256,7 @@
 	)
 	(wire
 		(pts
-			(xy 127 107.95) (xy 127 93.98)
+			(xy 127 88.9) (xy 127 107.95)
 		)
 		(stroke
 			(width 0)
@@ -5309,16 +5303,6 @@
 			(type default)
 		)
 		(uuid "9ad4bf00-c32f-4aa3-8908-18fef789ebbe")
-	)
-	(wire
-		(pts
-			(xy 127 93.98) (xy 133.35 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9b6532fa-9544-4484-a5a3-02f06627c1da")
 	)
 	(bus
 		(pts
@@ -5740,6 +5724,16 @@
 		)
 		(uuid "d6fab73d-7aa9-451b-a417-aa420ae4b48a")
 	)
+	(wire
+		(pts
+			(xy 127 88.9) (xy 133.35 88.9)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d80d571f-582e-43b8-9b71-2908d632fb4e")
+	)
 	(bus
 		(pts
 			(xy 59.69 45.72) (xy 59.69 48.26)
@@ -5849,16 +5843,6 @@
 			(type default)
 		)
 		(uuid "e26789a5-4269-461e-b79a-e3577ecdf1eb")
-	)
-	(wire
-		(pts
-			(xy 166.37 76.2) (xy 181.61 76.2)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e322177f-bf63-4335-a3be-f51197156e07")
 	)
 	(wire
 		(pts
@@ -6002,7 +5986,7 @@
 	)
 	(wire
 		(pts
-			(xy 124.46 88.9) (xy 124.46 127)
+			(xy 124.46 93.98) (xy 124.46 127)
 		)
 		(stroke
 			(width 0)
@@ -6039,16 +6023,6 @@
 			(type default)
 		)
 		(uuid "fbc1638b-8de1-4d06-adfe-6e3e7276baa3")
-	)
-	(wire
-		(pts
-			(xy 124.46 88.9) (xy 133.35 88.9)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fc05c470-71dc-49c4-accc-40f70531e198")
 	)
 	(wire
 		(pts
@@ -6631,6 +6605,17 @@
 				(hide yes)
 			)
 		)
+	)
+	(hierarchical_label "~{Io1Cs}"
+		(shape input)
+		(at 166.37 68.58 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "1d922161-bff4-4137-a941-d3dfa1f690ad")
 	)
 	(hierarchical_label "~{IRQ}"
 		(shape bidirectional)
