@@ -2454,10 +2454,6 @@
 		(uuid "8481e768-ecb0-4bdf-8398-3d7e0c86b5c6")
 	)
 	(no_connect
-		(at 115.57 99.06)
-		(uuid "a0f0315c-cf5e-4fcf-8c46-ffe0dd9c61a5")
-	)
-	(no_connect
 		(at 177.8 71.12)
 		(uuid "b7ad26bf-9f30-4a8b-9749-3e07505c87f9")
 	)
@@ -2796,6 +2792,16 @@
 			(type default)
 		)
 		(uuid "138276d3-b631-4e4a-a6a5-d5ca4af630e0")
+	)
+	(wire
+		(pts
+			(xy 96.52 99.06) (xy 115.57 99.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "198c6bf4-8d4b-45e2-9262-38d5c395fee7")
 	)
 	(wire
 		(pts
@@ -4860,6 +4866,73 @@
 			(project "main-board"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7"
 					(reference "C4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:VCC")
+		(at 96.52 99.06 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "10bae14c-7042-4f37-afe6-3b3d8e59bcaf")
+		(property "Reference" "#PWR072"
+			(at 100.33 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "VCC"
+			(at 92.71 99.0599 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 96.52 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 96.52 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 96.52 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "9ed628ce-e3e7-43c4-8f5d-db710e125e8d")
+		)
+		(instances
+			(project "main-board"
+				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7"
+					(reference "#PWR072")
 					(unit 1)
 				)
 			)
