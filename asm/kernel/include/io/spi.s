@@ -3,13 +3,10 @@ SPI_IN = VAR_8BIT_2
 
 MOSI = 1
 MISO = 2
-SPI_CLOCK = 4
 
 spi_init:
-    lda #0b11110101
-    sta IO_SYSTEM_VIA_DDRA
-    
-    lda #MOSI
+    ; No SPI device selected, clocks low and all output selects inactive
+    lda #0b11100000
     sta IO_SYSTEM_VIA_PORTA
 
     lda #(SPI_MODE_0 | SPI_FASTERCLOCK)

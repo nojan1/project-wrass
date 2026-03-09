@@ -6,7 +6,7 @@ import (
 
 type Keyboard struct {
 	bufferedKey int32
-	readCycle int
+	readCycle   int
 }
 
 func (s *Keyboard) HasKey() bool {
@@ -23,7 +23,7 @@ func (s *Keyboard) StoreKey(key int32, proc *sim6502.Processor) {
 	proc.IRQ(true)
 }
 
-func (s *Keyboard) readPort() (val uint8, requestIRG bool) {
+func (s *Keyboard) readPort(port W65C22Register) (val uint8, requestIRG bool) {
 	if s.HasKey() {
 		s.readCycle--
 		switch s.readCycle {

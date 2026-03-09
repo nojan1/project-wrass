@@ -18,4 +18,4 @@ checksum=$(echo $program | node -e 'const fs=require("fs"); console.log(fs.readF
 echo "load 0400 $checksum"
 echo -n $program
 echo ""
-echo "jump 0400"
+echo -n "jump 0400"

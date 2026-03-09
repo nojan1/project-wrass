@@ -93,11 +93,9 @@ func NewSdCard(sdImageFilePath string) *SdCardInterface {
 	}
 }
 
-func (s *SdCardInterface) onClock(clock bool, mosi uint8, selected bool) (miso uint8) {
+func (s *SdCardInterface) onClock(clock bool, mosi uint8, selected bool) (miso uint8, highZ bool) {
 	if selected {
 		miso = s.shifter.onClock(clock, mosi)
-	} else {
-		miso = 1
 	}
 
 	s.stateHandlers[s.card.state].OnClock(s.card, selected)
@@ -112,14 +110,18 @@ func (s *SdCardInterface) onClock(clock bool, mosi uint8, selected bool) (miso u
 			crc := s.commandBuffer.GetCrc()
 			stopbit := s.commandBuffer.GetStopBit()
 
-			// fmt.Printf("Got SD Command %v, ARG: %04X, CRC: %X, STOP: %v\n", command, argument, crc, stopbit)
+			fmt.Printf("Got SD Command %v, ARG: %04X, CRC: %X, STOP: %v\n", command, argument, crc, stopbit)
 
 			s.stateHandlers[s.card.state].OnCommand(s.card, command, argument, crc, stopbit, s.dataOut)
 		}
 
 	}
 
-	return miso
+	if !selected {
+		return 1, true
+	}
+
+	return miso, false
 }
 
 //

@@ -6,9 +6,9 @@ type SpiEchoDevice struct {
 	shifter *SPIShifter
 }
 
-func (s *SpiEchoDevice) onClock(clock bool, mosi uint8, selected bool) (miso uint8) {
+func (s *SpiEchoDevice) onClock(clock bool, mosi uint8, selected bool) (miso uint8, highZ bool) {
 	if !selected {
-		return 1
+		return 1, true
 	}
 
 	miso = s.shifter.onClock(clock, mosi)
@@ -17,5 +17,5 @@ func (s *SpiEchoDevice) onClock(clock bool, mosi uint8, selected bool) (miso uin
 		s.shifter.writeByte(val)
 	}
 
-	return miso
+	return miso, false
 }

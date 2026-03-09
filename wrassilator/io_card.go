@@ -2,35 +2,89 @@ package main
 
 type IoCard struct {
 	keyboard  *Keyboard
+	spi       *SPI
 	userVia   *W65C22
 	systemVia *W65C22
+
+	keyboardOeB bool
+	spiOeB      bool
 }
 
 func NewIoCard(irqMultiplexer *IRQMultiplexer, sdCardPath string) *IoCard {
 	keyboard := &Keyboard{}
 
-	spi := &SPI{}
-	spi.devices[0] = NewSdCard(sdCardPath)
-	spi.devices[1] = NewDS1306()
+	spi := &SPI{
+		outputShiftRegister: &IC74165{},
+		inputShiftRegister:  &IC74565{},
+	}
+
+	// device 0 is the "none selected device"
+	spi.devices[1] = NewSdCard(sdCardPath)
+	spi.devices[2] = NewDS1306()
 
 	// Temp
-	spi.devices[2] = &SpiEchoDevice{
+	spi.devices[3] = &SpiEchoDevice{
 		shifter: &SPIShifter{mode: 1},
 	}
 
-	return &IoCard{
+	ioCard := &IoCard{
 		keyboard: keyboard,
+		spi:      spi,
 		userVia: &W65C22{
 			irqMultiplexer: irqMultiplexer,
 			irqSource:      UserViaIRQSource,
 		},
 		systemVia: &W65C22{
-			irqMultiplexer:    irqMultiplexer,
-			irqSource:         SystemViaIRQSource,
-			portAReadHandler:  spi,
-			portAWriteHandler: spi,
-			portBReadHandler:  keyboard,
+			irqMultiplexer: irqMultiplexer,
+			irqSource:      SystemViaIRQSource,
 		},
+	}
+
+	ioCard.systemVia.portReadHandler = ioCard
+	ioCard.systemVia.portWriteHandler = ioCard
+
+	return ioCard
+}
+
+// PortA on the SystemVia has the following pin allocations
+// PA0: SPI_DEV0
+// PA1: SPI_DEV1
+// PA2: SPI_DEV2
+// PA3: CLK_In
+// PA4: CLK_Invert
+// PA5: /DI_Latch
+// PA6: /DO_Enable
+// PA7: /Keyboard_OE
+func (s *IoCard) writePort(val uint8, port W65C22Register) {
+	if port == PORTA {
+		s.spiOeB = (val>>6)&0x1 == 1
+		s.keyboardOeB = (val>>7)&0x1 == 1
+	}
+
+	// Writes to PortB (SPI data out) is handled inside spi writePort handler
+	s.spi.writePort(val, port)
+}
+
+// PortB is connected as a bus to three sources, SPI read/write and keyboard read
+func (s *IoCard) readPort(port W65C22Register) (val uint8, requestIRQ bool) {
+	if port == PORTB {
+		returnVal := uint8(0)
+		requestIRQ := false
+
+		if s.spiOeB {
+			returnVal |= s.spi.inputShiftRegister.readLatchValue
+		}
+
+		if s.keyboardOeB {
+			val, irq := s.keyboard.readPort(port)
+			returnVal |= val
+			requestIRQ = requestIRQ || irq
+		}
+
+		return returnVal, requestIRQ
+
+	} else {
+		return 0, false
 	}
 }
 
@@ -52,90 +106,4 @@ func (s *IoCard) Read(addr uint16, internal bool) uint8 {
 	} else {
 		return s.userVia.Read(uint8(addr))
 	}
-}
-
-type W65C22PortReadHandler interface {
-	readPort() (val uint8, requestIRG bool)
-}
-
-type W65C22PortWriteHandler interface {
-	writePort(val uint8)
-}
-
-type W65C22 struct {
-	irqMultiplexer *IRQMultiplexer
-	irqSource      IRQSource
-
-	ddrA              uint8
-	ddrB              uint8
-	portAReadHandler  W65C22PortReadHandler
-	portBReadHandler  W65C22PortReadHandler
-	portAWriteHandler W65C22PortWriteHandler
-	portBWriteHandler W65C22PortWriteHandler
-}
-
-type W65C22Register uint8
-
-const (
-	PORTB W65C22Register = iota
-	PORTA
-	DDRB
-	DDRA
-)
-
-func (s *W65C22) Write(addr uint8, val uint8) {
-	register := W65C22Register(addr & 0xF)
-	switch register {
-	case PORTB:
-		if s.portBWriteHandler != nil {
-			s.portBWriteHandler.writePort(val & s.ddrB)
-		}
-	case PORTA:
-		if s.portAWriteHandler != nil {
-			s.portAWriteHandler.writePort(val & s.ddrA)
-		}
-	case DDRB:
-		s.ddrB = val
-	case DDRA:
-		s.ddrA = val
-	}
-}
-
-func (s *W65C22) Read(addr uint8) uint8 {
-	// TODO: IRQ from port is actually conditional and is controlled by registers.
-	// update this function at some point
-
-	register := W65C22Register(addr & 0xF)
-	switch register {
-	case PORTB:
-		if s.portBReadHandler != nil {
-			data, holdIRQ := s.portBReadHandler.readPort()
-
-			if holdIRQ {
-				s.irqMultiplexer.SetInterupt(s.irqSource)
-			} else {
-				s.irqMultiplexer.ClearInterupt(s.irqSource)
-			}
-
-			return data
-		}
-	case PORTA:
-		if s.portAReadHandler != nil {
-			data, holdIRQ := s.portAReadHandler.readPort()
-
-			if holdIRQ {
-				s.irqMultiplexer.SetInterupt(s.irqSource)
-			} else {
-				s.irqMultiplexer.ClearInterupt(s.irqSource)
-			}
-
-			return data
-		}
-	case DDRB:
-		return s.ddrB
-	case DDRA:
-		return s.ddrA
-	}
-
-	return 0
 }

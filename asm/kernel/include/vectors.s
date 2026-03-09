@@ -50,9 +50,9 @@ reset:
     lda #(KEYBOARD_INPUT | GPU_OUTPUT | UART_OUTPUT | UART_INPUT_ENABLE)
     sta IO_CONTROL
 
-    ; KEYBOARD INTERFACE SETUP
-    lda #0
-    sta IO_SYSTEM_VIA_DDRB ; All pins are input
+    ; All pins on PORTA of system VIA is output
+    lda #$FF
+    sta IO_SYSTEM_VIA_DDRA 
 
     ; SPI INTERFACE SETUP
     jsr spi_init

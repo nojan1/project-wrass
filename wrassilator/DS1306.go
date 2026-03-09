@@ -36,9 +36,9 @@ func NewDS1306() *DS1306 {
 	}
 }
 
-func (s *DS1306) onClock(clock bool, mosi uint8, selected bool) (miso uint8) {
+func (s *DS1306) onClock(clock bool, mosi uint8, selected bool) (miso uint8, highZ bool) {
 	if !selected {
-		return 1
+		return 1, true
 	}
 
 	miso = s.shifter.onClock(clock, mosi)
@@ -153,7 +153,7 @@ func (s *DS1306) onClock(clock bool, mosi uint8, selected bool) (miso uint8) {
 		}
 	}
 
-	return miso
+	return miso, false
 }
 
 func toBcd(x int) uint8 {

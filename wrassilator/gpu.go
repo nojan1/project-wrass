@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -26,6 +27,7 @@ type GpuControlWord = uint8
 const (
 	IRQControlWord         GpuControlWord = 1 << 0
 	BlankScreenControlWord GpuControlWord = 1 << 1
+	BitmapModeControlWord  GpuControlWord = 1 << 2
 )
 
 const (
@@ -204,16 +206,17 @@ func (s *GPU) Init() {
 
 func (s *GPU) Write(addr uint16, val uint8) {
 	subAddr := GpuRegister(addr & 0x1F)
-	if subAddr == ReadWrite {
+	switch subAddr {
+	case ReadWrite:
 		internalAddress := uint16(s.registerValues[AddressHigh])<<8 | uint16(s.registerValues[AddressLow])
 		s.handleIncrement()
 
 		if internalAddress < uint16(len(s.vram)) {
 			s.vram[internalAddress] = val
 		}
-	} else if subAddr == ScanlineHigh || subAddr == ScanlineLow {
+	case ScanlineHigh, ScanlineLow:
 		// Writing to scanline registers is a no-op
-	} else {
+	default:
 		s.registerValues[subAddr] = val
 	}
 }
@@ -225,7 +228,8 @@ func (s *GPU) Read(addr uint16, internal bool) uint8 {
 
 	subAddr := GpuRegister(addr & 0x1F)
 
-	if subAddr == ReadWrite {
+	switch subAddr {
+	case ReadWrite:
 		internalAddress := uint16(s.registerValues[AddressHigh])<<8 | uint16(s.registerValues[AddressLow])
 		s.handleIncrement()
 
@@ -234,11 +238,11 @@ func (s *GPU) Read(addr uint16, internal bool) uint8 {
 		} else {
 			return 0
 		}
-	} else if subAddr == ScanlineHigh {
+	case ScanlineHigh:
 		return uint8(s.currentScanline >> 8)
-	} else if subAddr == ScanlineLow {
+	case ScanlineLow:
 		return uint8(s.currentScanline)
-	} else {
+	default:
 		if subAddr == GpuControl {
 			s.irqMultiplexer.ClearInterupt(GpuFrameIRQSource)
 		}
@@ -264,15 +268,27 @@ func (s *GPU) DrawFrameBuffer(x int32, y int32) {
 		return
 	}
 
-	var cycle, scrollX, scrollY uint16
+	if s.registerValues[GpuControl]&BitmapModeControlWord == 0 {
+		s.drawTilemap(x, y)
+	} else {
+		s.drawBitmap(x, y)
+	}
+
+	if s.registerValues[GpuControl]&IRQControlWord != 0 {
+		s.irqMultiplexer.SetInterupt(GpuFrameIRQSource)
+	}
+}
+
+func (s *GPU) drawTilemap(x int32, y int32) {
+	var scrollX, scrollY uint16
 
 	for s.currentScanline = 0; s.currentScanline < DisplayHeight; s.currentScanline++ {
-		if s.currentScanline % 8 == 0 {
+		if s.currentScanline%8 == 0 {
 			scrollY = uint16(s.registerValues[YOffset])
 		}
 
-		for cycle = 0; cycle < DisplayWidth; cycle++ {
-			if cycle % 8 == 0 {
+		for cycle := range uint16(DisplayWidth) {
+			if cycle%8 == 0 {
 				scrollX = uint16(s.registerValues[XOffset])
 			}
 
@@ -304,21 +320,41 @@ func (s *GPU) DrawFrameBuffer(x int32, y int32) {
 			s.drawColoredPixel(x+int32(cycle), y+int32(s.currentScanline), colorIndex)
 		}
 	}
+}
 
-	if s.registerValues[GpuControl]&IRQControlWord != 0 {
-		s.irqMultiplexer.SetInterupt(GpuFrameIRQSource)
+func (s *GPU) drawBitmap(x int32, y int32) {
+	// Using the ares for Tilemap and ColorAttributes giving us 2 * 2k
+	// this is allocated to 2k for the upper screen and 2k for the lower
+	// pixels are packed in 4bp indexed into the pallete
+	// total resolution is 128x64 pixels
+
+	for s.currentScanline = 0; s.currentScanline < DisplayHeight; s.currentScanline++ {
+		for cycle := range uint16(DisplayWidth) {
+
+			mapY := s.currentScanline >> 5
+			mapX := cycle >> 6
+
+			fmt.Printf("X: %v, Y: %v \n", mapY, mapX)
+
+			address := (mapY * 64) + (mapX >> 1)
+			data := s.vram[address]
+
+			colorIndex := data & 0xf
+			if cycle%2 == 0 {
+				colorIndex = (data >> 4) & 0xf
+			}
+
+			s.drawColoredPixel(x+int32(cycle), y+int32(s.currentScanline), colorIndex)
+		}
+
 	}
 }
 
-// Bitmap mode has a viewable area of 160x120 scaled pixels, stored in the framebuffer ass 256x128 allowing for scrolling
-// Pixels are stored at 4bp, with 2 pixels packed into each byte
-// The data usage works out to (256/2) * 128 =  
-
 func (s *GPU) drawTileWithAttribute(xBase int32, yBase int32, tileNumber uint8, colorAttribute uint8, scale int32) {
 	var y, x int32
-	for y = 0; y < 8; y++ {
+	for y = range int32(8) {
 		rowPattern := s.vram[TilemapStart+(int32(tileNumber)*8)+y]
-		for x = 0; x < 8; x++ {
+		for x = range int32(8) {
 			pixelOn := rowPattern&(1<<x) != 0
 			colorIndex := colorAttribute & 0xf
 
