@@ -2806,7 +2806,7 @@
 			(uuid "86a796a9-0d06-4dee-9939-23c09ba93946")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "#PWR031")
 					(unit 1)
@@ -2872,7 +2872,7 @@
 			(uuid "398ca960-af97-4673-ba3f-756489d34a51")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "#PWR033")
 					(unit 1)
@@ -2942,7 +2942,7 @@
 			(uuid "5552fd63-cf9b-46e7-b2c7-c162a3cdc0e2")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "C11")
 					(unit 1)
@@ -3008,7 +3008,7 @@
 			(uuid "feaa93ae-dd60-4440-8a44-5cca94de8396")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "#PWR034")
 					(unit 1)
@@ -3120,7 +3120,7 @@
 			(uuid "1d32350b-fa56-49a5-be25-6f4e72e18beb")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "U10")
 					(unit 1)
@@ -3190,7 +3190,7 @@
 			(uuid "62722e9a-2dc6-4af5-9fd8-18d625ec6a4c")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "C12")
 					(unit 1)
@@ -3256,7 +3256,7 @@
 			(uuid "27e6a3e2-a5ad-4b6e-81a2-2c357404cdc9")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "#PWR036")
 					(unit 1)
@@ -3326,7 +3326,7 @@
 			(uuid "5e03c736-9583-4551-976b-6f33601251d3")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "C13")
 					(unit 1)
@@ -3392,7 +3392,7 @@
 			(uuid "b715d35f-b4cb-40e8-a5e4-1ade2c26be5a")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "#PWR035")
 					(unit 1)
@@ -3504,7 +3504,7 @@
 			(uuid "4b22b27a-d131-40b0-ab02-318499fce4d6")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "U9")
 					(unit 1)
@@ -3570,7 +3570,7 @@
 			(uuid "15d624b1-e0da-4dd7-9d04-904891eebc5e")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "#PWR029")
 					(unit 1)
@@ -3636,7 +3636,7 @@
 			(uuid "b3ce9357-5f89-4948-b66d-37be6d58a6c9")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "#PWR030")
 					(unit 1)
@@ -3702,7 +3702,7 @@
 			(uuid "c44d899e-84d9-45e2-b953-14d89d37f604")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "#PWR032")
 					(unit 1)
@@ -3826,7 +3826,7 @@
 			(uuid "363a44dd-fe3b-440e-a44f-ae91e6351a03")
 		)
 		(instances
-			(project "main-board"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/b7610ea3-6d9d-4a7a-bdcf-7fc9b6af9d5d"
 					(reference "U8")
 					(unit 1)

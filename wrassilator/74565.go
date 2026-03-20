@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type IC74565 struct {
 	ouputEnableB           bool
 	lastShiftRegisterClock bool
@@ -17,7 +19,7 @@ func (s *IC74565) setShiftRegisterClock(newClock bool) {
 	}
 
 	if !s.lastShiftRegisterClock && newClock {
-		s.shiftRegisterValue <<= s.inputBit & 0x01
+		s.shiftRegisterValue = (s.shiftRegisterValue << 1) | (s.inputBit & 0x01)
 	}
 
 	s.lastShiftRegisterClock = newClock
@@ -40,6 +42,7 @@ func (s *IC74565) getOutput() uint8 {
 		return s.readLatchValue
 	}
 
+	fmt.Printf("Got read from non outputing shift register\n")
 	// Output enable is not active... in a real chip we would be high Z at this point
 	// but we are lazy and just return 0
 	return 0x00

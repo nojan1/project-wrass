@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-binaryPath=$(mktemp -t kernel-binary)
-listingPath=$(mktemp -t kernel-listing)
+binaryPath=$(mktemp -t kernel-binary.XXX)
+listingPath=$(mktemp -t kernel-listing.XXX)
 
 asm/build.sh "$binaryPath" asm/kernel/kernel.s "$listingPath"
 [ $? -ne 0 ] && echo "Build failed!" && exit 1

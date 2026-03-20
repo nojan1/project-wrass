@@ -44,12 +44,8 @@ ds1306_init:
 ds1306_command:
     pha
     
-    lda #(SPI_MODE_1 | SPI_SLOWCLOCK)
-    sta SPI_CONFIG
-    jsr spi_clock_inactive
-
-    ; Enable device 1, clock chip
-    lda #SPI_DEVICE_1    
+    ; Enable device 2, clock chip
+    lda #(SPI_DEVICE_2 | SPI_MODE_1)   
     jsr spi_set_device
 
     txa
@@ -62,7 +58,7 @@ ds1306_command:
 
     pha
     ; Unset device
-    lda #SPI_DEVICES_DISABLED
+    lda #(SPI_DEVICES_DISABLED | SPI_MODE_1)
     jsr spi_set_device
     pla
 

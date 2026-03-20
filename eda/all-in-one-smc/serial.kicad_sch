@@ -4086,7 +4086,7 @@
 			(uuid "bf642d5f-d7a2-4f7a-9ca4-b3902c8d54b2")
 		)
 		(instances
-			(project ""
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/13a62835-3c16-44b1-a0dd-ab885c2e0f44"
 					(reference "Y1")
 					(unit 1)
@@ -4407,7 +4407,7 @@
 			(uuid "8d134497-475f-47c6-9433-2ac697dae18a")
 		)
 		(instances
-			(project ""
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/13a62835-3c16-44b1-a0dd-ab885c2e0f44"
 					(reference "U15")
 					(unit 1)
@@ -4903,7 +4903,7 @@
 			(uuid "03310ddd-dcb5-42a4-a94d-37d3696c9ca1")
 		)
 		(instances
-			(project ""
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/13a62835-3c16-44b1-a0dd-ab885c2e0f44"
 					(reference "U14")
 					(unit 1)

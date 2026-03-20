@@ -3,10 +3,8 @@ package main
 type SPI struct {
 	currentDevice uint8
 	devices       [8]SPIDevice
-	portValue     uint8
 
-	keyboardOeB bool
-	doEnableB   bool
+	doEnableB bool
 
 	outputShiftRegister *IC74165
 	inputShiftRegister  *IC74565
@@ -24,15 +22,11 @@ func (s *SPI) writePort(val uint8, port W65C22Register) {
 
 		diLatchB := (val>>5)&0x1 == 1
 		s.doEnableB = (val>>6)&0x1 == 1
-		s.keyboardOeB = (val>>7)&0x1 == 1
 
 		conditionedClock := clk
 		if clkInvert {
 			conditionedClock = !conditionedClock
 		}
-
-		s.inputShiftRegister.setShiftRegisterClock(conditionedClock)
-		s.inputShiftRegister.setReadClock(!s.doEnableB)
 
 		var miso uint8 = 1
 
@@ -48,6 +42,9 @@ func (s *SPI) writePort(val uint8, port W65C22Register) {
 
 		s.inputShiftRegister.inputBit = miso
 
+		s.inputShiftRegister.setShiftRegisterClock(conditionedClock)
+		s.inputShiftRegister.setReadClock(!s.doEnableB)
+
 		s.outputShiftRegister.parallelLoadB = diLatchB
 		s.outputShiftRegister.setClock(!conditionedClock)
 	} else {
@@ -59,12 +56,11 @@ func (s *SPI) readPort(port W65C22Register) (val uint8, requestIRQ bool) {
 	if port == PORTB {
 		returnVal := uint8(0)
 
-		if s.doEnableB {
+		if !s.doEnableB {
 			returnVal |= s.inputShiftRegister.readLatchValue
 		}
 
 		return returnVal, false
-
 	} else {
 		return 0, false
 	}

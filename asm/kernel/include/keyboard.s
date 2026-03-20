@@ -13,7 +13,7 @@ scan_keyboard:
     lda KEYBOARD_FLAGS
     eor #KEYBOARD_RELEASE   ; flip the releasing bit
     sta KEYBOARD_FLAGS
-    lda IO_SYSTEM_VIA_PORTB      ; read key value that's being released
+    jsr read_keyboard_data ; read key being released
     cmp #$12       ; left shift
     beq shift_up
     cmp #$59       ; right shift
@@ -26,19 +26,29 @@ shift_up:
     sta KEYBOARD_FLAGS
     jmp exit
 
-read_key:
+read_keyboard_data:
     ; To be able to read a key from the keyboard we need to shift PORTB
     ; of the system VIA into input, then we we need to set keyboard output enable
     ; on PORTA
 
     ; We completly override all SPI related stuff and just set the KEYBOARD OE
-    lda #(~KEYBOARD_OEB | SPI_OEB | SPI_DATA_LATCHB | ~SPI_CLOCK_INVERT | ~SPI_CLOCK | SPI_DEVICES_DISABLED)
+    lda #%01100000
     sta IO_SYSTEM_VIA_PORTA
 
     lda #0
     sta IO_SYSTEM_VIA_DDRB ; All pins are input
 
     lda IO_SYSTEM_VIA_PORTB
+    pha
+
+    lda #%11100000
+    sta IO_SYSTEM_VIA_PORTA
+
+    pla
+    rts
+
+read_key:
+    jsr read_keyboard_data
     cmp #$f0        ; if releasing a key
     beq key_release ; set the releasing bit
     cmp #$12        ; left shift

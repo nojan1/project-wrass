@@ -18,6 +18,8 @@ func NewIoCard(irqMultiplexer *IRQMultiplexer, sdCardPath string) *IoCard {
 		inputShiftRegister:  &IC74565{},
 	}
 
+	spi.inputShiftRegister.shiftRegisterClearB = true
+
 	// device 0 is the "none selected device"
 	spi.devices[1] = NewSdCard(sdCardPath)
 	spi.devices[2] = NewDS1306()
@@ -71,12 +73,15 @@ func (s *IoCard) readPort(port W65C22Register) (val uint8, requestIRQ bool) {
 		returnVal := uint8(0)
 		requestIRQ := false
 
-		if s.spiOeB {
-			returnVal |= s.spi.inputShiftRegister.readLatchValue
+		if !s.spiOeB {
+			spiData := s.spi.inputShiftRegister.getOutput()
+			// fmt.Printf("SPI value read: %x\n", spiData)
+			returnVal |= spiData
 		}
 
-		if s.keyboardOeB {
+		if !s.keyboardOeB {
 			val, irq := s.keyboard.readPort(port)
+			// fmt.Printf("Keyboard value read: %x\n", val)
 			returnVal |= val
 			requestIRQ = requestIRQ || irq
 		}

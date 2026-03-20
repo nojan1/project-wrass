@@ -24,12 +24,8 @@ sd_dummy_boot_pulses:
 ; Setup SPI modes and initialize SD card
 ; Mutates: A, X, Y
 sd_init:
-    ; Setup SPI mode 0, with 2 wait cycles
-    lda #(SPI_MODE_0 | 2)
-    sta SPI_CONFIG
-    jsr spi_clock_inactive
-
-    jsr sd_dummy_boot_pulses
+    lda #(SPI_DEVICES_DISABLED | SPI_MODE_0)
+    jsr spi_set_device
 
     ; Send CMD0
     jsr sd_cmd0
@@ -69,8 +65,8 @@ sd_init:
 
 .sd_init_done:
     ; Once initialized we can speed up, setup SPI mode 0, with 1 wait cycles
-    lda #(SPI_MODE_0 | 1)
-    sta SPI_CONFIG
+;    lda #(SPI_MODE_0 | 1)
+;    sta SPI_CONFIG
 
     lda #SD_CARD_INITIALIZED
     sta SD_CARD_STATUS

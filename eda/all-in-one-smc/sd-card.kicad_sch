@@ -3610,7 +3610,7 @@
 			(uuid "3da1671c-8621-4cf3-bf57-755e17970ad9")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "R39")
 					(unit 1)
@@ -3682,7 +3682,7 @@
 			(uuid "70f3cb93-3e46-45ce-a665-28843eb13bff")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "#PWR0133")
 					(unit 1)
@@ -4023,7 +4023,7 @@
 			(uuid "497d8849-785c-41f8-bc3f-49cb71bd577d")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "#PWR0139")
 					(unit 1)
@@ -4101,7 +4101,7 @@
 			(uuid "b7e26d1a-3868-4a86-81c3-587c9fd13f9c")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "U32")
 					(unit 1)
@@ -4391,7 +4391,7 @@
 			(uuid "a4bbeb43-07bd-44bd-a1dd-41d736ed46f2")
 		)
 		(instances
-			(project ""
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "Q2")
 					(unit 1)
@@ -4492,7 +4492,7 @@
 			(uuid "2628f391-5eb5-4469-90b1-85ea3dc20a35")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "J12")
 					(unit 1)
@@ -4567,7 +4567,7 @@
 			(uuid "0fd044da-731b-4b43-ac57-480852dfb0b5")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "C45")
 					(unit 1)
@@ -4726,7 +4726,7 @@
 			(uuid "5f0440eb-5e35-4bcd-b525-93acbbf9b053")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "J11")
 					(unit 1)
@@ -4872,7 +4872,7 @@
 			(uuid "43221b00-282c-4869-b6f8-3110cf449823")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "#PWR0131")
 					(unit 1)
@@ -4944,7 +4944,7 @@
 			(uuid "a9f76a1e-3492-45b8-84c8-13202eb6669a")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "#PWR0134")
 					(unit 1)
@@ -5016,7 +5016,7 @@
 			(uuid "efed6f88-394f-40e3-95b4-b3e8f1674012")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "#PWR0136")
 					(unit 1)
@@ -5223,7 +5223,7 @@
 			(uuid "2c8185cc-8b92-4dfb-93f0-5026db67f41e")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "#PWR0137")
 					(unit 1)
@@ -5300,7 +5300,7 @@
 			(uuid "f2e98ab9-39df-4218-8520-758f7e77cdf0")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "JP6")
 					(unit 1)
@@ -5442,7 +5442,7 @@
 			(uuid "8e243f8c-1085-4ec5-9d47-509e5304e5cd")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "#PWR0138")
 					(unit 1)
@@ -5723,7 +5723,7 @@
 			(uuid "c9822b1c-60cb-4617-8680-5b3d0e7901c4")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "C44")
 					(unit 1)
@@ -5798,7 +5798,7 @@
 			(uuid "040231f3-924e-4640-8211-713a66c59306")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "R38")
 					(unit 1)
@@ -5870,7 +5870,7 @@
 			(uuid "cb7c8ac1-c992-4a8e-8e03-181c08cc65d0")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "#PWR0135")
 					(unit 1)
@@ -6012,7 +6012,7 @@
 			(uuid "7a28a36f-260e-40d0-bc28-5c5406ad21ba")
 		)
 		(instances
-			(project "io-card"
+			(project "all-in-one-smc"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e5847303-a1a0-4615-a3f4-69337996ce5e/41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc"
 					(reference "#PWR0132")
 					(unit 1)
