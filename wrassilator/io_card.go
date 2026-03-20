@@ -26,7 +26,16 @@ func NewIoCard(irqMultiplexer *IRQMultiplexer, sdCardPath string) *IoCard {
 
 	// Temp
 	spi.devices[3] = &SpiEchoDevice{
+		shifter: &SPIShifter{mode: 0},
+	}
+	spi.devices[4] = &SpiEchoDevice{
 		shifter: &SPIShifter{mode: 1},
+	}
+	spi.devices[5] = &SpiEchoDevice{
+		shifter: &SPIShifter{mode: 2},
+	}
+	spi.devices[6] = &SpiEchoDevice{
+		shifter: &SPIShifter{mode: 3},
 	}
 
 	ioCard := &IoCard{
