@@ -56,10 +56,12 @@ run_test:
         bra .try_next
 
 .error:
+        pha
         putstr_addr error_string
         jsr sys_newline
         putstr_addr expected_string
 
+        pla
         jsr sys_puthex
         putstr_addr got_string
 
