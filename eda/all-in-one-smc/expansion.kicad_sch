@@ -3088,7 +3088,7 @@
 	)
 	(wire
 		(pts
-			(xy 130.81 96.52) (xy 133.35 96.52)
+			(xy 129.54 96.52) (xy 133.35 96.52)
 		)
 		(stroke
 			(width 0)
@@ -4468,7 +4468,7 @@
 	)
 	(global_label "Audio_R"
 		(shape input)
-		(at 129.54 99.06 180)
+		(at 129.54 96.52 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -4478,7 +4478,7 @@
 		)
 		(uuid "1d4ef39d-b9a5-4b36-9a91-7c7fe06e4ce5")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 119.1768 99.06 0)
+			(at 119.1768 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4523,6 +4523,28 @@
 		(uuid "8db35778-512f-4cbd-9efe-cff72b92bf1e")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 118.8933 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "Audio_GND"
+		(shape input)
+		(at 129.54 99.06 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "f35ca25e-7a84-4c9a-954f-e8741ec270b9")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 116.5763 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6017,72 +6039,6 @@
 			(project "main-board"
 				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e588fc5d-119a-48c2-8ca0-ace464ced7b8"
 					(reference "#PWR052")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 130.81 96.52 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "b41f9205-3d9b-4a7e-a841-a1f74e456084")
-		(property "Reference" "#PWR053"
-			(at 124.46 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 127 96.52 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" ""
-			(at 130.81 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 130.81 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 130.81 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "48e462bc-8461-4979-948b-7a8a110a10b0")
-		)
-		(instances
-			(project "main-board"
-				(path "/2957ffac-6a43-4af7-8ab7-5cc1dbf2f2d7/e588fc5d-119a-48c2-8ca0-ace464ced7b8"
-					(reference "#PWR053")
 					(unit 1)
 				)
 			)

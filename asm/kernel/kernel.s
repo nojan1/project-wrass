@@ -31,6 +31,8 @@
     .include "include/io/fs/partition.s"
     .include "include/io/fs/userland.s"
 
+    .include "include/ds1306.s"
+
     .ifndef NO_GPU
     .include "include/io/graphic/graphic.s"
     .include "include/io/graphic/io_graphic.s"

@@ -50,14 +50,12 @@ reset:
     lda #(KEYBOARD_INPUT | GPU_OUTPUT | UART_OUTPUT | UART_INPUT_ENABLE)
     sta IO_CONTROL
 
-    ; All pins on PORTA of system VIA is output
-    lda #$FF
-    sta IO_SYSTEM_VIA_DDRA 
-
     ; SPI INTERFACE SETUP
     jsr spi_init
 
     lda #$FF
     jsr spi_transcieve
+
+    jsr ds1306_init
 
     jsr monitor_loop_start

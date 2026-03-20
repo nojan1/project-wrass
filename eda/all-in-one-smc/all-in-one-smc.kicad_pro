@@ -190,7 +190,8 @@
         }
       ],
       "track_widths": [
-        0.0
+        0.0,
+        0.15
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -222,6 +223,10 @@
         {
           "diameter": 0.0,
           "drill": 0.0
+        },
+        {
+          "diameter": 0.5,
+          "drill": 0.2
         }
       ],
       "zones_allow_external_fillets": false
@@ -681,6 +686,10 @@
     [
       "5f8686b6-fa2e-4d37-9d38-850dfcfe6237",
       "PS2 keyboard interface"
+    ],
+    [
+      "ee6b314a-d12a-4589-b2bf-a632e2eed09f",
+      "Clock"
     ],
     [
       "41a1bb13-ad71-4a8d-be8a-acdb53ae3dcc",

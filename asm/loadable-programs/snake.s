@@ -232,7 +232,7 @@ _check_food_done:
     rts
 
 game_over_text:
-    .string "GAME OVER!"
+    .string "YOU DIED!"
 press_r_test:
     .string "PRESS R TO TRY AGAIN"
 game_over:

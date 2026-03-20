@@ -22,6 +22,9 @@ cd_command_string:
 cat_command_string:
     .string "cat"
 
+time_command_string:
+    .string "time"
+
 commands:
     ; read <addr> [count]
     .word read_command_string ; command string
@@ -62,6 +65,11 @@ commands:
     .word cat_command_string ; command string
     .byte 0 ; num parameters, technically there is a string after but that is not a 16 bit number so the monitor won't care
     .word cat_command_implementation
+
+    ; time
+    .word time_command_string
+    .byte 0
+    .word time_command_implementation
 commands_end:
 
 monitor_loop_start:
@@ -288,3 +296,4 @@ _monitor_loop_command_error:
     .include "include/monitor/commands/load.s"
     .include "include/monitor/commands/initsd.s"
     .include "include/monitor/commands/fs.s"
+    .include "include/monitor/commands/time.s"

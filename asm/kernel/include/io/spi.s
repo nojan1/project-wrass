@@ -1,10 +1,8 @@
-SPI_OUT = VAR_8BIT_1
-SPI_IN = VAR_8BIT_2
-
-MOSI = 1
-MISO = 2
-
 spi_init:
+    ; All pins on PORTA of system VIA is output
+    lda #$FF
+    sta IO_SYSTEM_VIA_DDRA
+    
     ; No SPI device selected, clocks low and all output selects inactive
     lda #0b11100000
     sta IO_SYSTEM_VIA_PORTA
@@ -16,20 +14,26 @@ spi_init:
 
     rts
 
+
+; TEMP
+MOSI=0
+MISO=0
+SPI_IN=$FA
+SPI_OUT=$FB
+
 ; Set the active SPI device to the line number in A
-; bit 0 set to 0 disables all devies
-; bit 1-3 are address
+; bit 0-2 are address
 spi_set_device:
-    and #$0F
-    asl
-    asl
-    asl
-    asl
-    sta VAR_8BIT_1
+    and #$07
+    pha
     lda IO_SYSTEM_VIA_PORTA
-    and #(SPI_CLOCK | MOSI)
-    ora VAR_8BIT_1
+    and #$f1
     sta IO_SYSTEM_VIA_PORTA
+    pla
+    beq .spi_set_no_device ; if we are deselecting (addr==0) then we can skip the or operation
+    ora IO_SYSTEM_VIA_PORTA
+    sta IO_SYSTEM_VIA_PORTA
+.spi_set_no_device:    
     rts
 
 ; Set clock to inactive state based on current CPOL
