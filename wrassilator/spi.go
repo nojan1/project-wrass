@@ -54,17 +54,3 @@ func (s *SPI) writePort(val uint8, port W65C22Register) {
 		s.outputShiftRegister.parallelInput = val
 	}
 }
-
-func (s *SPI) readPort(port W65C22Register) (val uint8, requestIRQ bool) {
-	if port == PORTB {
-		returnVal := uint8(0)
-
-		if !s.doEnableB {
-			returnVal |= s.inputShiftRegister.getOutput()
-		}
-
-		return returnVal, false
-	} else {
-		return 0, false
-	}
-}

@@ -17,28 +17,6 @@ spi_set_device:
     sta IO_SYSTEM_VIA_PORTA
     rts
 
-; ; Set clock to inactive state based on current CPOL
-; spi_clock_inactive:
-;     pha
-;     lda SPI_CONFIG
-;     and #CPOL_INVERTED
-;     bne .set_clock_inactive_inverted
-
-;     lda IO_SYSTEM_VIA_PORTA
-;     and #(~SPI_CLOCK)
-;     sta IO_SYSTEM_VIA_PORTA
-
-;     jmp .spi_clock_inactive_done
-
-; .set_clock_inactive_inverted:
-;     lda IO_SYSTEM_VIA_PORTA
-;     ora #SPI_CLOCK
-;     sta IO_SYSTEM_VIA_PORTA
-
-; .spi_clock_inactive_done:
-;     pla
-;     rts
-
 ; Sends the byte stored in A over spi, toggling the clock
 ; Puts the return value into A
 spi_transcieve:
@@ -93,41 +71,3 @@ spi_transcieve:
 
     plx
     rts
-
-; ;; Take the most significant bit from SPI_OUT and set it on the MOSI line
-; spi_set_mosi:
-;     rol SPI_OUT
-;     bcs .spi_set_mosi_1
-;     and #(~MOSI)
-;     sta IO_SYSTEM_VIA_PORTA
-;     jmp .spi_set_mosi_done
-; .spi_set_mosi_1:
-;     ora #MOSI
-;     sta IO_SYSTEM_VIA_PORTA
-; .spi_set_mosi_done:
-;     rts
-;; ;; Sample MISO line and shift bit in towards the most significant bit in SPI_IN
-; spi_sample_miso:
-;     lda IO_SYSTEM_VIA_PORTA
-;     and #MISO
-;     bne .spi_sample_miso_high
-;     clc
-;     jmp .spi_sample_miso_done
-; .spi_sample_miso_high:
-;     sec
-; .spi_sample_miso_done:
-;     rol SPI_IN
-;     lda IO_SYSTEM_VIA_PORTA
-;     rts
-;; spi_delay:
-;     phx
-;     pha
-;     lda SPI_CONFIG
-;     and #0b00001111
-;     tax
-; .spi_delay_cont:
-;     dex
-;     bne .spi_delay_cont
-;;     pla
-;     plx
-;     rts
