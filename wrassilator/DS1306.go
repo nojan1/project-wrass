@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -48,7 +47,7 @@ func (s *DS1306) onClock(clock bool, mosi uint8, selected bool) (miso uint8, hig
 			// Perform a write now
 			effectiveAddress := s.writeAddress & 0x7f
 
-			fmt.Printf("Got write to address %02X with value %02X\n", effectiveAddress, val)
+			// fmt.Printf("Got write to address %02X with value %02X\n", effectiveAddress, val)
 
 			switch effectiveAddress {
 			case SECONDS:

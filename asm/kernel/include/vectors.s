@@ -53,9 +53,9 @@ reset:
     ; SPI INTERFACE SETUP
     jsr spi_init
 
-    lda #$FF
-    jsr spi_transcieve
+;    lda #$FF
+;    jsr spi_transcieve
 
-    jsr ds1306_init
+;    jsr ds1306_init
 
     jsr monitor_loop_start
