@@ -46,16 +46,14 @@ reset:
     jsr lcd_display_init
     .endif
 
-    ; lda #(KEYBOARD_INPUT | GPU_OUTPUT)
     lda #(KEYBOARD_INPUT | GPU_OUTPUT | UART_OUTPUT | UART_INPUT_ENABLE)
     sta IO_CONTROL
 
-    ; SPI INTERFACE SETUP
     jsr spi_init
 
-;    lda #$FF
-;    jsr spi_transcieve
+    lda #$FF
+    jsr spi_transcieve
 
-;    jsr ds1306_init
+    jsr ds1306_init
 
     jsr monitor_loop_start

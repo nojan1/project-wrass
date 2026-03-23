@@ -1,5 +1,6 @@
 
     .include "../kernel/include/constants.s"
+    .include "../kernel/include/variables.s"
     .include "constants.s"
     .include "macro.s"
 

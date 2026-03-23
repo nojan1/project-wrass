@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 type SPIMode = uint8
 
 type SPIShifter struct {
@@ -90,5 +88,5 @@ func (s *SPIShifter) writeByte(val uint8) {
 	s.bufferOut = val
 	s.cycleOut = 0
 	s.bufferOutInitialized = true
-	fmt.Printf("Buffer out was set to $%02X\n", val)
+	// fmt.Printf("Buffer out was set to $%02X\n", val)
 }

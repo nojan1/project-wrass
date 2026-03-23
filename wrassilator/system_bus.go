@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	sim6502 "github.com/nojan1/sim6502/pkg"
 )
 
@@ -72,7 +70,6 @@ func (m *SystemBus) Write(addr uint16, val uint8) {
 		m.bankedRam.Write(addr, val)
 		return
 	} else if addr == 0x000 {
-		fmt.Println("HUULLLLALAL")
 		// Memcontrol register
 		m.memControlRegister.Write(addr, val)
 		return
