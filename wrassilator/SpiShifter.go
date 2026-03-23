@@ -70,8 +70,8 @@ func (s *SPIShifter) onClock(clock bool, mosi uint8) (miso uint8) {
 		s.cycle++
 	}
 
-	fmt.Printf("Buffer IN: %08b\n", s.bufferIn)
-	fmt.Printf("Buffer OUT: %08b\n", s.bufferOut)
+	// fmt.Printf("Buffer IN: %08b\n", s.bufferIn)
+	// fmt.Printf("Buffer OUT: %08b\n", s.bufferOut)
 
 	s.lastMiso = miso
 	return miso

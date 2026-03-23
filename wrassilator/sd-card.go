@@ -77,7 +77,7 @@ func NewSdCard(sdImageFilePath string) *SdCardInterface {
 	dataOut := make(chan uint8, 700)
 
 	return &SdCardInterface{
-		shifter:       &SPIShifter{mode: 1, dataOut: dataOut}, //SHOULD BE 0 PROBABLY BUT ASM IS CURRENTLY BORKED!!!
+		shifter:       &SPIShifter{mode: 0, dataOut: dataOut},
 		commandBuffer: &CommandBuffer{},
 		dataOut:       dataOut,
 		stateHandlers: []SdCardStateHandler{

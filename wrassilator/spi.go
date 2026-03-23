@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 type SPI struct {
 	currentDevice uint8
 	devices       [8]SPIDevice
@@ -31,7 +29,7 @@ func (s *SPI) writePort(val uint8, port W65C22Register) {
 		}
 
 		var miso uint8 = 1
-		fmt.Printf("PORTA Written, device: %02x, clk: %t, clkInvert: %t, diLatchB: %t, doEnableB: %t, keyboardOe: %d\n", s.currentDevice, clk, clkInvert, diLatchB, s.doEnableB, (val>>7)&0x1)
+		// fmt.Printf("PORTA Written, device: %02x, clk: %t, clkInvert: %t, diLatchB: %t, doEnableB: %t, keyboardOe: %d\n", s.currentDevice, clk, clkInvert, diLatchB, s.doEnableB, (val>>7)&0x1)
 
 		s.outputShiftRegister.parallelLoadB = diLatchB
 		s.outputShiftRegister.setClock(!conditionedClock)

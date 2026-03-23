@@ -61618,6 +61618,22 @@
 		(uuid "1b1120cd-2a01-4630-b9b4-5dc330847551")
 	)
 	(segment
+		(start 168.5843 57.3741)
+		(end 169.4707 56.4877)
+		(width 0.1524)
+		(layer "F.Cu")
+		(net 233)
+		(uuid "3f77de29-1039-4bbd-92db-dd3cee7e7023")
+	)
+	(segment
+		(start 167.5384 57.3741)
+		(end 168.5843 57.3741)
+		(width 0.1524)
+		(layer "F.Cu")
+		(net 233)
+		(uuid "c2b001a1-1e12-48eb-86af-27bc9ecb0a55")
+	)
+	(segment
 		(start 165.5009 55.23668)
 		(end 164.461121 54.196901)
 		(width 0.15)

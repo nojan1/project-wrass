@@ -1,5 +1,6 @@
 
 time_command_implementation:
+    nop
     jsr newline
 
     ldx #(DS1306_YEAR)
