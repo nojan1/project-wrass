@@ -41,7 +41,7 @@ time_command_implementation:
     ldx #(DS1306_SECONDS)
     jsr ds1306_command
     jsr puthex
-  
-    jsr newline
 
+    jsr newline
+  
     jmp _command_execution_complete

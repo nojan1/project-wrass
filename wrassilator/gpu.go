@@ -206,6 +206,11 @@ func (s *GPU) Init() {
 
 func (s *GPU) Write(addr uint16, val uint8) {
 	subAddr := GpuRegister(addr & 0x1F)
+
+	if subAddr > ScanlineLow {
+		return
+	}
+
 	switch subAddr {
 	case ReadWrite:
 		internalAddress := uint16(s.registerValues[AddressHigh])<<8 | uint16(s.registerValues[AddressLow])
@@ -227,6 +232,10 @@ func (s *GPU) Read(addr uint16, internal bool) uint8 {
 	}
 
 	subAddr := GpuRegister(addr & 0x1F)
+
+	if subAddr > ScanlineLow {
+		return 0
+	}
 
 	switch subAddr {
 	case ReadWrite:

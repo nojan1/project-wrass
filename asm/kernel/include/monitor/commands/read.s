@@ -12,8 +12,7 @@ read_command_implementation:
     sta PARAM_16_3
 
 .new_row:
-    ldx #1
-    lda PARAM_16_2, x
+    lda PARAM_16_2 + 1
     jsr puthex
     ldx #0 ; Column count
     tya
