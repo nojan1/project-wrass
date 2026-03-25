@@ -10,7 +10,7 @@ type disassembly struct {
 	text    string
 }
 
-func Disassemble(proc *sim6502.Processor, instructionsBack int, instructionsForward int) []*disassembly {
+func Disassemble(proc *sim6502.Processor, instructionsBack int, instructionsForward int, symbols map[uint16]string) []*disassembly {
 	ret := make([]*disassembly, 0, instructionsBack+instructionsForward)
 
 	pc := proc.Registers().PC.Current()
@@ -24,7 +24,7 @@ func Disassemble(proc *sim6502.Processor, instructionsBack int, instructionsForw
 	// }
 
 	for i := 0; i < instructionsBack+instructionsForward; i++ {
-		newPc, disassembly := disassembleInstruction(proc, pc)
+		newPc, disassembly := disassembleInstruction(proc, pc, symbols)
 		pc = newPc
 
 		ret = append(ret, disassembly)
@@ -72,7 +72,16 @@ func getLength(mode sim6502.AddressingMode) int {
 	}
 }
 
-func disassembleInstruction(proc *sim6502.Processor, pc uint16) (uint16, *disassembly) {
+func annotate(addr uint16, symbols map[uint16]string) string {
+	value, found := symbols[addr]
+	if found {
+		return value
+	} else {
+		return fmt.Sprintf("$%04X", addr)
+	}
+}
+
+func disassembleInstruction(proc *sim6502.Processor, pc uint16, symbols map[uint16]string) (uint16, *disassembly) {
 	memory := proc.Memory()
 	opcode := memory.Read(pc, true)
 	instruction := proc.Instructions()[opcode]
@@ -89,7 +98,7 @@ func disassembleInstruction(proc *sim6502.Processor, pc uint16) (uint16, *disass
 		data := memory.Read(pc+1, true)
 		return pc + 2, &disassembly{
 			address: pc,
-			text:    fmt.Sprintf("%s %02X", instruction.Impl.Mnemonic(), data),
+			text:    fmt.Sprintf("%s $%02X", instruction.Impl.Mnemonic(), data),
 		}
 
 	case sim6502.ABS:
@@ -99,7 +108,7 @@ func disassembleInstruction(proc *sim6502.Processor, pc uint16) (uint16, *disass
 		addr := uint16(oper1) | (uint16(oper2) << 8)
 		return pc + 3, &disassembly{
 			address: pc,
-			text:    fmt.Sprintf("%s %04X", instruction.Impl.Mnemonic(), addr),
+			text:    fmt.Sprintf("%s %s", instruction.Impl.Mnemonic(), annotate(addr, symbols)),
 		}
 
 	case sim6502.ABS_X:
@@ -109,7 +118,7 @@ func disassembleInstruction(proc *sim6502.Processor, pc uint16) (uint16, *disass
 		baseAddr := (uint16(oper1) | (uint16(oper2) << 8))
 		return pc + 3, &disassembly{
 			address: pc,
-			text:    fmt.Sprintf("%s %04X,X", instruction.Impl.Mnemonic(), baseAddr),
+			text:    fmt.Sprintf("%s %s,X", instruction.Impl.Mnemonic(), annotate(baseAddr, symbols)),
 		}
 
 	case sim6502.ABS_Y:
@@ -119,7 +128,7 @@ func disassembleInstruction(proc *sim6502.Processor, pc uint16) (uint16, *disass
 		baseAddr := (uint16(oper1) | (uint16(oper2) << 8))
 		return pc + 3, &disassembly{
 			address: pc,
-			text:    fmt.Sprintf("%s %04X,Y", instruction.Impl.Mnemonic(), baseAddr),
+			text:    fmt.Sprintf("%s %s,Y", instruction.Impl.Mnemonic(), annotate(baseAddr, symbols)),
 		}
 
 	case sim6502.ZPG:
@@ -128,7 +137,7 @@ func disassembleInstruction(proc *sim6502.Processor, pc uint16) (uint16, *disass
 		addr := uint16(oper1)
 		return pc + 2, &disassembly{
 			address: pc,
-			text:    fmt.Sprintf("%s %02X", instruction.Impl.Mnemonic(), addr),
+			text:    fmt.Sprintf("%s %s", instruction.Impl.Mnemonic(), annotate(addr, symbols)),
 		}
 
 	case sim6502.ZPG_X:
@@ -137,7 +146,7 @@ func disassembleInstruction(proc *sim6502.Processor, pc uint16) (uint16, *disass
 		addr := uint16(oper1)
 		return pc + 2, &disassembly{
 			address: pc,
-			text:    fmt.Sprintf("%s %02X,X", instruction.Impl.Mnemonic(), addr),
+			text:    fmt.Sprintf("%s %s,X", instruction.Impl.Mnemonic(), annotate(addr, symbols)),
 		}
 
 	case sim6502.ZPG_Y:
@@ -146,7 +155,7 @@ func disassembleInstruction(proc *sim6502.Processor, pc uint16) (uint16, *disass
 		addr := uint16(oper1)
 		return pc + 2, &disassembly{
 			address: pc,
-			text:    fmt.Sprintf("%s %02X,Y", instruction.Impl.Mnemonic(), addr),
+			text:    fmt.Sprintf("%s %s,Y", instruction.Impl.Mnemonic(), annotate(addr, symbols)),
 		}
 
 	case sim6502.IND:
@@ -157,7 +166,7 @@ func disassembleInstruction(proc *sim6502.Processor, pc uint16) (uint16, *disass
 		addr := uint16(oper1) | (uint16(oper2) << 8)
 		return pc + 3, &disassembly{
 			address: pc,
-			text:    fmt.Sprintf("%s (%04X)", instruction.Impl.Mnemonic(), addr),
+			text:    fmt.Sprintf("%s (%s)", instruction.Impl.Mnemonic(), annotate(addr, symbols)),
 		}
 
 	case sim6502.X_IND:
@@ -168,7 +177,7 @@ func disassembleInstruction(proc *sim6502.Processor, pc uint16) (uint16, *disass
 		addr := uint16(oper1) | (uint16(oper2) << 8)
 		return pc + 3, &disassembly{
 			address: pc,
-			text:    fmt.Sprintf("%s (%04X,X)", instruction.Impl.Mnemonic(), addr),
+			text:    fmt.Sprintf("%s (%s,X)", instruction.Impl.Mnemonic(), annotate(addr, symbols)),
 		}
 
 	case sim6502.IND_Y:
@@ -179,7 +188,7 @@ func disassembleInstruction(proc *sim6502.Processor, pc uint16) (uint16, *disass
 		addr := uint16(oper1) | (uint16(oper2) << 8)
 		return pc + 3, &disassembly{
 			address: pc,
-			text:    fmt.Sprintf("%s (%04X),Y", instruction.Impl.Mnemonic(), addr),
+			text:    fmt.Sprintf("%s (%s),Y", instruction.Impl.Mnemonic(), annotate(addr, symbols)),
 		}
 
 	case sim6502.REL:
@@ -194,7 +203,7 @@ func disassembleInstruction(proc *sim6502.Processor, pc uint16) (uint16, *disass
 		}
 		return pc + 2, &disassembly{
 			address: pc,
-			text:    fmt.Sprintf("%s %04X", instruction.Impl.Mnemonic(), addr),
+			text:    fmt.Sprintf("%s %s", instruction.Impl.Mnemonic(), annotate(addr, symbols)),
 		}
 
 	// // 65C02 Zero page relative mode
@@ -217,16 +226,16 @@ func disassembleInstruction(proc *sim6502.Processor, pc uint16) (uint16, *disass
 		addr := uint16(oper1) | (uint16(oper2) << 8)
 		return pc + 3, &disassembly{
 			address: pc,
-			text:    fmt.Sprintf("%s (%04X),X", instruction.Impl.Mnemonic(), addr),
+			text:    fmt.Sprintf("%s (%s),X", instruction.Impl.Mnemonic(), annotate(addr, symbols)),
 		}
 
 	// 65C02 indirect zeropage
 	case sim6502.ZPG_IND:
 		oper1 := memory.Read(pc+1, true)
-		addr := memory.Read(uint16(oper1), true) | (memory.Read(uint16(oper1)+1, true) << 8)
+		addr := uint16(memory.Read(uint16(oper1), true)) | (uint16(memory.Read(uint16(oper1)+1, true)) << 8)
 		return pc + 2, &disassembly{
 			address: pc,
-			text:    fmt.Sprintf("%s (%04X)", instruction.Impl.Mnemonic(), addr),
+			text:    fmt.Sprintf("%s (%04X)", instruction.Impl.Mnemonic(), annotate(addr, symbols)),
 		}
 
 	default:

@@ -6,7 +6,7 @@ import (
 	sim6502 "github.com/nojan1/sim6502/pkg"
 )
 
-func DrawRegisterStatusPanel(x int32, y int32, proc *sim6502.Processor, memControl *MemControl) {
+func DrawRegisterStatusPanel(x int32, y int32, proc *sim6502.Processor, memControl *MemControl, symbols map[uint16]string) {
 	fontSize := 20
 
 	lineHeight := 25
@@ -34,7 +34,7 @@ func DrawRegisterStatusPanel(x int32, y int32, proc *sim6502.Processor, memContr
 	DrawStatusBox(registers.SR.IsSet(sim6502.SRFlagZ), "Z", x+int32(boxSpacing)*7, y+int32(lineHeight)*2, boxSize)
 
 	nextLine := 3 + DrawStack(proc, x, y+int32(lineHeight)*3, lineHeight, fontSize)
-	nextLine += 1 + DrawDissambly(proc, x, y+int32(lineHeight)*nextLine, lineHeight, fontSize)
+	nextLine += 1 + DrawDissambly(proc, x, y+int32(lineHeight)*nextLine, lineHeight, fontSize, symbols)
 
 	DrawMemControl(memControl, x, y+int32(lineHeight)*nextLine, lineHeight, fontSize)
 }
@@ -74,17 +74,20 @@ func DrawStack(proc *sim6502.Processor, x int32, y int32, lineHeight int, fontSi
 	return 1 + int32(numStackEntries)
 }
 
-func DrawDissambly(proc *sim6502.Processor, x int32, y int32, lineHeight int, fontSize int) int32 {
+func DrawDissambly(proc *sim6502.Processor, x int32, y int32, lineHeight int, fontSize int, symbols map[uint16]string) int32 {
 	currentAddress := proc.Registers().PC.Current()
 
 	numRows := int32(1)
 	rl.DrawText("- PROG -", x+80, y, int32(fontSize), rl.White)
 
-	disassemblies := Disassemble(proc, 8, 8)
+	rowFontSize := int32(fontSize) - 2
+	rowLineHeight := int32(lineHeight) - 5
+
+	disassemblies := Disassemble(proc, 8, 8, symbols)
 
 	for i, disassembly := range disassemblies {
 		text := fmt.Sprintf("$%04X:", disassembly.address)
-		textY := y + int32(lineHeight)*int32(i+1)
+		textY := y + int32(rowLineHeight)*int32(i+1)
 
 		color := rl.Gray
 
@@ -92,8 +95,8 @@ func DrawDissambly(proc *sim6502.Processor, x int32, y int32, lineHeight int, fo
 			color = rl.White
 		}
 
-		rl.DrawText(text, x, textY, int32(fontSize), color)
-		rl.DrawText(disassembly.text, x+80, textY, int32(fontSize), color)
+		rl.DrawText(text, x, textY, int32(rowFontSize), color)
+		rl.DrawText(disassembly.text, x+80, textY, int32(rowFontSize), color)
 
 		numRows++
 	}

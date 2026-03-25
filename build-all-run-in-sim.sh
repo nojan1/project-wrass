@@ -10,10 +10,10 @@ printf "Binary:\n%s\n" $binaryPath
 printf "Listing:\n%s\n" $listingPath
 
 if [ -z "$1" ]; then
-  cd wrassilator && go run . -file "$binaryPath" # -listing "$listingPath"
+  cd wrassilator && go run . -file "$binaryPath" -listing "$listingPath"
 else
   prgRes=$(asm/loadable-programs/build-for-load.sh $1)
   [ $? -ne 0 ] && exit 1
 
-  cd wrassilator && go run . -file "$binaryPath" <<<"$prgRes"
+  cd wrassilator && go run . -file "$binaryPath" -listing "$listingPath" <<<"$prgRes"
 fi

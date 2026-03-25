@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"flag"
+	"fmt"
 	"os"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -30,7 +31,7 @@ func createSimulatorState(binaryFile string, loadAddress uint16, trace bool, bre
 	proc := sim6502.NewProcessor(bus).
 		SetModel65C02().
 		SetClock(4000000) //4MHz
- 
+
 	if sdCardPath == "" {
 		// sdCardPath = "/Users/nojan/Dev/6502-project/simulator/testfiles/sd-card.img"
 		// sdCardPath = "~/Dev/6502-project/simulator/testfiles/sd-card.img"
@@ -105,7 +106,7 @@ func (s *SimulatorState) step() {
 	}
 }
 
-func Draw(simulatorState *SimulatorState) {
+func Draw(simulatorState *SimulatorState, symbols map[uint16]string) {
 	gpu := simulatorState.bus.gpu
 
 	rl.BeginDrawing()
@@ -119,14 +120,14 @@ func Draw(simulatorState *SimulatorState) {
 
 	gpu.DrawFrameBuffer(20+(8*TotalCharCols), 10)
 
-	DrawRegisterStatusPanel(20+(8*TotalCharCols)+650, 10, simulatorState.proc, &simulatorState.bus.memControl)
+	DrawRegisterStatusPanel(20+(8*TotalCharCols)+650, 10, simulatorState.proc, &simulatorState.bus.memControl, symbols)
 
 	rl.EndDrawing()
 }
 
 func main() {
 	binaryFile := flag.String("file", "", "The path to the binary file that should be loaded into memory")
-	// listingFile := flag.String("listing", "", "The path to a listing file for the binary, it will be used to decorate disassembly and set breakpoints")
+	listingFile := flag.String("listing", "", "The path to a listing file for the binary, it will be used to decorate disassembly and set breakpoints")
 	loadAddress := flag.Uint("load-address", 0xC000, "The start address to where the binary should be stored in memory")
 	trace := flag.Bool("trace", false, "Enable tracing of CPU instructions")
 	breakpoints := flag.String("breakpoint", "", "List of address to break at, separated by ,")
@@ -141,6 +142,10 @@ func main() {
 		flag.Usage()
 		return
 	}
+
+	extraBreakpoints, symbols := parseListing(*listingFile)
+
+	fmt.Printf("%v \n", extraBreakpoints)
 
 	simulatorState := createSimulatorState(*binaryFile, uint16(*loadAddress), *trace, *breakpoints, *interactive || *headless, *sdCardPath)
 
@@ -157,8 +162,8 @@ func main() {
 		}
 
 		for !rl.WindowShouldClose() {
-			Draw(simulatorState)
-		
+			Draw(simulatorState, symbols)
+
 			keyPressed := rl.GetKeyPressed()
 			switch keyPressed {
 			case rl.KeyF5:
