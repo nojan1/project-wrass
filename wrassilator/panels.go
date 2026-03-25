@@ -114,19 +114,24 @@ func DrawMemControl(memControl *MemControl, x int32, y int32, lineHeight int, fo
 	rl.DrawText(fmt.Sprintf("BANK: $%02X", memControl.GetMemoryBank()), x+((int32(lineHeight)+10)*3), y+(int32(lineHeight)*1)+2, int32(fontSize), rl.White)
 }
 
-func (s *GPU) DrawTileMap(xBase int32, yBase int32) {
-	var numColumns int32 = 16
+func (s *GPU) DrawTileMap(texture *rl.RenderTexture2D, numColumns int32) {
+	rl.BeginTextureMode(*texture)
+
 	var tileNumber int32
 
 	for tileNumber = 0; tileNumber < 256; tileNumber++ {
-		xTileBase := xBase + 16*(tileNumber%numColumns)
-		yTileBase := yBase + 16*(tileNumber/numColumns)
+		xTileBase := 16 * (tileNumber % numColumns)
+		yTileBase := 16 * (tileNumber / numColumns)
 
 		s.drawTileWithAttribute(xTileBase, yTileBase, uint8(tileNumber), 0b00010000, 2)
 	}
+
+	rl.EndTextureMode()
 }
 
-func (s *GPU) DrawColorAttributes(xBase int32, yBase int32) {
+func (s *GPU) DrawColorAttributes(texture *rl.RenderTexture2D) {
+	rl.BeginTextureMode(*texture)
+
 	var side float32 = 8
 	var attributeIndex int32
 
@@ -135,8 +140,8 @@ func (s *GPU) DrawColorAttributes(xBase int32, yBase int32) {
 		foregroundIndex := (colorAttribute >> 4) & 0xf
 		backgroundIndex := colorAttribute & 0xf
 
-		xDrawBase := float32(xBase + 8*(attributeIndex%TotalCharCols))
-		yDrawBase := float32(yBase + 8*(attributeIndex/TotalCharCols))
+		xDrawBase := float32(8 * (attributeIndex % TotalCharCols))
+		yDrawBase := float32(8 * (attributeIndex / TotalCharCols))
 
 		rl.DrawTriangle(
 			rl.Vector2{X: xDrawBase, Y: yDrawBase},
@@ -153,27 +158,33 @@ func (s *GPU) DrawColorAttributes(xBase int32, yBase int32) {
 		)
 	}
 
-	s.drawWindowBoundry(xBase, yBase)
+	// s.drawWindowBoundry(xBase, yBase)
+
+	rl.EndTextureMode()
 }
 
-func (s *GPU) drawWindowBoundry(xBase int32, yBase int32) {
-	// offsetX := s.registerValues[XOffset]
-	// offsetY := s.registerValues[YOffset]
+// func (s *GPU) drawWindowBoundry(xBase int32, yBase int32) {
+// 	// offsetX := s.registerValues[XOffset]
+// 	// offsetY := s.registerValues[YOffset]
 
-}
+// }
 
-func (s *GPU) DrawFullFrameBuffer(xBase int32, yBase int32) {
+func (s *GPU) DrawFullFrameBuffer(texture *rl.RenderTexture2D) {
+	rl.BeginTextureMode(*texture)
+
 	var frameBufferIndex int32
 	for frameBufferIndex = 0; frameBufferIndex < (ColorAttributesStart - FramebufferStart); frameBufferIndex++ {
 		tileNumber := s.vram[FramebufferStart+frameBufferIndex]
 
-		xDrawBase := int32(xBase + 8*(frameBufferIndex%TotalCharCols))
-		yDrawBase := int32(yBase + 8*(frameBufferIndex/TotalCharCols))
+		xDrawBase := int32(8 * (frameBufferIndex % TotalCharCols))
+		yDrawBase := int32(8 * (frameBufferIndex / TotalCharCols))
 
 		s.drawTileWithAttribute(xDrawBase, yDrawBase, tileNumber, 0b00010000, 1)
 	}
 
-	s.drawWindowBoundry(xBase, yBase)
+	// s.drawWindowBoundry(xBase, yBase)
+
+	rl.EndTextureMode()
 }
 
 func (s *GPU) DrawColors(xBase int32, yBase int32) {

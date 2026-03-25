@@ -28,7 +28,7 @@ clear_screen:
     ldy #GRAPHICS_ADDR_TILEMAP_LOW
     sty GRAPHICS_ADDR_LOW
 
-    ldy #8
+    ldy #32
 set_framebuffer_outer_loop:
     ldx #0
 set_framebuffer_inner_loop:
@@ -45,7 +45,7 @@ set_framebuffer_inner_loop:
     sta GRAPHICS_ADDR_LOW
 
     pla
-    ldy #8
+    ldy #32
 set_colorattribute_outer_loop:
     ldx #0
 set_colorattribute_inner_loop:
@@ -107,9 +107,8 @@ goto_colorattribute_x_y:
     pha
     
     ; Calculate HIGH
-    ; HIGH = GRAPHICS_ADDR_COLORATTRIBUTES_HIGH + (ROW >> 2)
+    ; HIGH = GRAPHICS_ADDR_COLORATTRIBUTES_HIGH + (ROW >> 1)
     tya
-    lsr
     lsr
     ora #GRAPHICS_ADDR_COLORATTRIBUTES_HIGH
     sta GRAPHICS_ADDR_HIGH
@@ -121,18 +120,17 @@ goto_tilemap_x_y:
     pha
     
     ; Calculate HIGH
-    ; HIGH = ROW >> 2
+    ; HIGH = ROW >> 1
     tya
-    lsr
     lsr
     sta GRAPHICS_ADDR_HIGH
 
 _set_xy_low:
     ; Calculate LOW
-    ; LOW = (ROW << 6) | COL
+    ; LOW = (ROW << 7) | COL
     stx VAR_8BIT_1
     tya
-    .repeat 6
+    .repeat 7
     asl
     .endr
     ora VAR_8BIT_1

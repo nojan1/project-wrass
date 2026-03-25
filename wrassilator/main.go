@@ -109,18 +109,53 @@ func (s *SimulatorState) step() {
 func Draw(simulatorState *SimulatorState, symbols map[uint16]string) {
 	gpu := simulatorState.bus.gpu
 
+	colorAttributesTexture := rl.LoadRenderTexture(TotalCharCols*8, TotalCharRows*8)
+	tileMapTexture := rl.LoadRenderTexture(16*8*2, (256/16)*8*2)
+	fullFrameBufferTexture := rl.LoadRenderTexture(TotalCharCols*8, TotalCharRows*8)
+	frameBufferTexture := rl.LoadRenderTexture(640, 480)
+
+	gpu.DrawColorAttributes(&colorAttributesTexture)
+	gpu.DrawFullFrameBuffer(&fullFrameBufferTexture)
+	gpu.DrawTileMap(&tileMapTexture, 16)
+	gpu.DrawFrameBuffer(&frameBufferTexture)
+
 	rl.BeginDrawing()
 
 	rl.ClearBackground(rl.DarkBlue)
 
-	gpu.DrawColorAttributes(10, 10)
-	gpu.DrawFullFrameBuffer(10, 20+(TotalCharRows*8))
-	gpu.DrawTileMap(10, 40+(16*TotalCharRows))
-	gpu.DrawColors(20+(16*16), 40+(16*TotalCharRows))
+	rl.DrawTexturePro(
+		colorAttributesTexture.Texture,
+		rl.Rectangle{Width: float32(colorAttributesTexture.Texture.Width), Height: float32(colorAttributesTexture.Texture.Height) * -1},
+		rl.Rectangle{X: 10, Y: 10, Width: 64 * 8, Height: 32 * 8},
+		rl.Vector2{X: 0, Y: 0},
+		0,
+		rl.White)
 
-	gpu.DrawFrameBuffer(20+(8*TotalCharCols), 10)
+	rl.DrawTexturePro(
+		fullFrameBufferTexture.Texture,
+		rl.Rectangle{Width: float32(fullFrameBufferTexture.Texture.Width), Height: float32(fullFrameBufferTexture.Texture.Height) * -1},
+		rl.Rectangle{X: 10, Y: 20 + (32 * 8), Width: 64 * 8, Height: 32 * 8},
+		rl.Vector2{X: 0, Y: 0},
+		0,
+		rl.White)
 
-	DrawRegisterStatusPanel(20+(8*TotalCharCols)+650, 10, simulatorState.proc, &simulatorState.bus.memControl, symbols)
+	rl.DrawTextureRec(
+		tileMapTexture.Texture,
+		rl.Rectangle{X: 0, Y: 0, Width: float32(tileMapTexture.Texture.Width), Height: float32(tileMapTexture.Texture.Height) * -1},
+		rl.Vector2{X: 10, Y: 40 + (64 * 8)},
+		rl.White)
+
+	rl.DrawTexturePro(
+		frameBufferTexture.Texture,
+		rl.Rectangle{Width: float32(frameBufferTexture.Texture.Width), Height: float32(frameBufferTexture.Texture.Height) * -1},
+		rl.Rectangle{X: 20 + (64 * 8), Y: 10, Width: 640, Height: 480},
+		rl.Vector2{X: 0, Y: 0},
+		0,
+		rl.White)
+
+	gpu.DrawColors(20+(16*16), 40+(32*16))
+
+	DrawRegisterStatusPanel(20+(64*8)+650, 10, simulatorState.proc, &simulatorState.bus.memControl, symbols)
 
 	rl.EndDrawing()
 }

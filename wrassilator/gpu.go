@@ -33,11 +33,11 @@ const (
 const (
 	DisplayWidth         = 640
 	DisplayHeight        = 480
-	TotalCharCols        = 64
-	TotalCharRows        = 32
+	TotalCharCols        = 128
+	TotalCharRows        = 64
 	FramebufferStart     = 0x0000
-	ColorAttributesStart = FramebufferStart + 0x0800
-	TilemapStart         = ColorAttributesStart + 0x0800
+	ColorAttributesStart = FramebufferStart + 0x2000
+	TilemapStart         = ColorAttributesStart + 0x2000
 	ColorsStart          = TilemapStart + 0x800
 	MemoryTop            = ColorsStart + 0x80
 )
@@ -272,23 +272,27 @@ func (s *GPU) handleIncrement() {
 	}
 }
 
-func (s *GPU) DrawFrameBuffer(x int32, y int32) {
+func (s *GPU) DrawFrameBuffer(texture *rl.RenderTexture2D) {
 	if s.registerValues[GpuControl]&BlankScreenControlWord != 0 {
 		return
 	}
 
+	rl.BeginTextureMode(*texture)
+
 	if s.registerValues[GpuControl]&BitmapModeControlWord == 0 {
-		s.drawTilemap(x, y)
+		s.drawTilemap()
 	} else {
-		s.drawBitmap(x, y)
+		s.drawBitmap()
 	}
+
+	rl.EndTextureMode()
 
 	if s.registerValues[GpuControl]&IRQControlWord != 0 {
 		s.irqMultiplexer.SetInterupt(GpuFrameIRQSource)
 	}
 }
 
-func (s *GPU) drawTilemap(x int32, y int32) {
+func (s *GPU) drawTilemap() {
 	var scrollX, scrollY uint16
 
 	for s.currentScanline = 0; s.currentScanline < DisplayHeight; s.currentScanline++ {
@@ -301,13 +305,16 @@ func (s *GPU) drawTilemap(x int32, y int32) {
 				scrollX = uint16(s.registerValues[XOffset])
 			}
 
-			offsetCycle := ((cycle >> 1) + (512 - scrollX)) & 0x1ff
-			offsetScanline := ((s.currentScanline >> 1) + (256 - scrollY)) & 0x0ff
+			// offsetCycle := (cycle + (512 - scrollX)) & 0x1ff
+			// offsetScanline := (s.currentScanline + (256 - scrollY)) & 0x0ff
+
+			offsetCycle := cycle + scrollX
+			offsetScanline := s.currentScanline + scrollY
 
 			charColumn := offsetCycle >> 3
 			charRow := offsetScanline >> 3
 
-			framebufferAddress := (charRow << 6) | charColumn
+			framebufferAddress := (charRow << 7) | charColumn
 
 			tileNumber := s.vram[FramebufferStart+framebufferAddress]
 
@@ -326,12 +333,12 @@ func (s *GPU) drawTilemap(x int32, y int32) {
 				colorIndex = (colorAttribute >> 4) & 0xf
 			}
 
-			s.drawColoredPixel(x+int32(cycle), y+int32(s.currentScanline), colorIndex)
+			s.drawColoredPixel(int32(cycle), int32(s.currentScanline), colorIndex)
 		}
 	}
 }
 
-func (s *GPU) drawBitmap(x int32, y int32) {
+func (s *GPU) drawBitmap() {
 	// Using the ares for Tilemap and ColorAttributes giving us 2 * 2k
 	// this is allocated to 2k for the upper screen and 2k for the lower
 	// pixels are packed in 4bp indexed into the pallete
@@ -353,7 +360,7 @@ func (s *GPU) drawBitmap(x int32, y int32) {
 				colorIndex = (data >> 4) & 0xf
 			}
 
-			s.drawColoredPixel(x+int32(cycle), y+int32(s.currentScanline), colorIndex)
+			s.drawColoredPixel(int32(cycle), int32(s.currentScanline), colorIndex)
 		}
 
 	}

@@ -12,7 +12,7 @@ print_banner:
     jsr gpu_putsc
 
     lda #99
-    .rept 38
+    .rept 78
     jsr gpu_putsc
     .endr
 
@@ -31,7 +31,7 @@ print_banner:
     putstr_addr welcome_message_string  
 
     .ifndef NO_GPU
-    ldx #39
+    ldx #79
     ldy #1
     jsr goto_tilemap_x_y
 
@@ -44,7 +44,7 @@ print_banner:
     jsr gpu_putsc
 
     lda #99
-    .rept 38
+    .rept 78
     jsr gpu_putsc
     .endr
 

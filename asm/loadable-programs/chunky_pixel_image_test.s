@@ -24,7 +24,7 @@
 
     pla
     clc
-    adc #64 ;Advance to next row
+    adc #128 ;Advance to next row
     sta GRAPHICS_ADDR_LOW
     
     ply

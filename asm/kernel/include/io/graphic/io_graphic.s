@@ -1,6 +1,6 @@
-GPU_LINE_BYTES = 64
-GPU_TEXT_LINES = 30
-GPU_TEXT_COLUMNS = 40
+GPU_LINE_BYTES = 128
+GPU_TEXT_COLUMNS = 80
+GPU_TEXT_LINES = 60
 
 ; Transform ascii character i A into screencode and put into A
 c_to_sc:
