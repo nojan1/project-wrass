@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -339,20 +338,31 @@ func (s *GPU) drawTilemap() {
 }
 
 func (s *GPU) drawBitmap() {
-	// Using the ares for Tilemap and ColorAttributes giving us 2 * 2k
-	// this is allocated to 2k for the upper screen and 2k for the lower
+	// Using the ares for Tilemap and ColorAttributes giving us 16KB to work with
 	// pixels are packed in 4bp indexed into the pallete
-	// total resolution is 128x64 pixels
+	// total resolution is 256x128
+	// visible resolution is 160x120
+
+	var scrollX, scrollY uint16
 
 	for s.currentScanline = 0; s.currentScanline < DisplayHeight; s.currentScanline++ {
+		if s.currentScanline%8 == 0 {
+			scrollY = uint16(s.registerValues[YOffset])
+		}
+
 		for cycle := range uint16(DisplayWidth) {
+			if cycle%8 == 0 {
+				scrollX = uint16(s.registerValues[XOffset])
+			}
 
-			mapY := s.currentScanline >> 5
-			mapX := cycle >> 6
+			offsetCycle := (cycle + scrollX) % 640
+			offsetScanline := (s.currentScanline + scrollY) % 480
 
-			fmt.Printf("X: %v, Y: %v \n", mapY, mapX)
+			mapX := offsetCycle >> 3    // divide by 8 since 620/160 == 4 but we are packing two pixels into each byte (adding another /2)
+			mapY := offsetScanline >> 2 // divide by 4 since 480 / 120 == 4
 
-			address := (mapY * 64) + (mapX >> 1)
+			// This means (rowNum * "bytes per row") + "column offset"
+			address := (mapY << 7) + mapX
 			data := s.vram[address]
 
 			colorIndex := data & 0xf
